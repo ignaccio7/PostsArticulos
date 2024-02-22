@@ -1,0 +1,37 @@
+### GET a la pagina de inicio
+GET http://localhost:1234/
+### POST a la pagina de inicio - dara un 404 - como cualquier otro metodo HTTP
+POST http://localhost:1234/
+
+### GET a la pagina de inicio de PERSONA
+GET http://localhost:1234/person
+
+### GET a la pagina inicio de PERSONA para obtener por ci
+GET http://localhost:1234/person/10918761
+
+### POST a la pagina de inicio de PERSONA para crear
+POST  http://localhost:1234/person
+Content-Type: application/json
+
+{
+  "ci" : 10918761,
+  "nombres" : "Nestor",
+  "paterno" : "Rojas",
+  "materno" : "Guarachi",
+  "telefono" : "75209039",
+  "correo" : "nr@gmail.com",
+  "avatar" : "avatarnr"
+}
+
+### DELETE para eliminar una persona de la base de datos
+DELETE http://localhost:1234/person/10918769
+
+### PATCH a la pagina de inicio de PERSONA para modificar
+PATCH http://localhost:1234/person/10918761
+Content-Type: application/json
+
+{
+  "nombres" : "Nestor2222",
+  "paterno" : "Rojas2",
+  "materno" : "aa"
+}
