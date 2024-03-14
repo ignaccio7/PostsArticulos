@@ -35,3 +35,44 @@ Content-Type: application/json
   "paterno" : "Rojas2",
   "materno" : "aa"
 }
+
+### GET user page
+GET http://localhost:1234/user
+
+### POST user page
+POST http://localhost:1234/user
+Content-Type: application/json
+
+{
+  "person":{
+    "ci" : 10918765,
+    "nombres" : "Nestor",
+    "paterno" : "Rojas",
+    "materno" : "Guarachi",
+    "telefono" : "75209039",
+    "correo" : "nr@gmail.com",
+    "avatar" : "avatarnr"
+  },
+  "user":{
+    "usuario":"ignaccio5",
+    "pass":"260298nesigABC+-*",
+    "rol":"user"
+  }
+}
+
+### POST login user
+POST http://localhost:1234/user/login
+Content-Type: application/json
+
+{
+  "usuario":"ignaccio4",
+  "pass":"260298nesigABC+-*"
+}
+
+### GET a la pagina de inicio de PERSONA con uso de TOKEN
+GET http://localhost:1234/person
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW80IiwiaWF0IjoxNzEwMzc4NzA3fQ.3nQLpJXxK2jtp5o9bPPKdqBicrqOtWQWQ1K1V9X6Xlw
+
+### GET a la pagina inicio de PERSONA para obtener por ci
+GET http://localhost:1234/person/10918761
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW80IiwiaWF0IjoxNzEwMzc4NzA3fQ.3nQLpJXxK2jtp5o9bPPKdqBicrqOtWQWQ1K1V9X6Xlw

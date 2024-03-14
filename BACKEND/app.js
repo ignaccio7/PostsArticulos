@@ -3,6 +3,7 @@ import logger from 'morgan'
 import express, { json } from 'express'
 import config from './config.js'
 import { routerPerson } from './routes/person.js'
+import { routerUser } from './routes/user.js'
 const pkg = readJSON('./package.json')
 
 const app = express()
@@ -26,6 +27,8 @@ app.get('/', (request, response) => {
 
 // Para la persona
 app.use('/person', routerPerson)
+// Para el usuario
+app.use('/user', routerUser)
 
 app.use('/', (request, response) => {
   response.send('<h1>404</h1>')

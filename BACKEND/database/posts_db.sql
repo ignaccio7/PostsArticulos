@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 5.5.5-10.4.11-MariaDB)
-# Date: 2024-01-08 21:09:30
+# Date: 2024-01-08 21:09:30 posts_db
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -31,9 +31,9 @@ INSERT INTO `persona` VALUES (1,'Juan','Perez','Gomez',123456789,'juan@example.c
 
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL AUTO_INCREMENT,
   `persona_ci` int(11) NOT NULL,
-  `usuario` varchar(15) DEFAULT NULL,
+  `usuario` varchar(15) UNIQUE DEFAULT NULL,
   `pass` varchar(255) DEFAULT NULL,
   `rol` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id_usuario`),
@@ -54,7 +54,7 @@ INSERT INTO `usuario` VALUES (1,1,'usuario1','pass1','usuario'),(2,2,'usuario2',
 
 DROP TABLE IF EXISTS `notas`;
 CREATE TABLE `notas` (
-  `id_nota` int(11) NOT NULL,
+  `id_nota` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id_usuario` int(11) NOT NULL,
   `titulo` varchar(30) DEFAULT NULL,
   `tema` varchar(30) DEFAULT NULL,
