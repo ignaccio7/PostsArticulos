@@ -13,7 +13,8 @@ mysql2
     `npm i mysql2 -E`
 jwt
     `npm install jsonwebtoken -E`
-
+cors
+    `npm install cors -E`
 ---
 
 

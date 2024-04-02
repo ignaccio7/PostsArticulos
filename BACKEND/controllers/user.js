@@ -56,10 +56,14 @@ export default class UserController {
       //   data: newUser
       // })
     } catch (error) {
-      console.log(error)
+      console.log('errorController', error)
+      // response.json({
+      //   statusCode: 500,
+      //   message: 'Fallo al crear la persona y usuario'
+      // })
       response.json({
-        statusCode: 500,
-        message: 'Fallo al crear la persona y usuario'
+        statusCode: error.status,
+        message: error.message
       })
     }
 
@@ -81,7 +85,7 @@ export default class UserController {
     }
     const { usuario, pass } = user
     try {
-      const result = await UserModel.searchUser({ user: usuario, pass })
+      const result = await UserModel.verifyUser({ user: usuario, pass })
       if (result.length === 0) {
         return response.status(404).json({
           statusCode: 404,

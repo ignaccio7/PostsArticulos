@@ -47,12 +47,18 @@ export default class UserModel {
       }
     } catch (error) {
       await connection.rollback()
-      console.error(error)
-      throw new Error('Error al crear la persona')
+      // throw new Error('Error al crear la persona')
+      console.error('errorModel', error)
+      const objError = { status: 500, message: 'Error al crear la persona' }
+      if (error.code === 'ER_DUP_ENTRY') {
+        objError.status = 409
+        objError.message = 'Usted ya cuenta con un usuario registrado'
+      }
+      throw objError
     }
   }
 
-  static async searchUser ({ user, pass }) {
+  static async verifyUser ({ user, pass }) {
     const query = 'SELECT * FROM usuario WHERE usuario=? AND pass=?'
     try {
       const [result] = await connection.query(query, [user, pass])
@@ -61,5 +67,9 @@ export default class UserModel {
       console.error(error)
       throw new Error('Error al intentar logearse')
     }
+  }
+
+  static async searchUser ({ ci }) {
+    const query = 'SELECT usuario FROM usuario WHERE persona_ci = ?'
   }
 }

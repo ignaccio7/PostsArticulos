@@ -4,6 +4,7 @@ import express, { json } from 'express'
 import config from './config.js'
 import { routerPerson } from './routes/person.js'
 import { routerUser } from './routes/user.js'
+import { corsMiddleware } from './middlewares/cors.js'
 const pkg = readJSON('./package.json')
 
 const app = express()
@@ -12,12 +13,14 @@ app.use(json())
 
 app.use(logger('dev'))
 
+app.use(corsMiddleware())
+
 app.set('pkg', pkg)
 app.set('port', config.port)
 app.set('host', config.host)
 
 app.get('/', (request, response) => {
-  response.json({
+  response.status(200).json({
     author: app.get('pkg').author,
     description: app.get('pkg').description,
     version: app.get('pkg').version,
