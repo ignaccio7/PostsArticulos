@@ -7,6 +7,8 @@ const routerUser = Router()
 routerUser.get('/', UserController.getAll)
 routerUser.post('/', UserController.signup)
 routerUser.post('/login', UserController.signin)
+routerUser.get('/:ci', UserController.search)
+routerUser.patch('/:ci', UserController.update)
 // routerUser.post('/', (request, response) => {
 //   const body = request.body
 //   const result = validateUser({ user: body })

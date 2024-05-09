@@ -5,7 +5,17 @@ export default class NoteController {
   // Para obtener todos los resultados
   static async getAll (request, response) {
     try {
-      const results = await NoteModel.getAll()
+      const { titulo, tema, init, end, page } = request.query
+      const results = await NoteModel.getAll({ filters: { titulo, tema }, fechaPost: { init, end }, page })
+
+      if (results.length === 0) {
+        response.status(404).json({
+          statusCode: 404,
+          message: 'No existen registros'
+        })
+        return
+      }
+
       return response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
@@ -47,7 +57,7 @@ export default class NoteController {
     }
   }
 
-  // Para crear una nueva nota AQUI NOS QUEDAMOS
+  // Para crear una nueva nota
   static async create (request, response) {
     const body = request.body
     const result = validateNote({ note: body })
@@ -60,52 +70,52 @@ export default class NoteController {
     }
 
     try {
-      const newPerson = await NoteModel.createPerson({ person: result.data })
+      const newNote = await NoteModel.createNote({ note: result.data })
       response.status(201).json({
         statusCode: 201,
-        message: 'Persona creada',
-        data: newPerson
+        message: 'Nota creada',
+        data: newNote
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al crear la persona'
+        message: 'Fallo al crear la nota'
       })
     }
   }
 
-  // Para eliminar una persona
+  // Para eliminar una nota
   static async delete (request, response) {
     try {
-      const { ci } = request.params
-      const result = await NoteModel.deletePerson({ ci })
+      const { id } = request.params
+      const result = await NoteModel.deleteNote({ id })
       if (result === false) {
         response.json({
           statusCode: 404,
-          message: 'Nose ha encontrado a la persona'
+          message: 'Nose ha encontrado la nota'
         })
         return
       }
       response.json({
         statusCode: 200,
-        message: 'Persona eliminada'
+        message: 'Nota eliminada'
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al eliminar la persona'
+        message: 'Fallo al eliminar la nota'
       })
     }
   }
 
-  // Para modificar una persona
+  // Para modificar una nota
   static async update (request, response) {
     try {
-      const partialPerson = request.body
-      console.log(partialPerson)
-      const result = validatePartialNote({ person: partialPerson })
+      const partialNote = request.body
+      console.log(partialNote)
+      const result = validatePartialNote({ note: partialNote })
       console.log(result)
       if (result.error) {
         return response.status(422).json({
@@ -113,28 +123,28 @@ export default class NoteController {
           message: result
         })
       }
-      const { ci } = request.params
-      console.log('el ci...................................' + ci)
-      const [newPerson] = await NoteModel.updatePerson({ ci, partialPerson })
-      console.log(newPerson)
+      const { id } = request.params
+      console.log('el id...................................' + id)
+      const newNote = await NoteModel.updateNote({ id, partialNote })
+      console.log(newNote)
 
-      if (newPerson === false) {
+      if (newNote === false) {
         return response.json({
           statusCode: 404,
-          message: 'Nose ha encontrado a la persona'
+          message: 'Nose ha encontrado la nota'
         })
       }
 
       response.json({
         statusCode: 200,
-        message: 'Persona modificada',
-        data: newPerson
+        message: 'Nota modificada',
+        data: newNote[0]
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al modificar la persona'
+        message: 'Fallo al modificar la nota'
       })
     }
   }

@@ -1,10 +1,15 @@
+import { getFilters } from '../utils/utils.js'
 import { connection } from './connection.js'
 
 export default class NoteModel {
-  static async getAll () {
+  static async getAll ({ filters, fechaPost, page = 0 }) {
+    const { sql, values } = getFilters({ filters, fechaPost })
+    const perPage = 4
+    const p = parseInt(page)
+    const selectedPage = p === 1 || p === 0 ? 0 : (p - 1) * perPage
     try {
-      const query = 'SELECT n.*, u.usuario FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario'
-      const [notes] = await connection.query(query)
+      const query = `SELECT n.*, u.usuario FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario${sql} LIMIT ?,${perPage}`
+      const [notes] = await connection.query(query, [...values, selectedPage])
       return notes
     } catch (error) {
       console.log('error in model notes')
@@ -15,7 +20,7 @@ export default class NoteModel {
 
   static async getById ({ id }) {
     try {
-      const query = 'SELECT * FROM notas WHERE id_nota = ?'
+      const query = 'SELECT n.*, u.usuario FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario AND id_nota = ?'
       const [note] = await connection.query(query, [id])
       return note
     } catch (error) {
@@ -25,15 +30,16 @@ export default class NoteModel {
   }
 
   static async createNote ({ note }) {
+    console.log('La nota es ', note)
     const {
-      idUsuario,
+      usuario_id_usuario: idUsuario,
       titulo,
       tema,
       descripcion,
       imagenes
     } = note
     try {
-      const query = 'INSERT INTO notas (usuario_id_usuario,titulo,tema,descripcion,imagenes,fechaPost) VALUES (?,?,?,?,?)'
+      const query = 'INSERT INTO notas (usuario_id_usuario,titulo,tema,descripcion,imagenes,fechaPost) VALUES (?,?,?,?,?,?)'
       await connection.query(query, [idUsuario, titulo, tema, descripcion, imagenes, new Date()])
     } catch (error) {
       console.log(error)
@@ -44,7 +50,9 @@ export default class NoteModel {
   static async deleteNote ({ id }) {
     try {
       const query = 'DELETE FROM notas WHERE id_nota = ?'
-      const [deleteNote] = connection.query(query, [id])
+      console.log('El id ees:', id)
+      const [deleteNote] = await connection.query(query, id)
+      console.log('El id ees:', id)
       if (deleteNote.affectedRows === 0) {
         return false
       }

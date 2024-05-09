@@ -115,7 +115,7 @@ export default class PersonController {
       }
       const { ci } = request.params
       console.log('el ci...................................' + ci)
-      const [newPerson] = await PersonModel.updatePerson({ ci, partialPerson })
+      const newPerson = await PersonModel.updatePerson({ ci, partialPerson })
       console.log(newPerson)
 
       if (newPerson === false) {
@@ -128,7 +128,7 @@ export default class PersonController {
       response.json({
         statusCode: 200,
         message: 'Persona modificada',
-        data: newPerson
+        data: newPerson[0]
       })
     } catch (error) {
       console.log(error)

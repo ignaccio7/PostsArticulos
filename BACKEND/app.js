@@ -4,7 +4,10 @@ import express, { json } from 'express'
 import config from './config.js'
 import { routerPerson } from './routes/person.js'
 import { routerUser } from './routes/user.js'
+// import { corsMiddleware, handleErrorCors } from './middlewares/cors.js'
 import { corsMiddleware } from './middlewares/cors.js'
+import { handleErrors } from './middlewares/handleErrors.js'
+import { routerNote } from './routes/note.js'
 const pkg = readJSON('./package.json')
 
 const app = express()
@@ -32,10 +35,15 @@ app.get('/', (request, response) => {
 app.use('/person', routerPerson)
 // Para el usuario
 app.use('/user', routerUser)
+// Para la nota
+app.use('/note', routerNote)
 
 app.use('/', (request, response) => {
   response.send('<h1>404</h1>')
 })
+
+// Manejo de errores
+app.use(handleErrors)
 
 app.listen(app.get('port'), () => {
   console.log(`Server listening on port: http://${app.get('host')}:${app.get('port')}`)

@@ -69,7 +69,44 @@ export default class UserModel {
     }
   }
 
-  static async searchUser ({ ci }) {
-    const query = 'SELECT usuario FROM usuario WHERE persona_ci = ?'
+  static async search ({ ci }) {
+    const query = 'SELECT persona_ci,usuario,rol FROM usuario WHERE persona_ci = ?'
+    try {
+      const [user] = await connection.query(query, [ci])
+      return user
+    } catch (error) {
+      console.error(error)
+      throw new Error(`Fallo el buscar el usuario con ci ${ci}`)
+    }
+  }
+
+  static async update ({ ci, usuario, pass }) {
+    try {
+      const query = 'UPDATE usuario SET usuario=?, pass=? WHERE persona_ci = ?'
+      const [result] = await connection.query(query, [usuario, pass, ci])
+      console.log(result)
+
+      if (result.affectedRows === 0) {
+        return false
+      }
+
+      const [updatedUser] = await connection.query('SELECT * FROM usuario WHERE persona_ci = ?', [ci])
+      return updatedUser
+    } catch (error) {
+      console.log(error)
+      throw new Error('Error al actualizar el usuario')
+    }
+  }
+
+  // metodo para el middleware de token
+  static async searchByUsername ({ username }) {
+    const query = 'SELECT rol FROM usuario WHERE usuario = ?'
+    try {
+      const [rol] = await connection.query(query, [username])
+      return rol
+    } catch (error) {
+      console.log(error)
+      throw new Error('Fallo en la base de datos al buscar el usuario')
+    }
   }
 }

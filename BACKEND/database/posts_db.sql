@@ -17,7 +17,7 @@ CREATE TABLE `persona` (
   `correo` varchar(40) DEFAULT NULL,
   `avatar` longblob DEFAULT NULL,
   PRIMARY KEY (`ci`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "persona"
@@ -40,7 +40,7 @@ CREATE TABLE `usuario` (
   KEY `usuario_FKIndex1` (`persona_ci`),
   KEY `IFK_Rel_01` (`persona_ci`),
   CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`persona_ci`) REFERENCES `persona` (`ci`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "usuario"
@@ -65,7 +65,7 @@ CREATE TABLE `notas` (
   KEY `notas_FKIndex1` (`usuario_id_usuario`),
   KEY `IFK_Rel_02` (`usuario_id_usuario`),
   CONSTRAINT `notas_ibfk_1` FOREIGN KEY (`usuario_id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "notas"
@@ -91,7 +91,7 @@ CREATE TABLE `notas_publicadas` (
   KEY `IFK_Rel_04` (`usuario_id_usuario`),
   CONSTRAINT `notas_publicadas_ibfk_1` FOREIGN KEY (`notas_id_nota`) REFERENCES `notas` (`id_nota`),
   CONSTRAINT `notas_publicadas_ibfk_2` FOREIGN KEY (`usuario_id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "notas_publicadas"

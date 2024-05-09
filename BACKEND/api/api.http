@@ -45,7 +45,7 @@ Content-Type: application/json
 
 {
   "person":{
-    "ci" : 10918765,
+    "ci" : 10918764,
     "nombres" : "Nestor",
     "paterno" : "Rojas",
     "materno" : "Guarachi",
@@ -54,10 +54,23 @@ Content-Type: application/json
     "avatar" : "avatarnr"
   },
   "user":{
-    "usuario":"ignaccio5",
+    "usuario":"ignaccio7",
     "pass":"260298nesigABC+-*",
-    "rol":"user"
+    "rol":"admin"
   }
+}
+
+### GET user if forward data
+GET http://localhost:1234/user/1
+
+
+### PATCH user for update data
+PATCH http://localhost:1234/user/1
+Content-Type: application/json
+
+{
+  "usuario":"usuario1",
+  "pass":"aA*123456"
 }
 
 ### POST login user
@@ -65,14 +78,94 @@ POST http://localhost:1234/user/login
 Content-Type: application/json
 
 {
-  "usuario":"ignaccio4",
+  "usuario":"ignaccio5",
   "pass":"260298nesigABC+-*"
 }
 
+
+### AHORA YA ES CON TOKEN ESTE ENDPOINT
 ### GET a la pagina de inicio de PERSONA con uso de TOKEN
 GET http://localhost:1234/person
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW80IiwiaWF0IjoxNzEwMzc4NzA3fQ.3nQLpJXxK2jtp5o9bPPKdqBicrqOtWQWQ1K1V9X6Xlw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW81IiwiaWF0IjoxNzE0MTAxNjIwLCJleHAiOjE3MTQxMDUyMjB9.3XoIePv8zxYPFrrWnTqAM3IlSy08_EhMGUKJ82imDww
 
 ### GET a la pagina inicio de PERSONA para obtener por ci
 GET http://localhost:1234/person/10918761
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW80IiwiaWF0IjoxNzEwMzc4NzA3fQ.3nQLpJXxK2jtp5o9bPPKdqBicrqOtWQWQ1K1V9X6Xlw
+
+### PATCH a la pagina de inicio de PERSONA para modificar
+PATCH http://localhost:1234/person/10918761
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW80IiwiaWF0IjoxNzEwMzc4NzA3fQ.3nQLpJXxK2jtp5o9bPPKdqBicrqOtWQWQ1K1V9X6Xlw
+Content-Type: application/json
+
+{
+  "nombres" : "Nestor2222",
+  "paterno" : "Rojas",
+  "materno" : "Guarachi"
+}
+
+
+
+### GET a la pagina de inicio de NOTAS no publicadas
+GET http://localhost:1234/note/
+
+### GET por id 
+GET http://localhost:1234/note/17
+
+### POST para crear una NOTA
+POST http://localhost:1234/note/
+Content-Type: application/json
+
+{
+  "usuario_id_usuario": 1,
+  "titulo": "titulo11 nuevo",
+  "tema": "tema11 nuevo",
+  "descripcion": "descripcion11",
+  "imagenes": "imagen111123"
+}
+
+### DELETE por id 
+DELETE http://localhost:1234/note/17
+
+### POST para crear una NOTA
+PATCH http://localhost:1234/note/17
+Content-Type: application/json
+
+{
+  "usuario_id_usuario": 2,
+  "titulo": "titulo12 nuevo2",
+  "tema": "tema11 nuevo2",
+  "descripcion": "descripcion11",
+  "imagenes": "imagen111123"
+}
+
+### GET a la pagina de inicio de NOTAS no publicadas para filtrar
+GET http://localhost:1234/note?titulo=titulo1
+
+### GET a la pagina de inicio de NOTAS no publicadas para filtrar
+GET http://localhost:1234/note?titulo=titulo1&tema=tema10
+
+### GET a la pagina de inicio de NOTAS no publicadas para filtrar
+GET http://localhost:1234/note?titulo=titulo4&tema=tema&init=2023-02-01&end=2023-05-02
+
+### GET a la pagina de inicio de NOTAS no publicadas para filtrar
+GET http://localhost:1234/note?init=2023-02-01&end=2023-07-02
+
+
+
+### GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
+GET http://localhost:1234/note
+### GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
+GET http://localhost:1234/note?page=2
+### GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
+GET http://localhost:1234/note?page=3
+
+
+
+### PRUEBA DE VALIDACION DE USUARIO
+### admin GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
+GET http://localhost:1234/note
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW83IiwiaWF0IjoxNzE0NzA1NzYwLCJleHAiOjE3MTQ3MDkzNjB9.rbnOBBccabRZL1PT_iMr2K2aMzR33n1wley2m6TIvn4
+
+### user GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
+GET http://localhost:1234/note
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW81IiwiaWF0IjoxNzE0NzA1OTg0LCJleHAiOjE3MTQ3MDk1ODR9.-nCbjG7bd0dOrWS6GibjbZQdl0jeDVzR_40D0Y9eAHw
