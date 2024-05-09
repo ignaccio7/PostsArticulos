@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 5.5.5-10.4.11-MariaDB)
-# Date: 2024-01-08 21:09:30
+# Date: 2024-01-08 21:09:30 posts_db
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -17,7 +17,7 @@ CREATE TABLE `persona` (
   `correo` varchar(40) DEFAULT NULL,
   `avatar` longblob DEFAULT NULL,
   PRIMARY KEY (`ci`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "persona"
@@ -31,16 +31,16 @@ INSERT INTO `persona` VALUES (1,'Juan','Perez','Gomez',123456789,'juan@example.c
 
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL AUTO_INCREMENT,
   `persona_ci` int(11) NOT NULL,
-  `usuario` varchar(15) DEFAULT NULL,
+  `usuario` varchar(15) UNIQUE DEFAULT NULL,
   `pass` varchar(255) DEFAULT NULL,
   `rol` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id_usuario`),
   KEY `usuario_FKIndex1` (`persona_ci`),
   KEY `IFK_Rel_01` (`persona_ci`),
   CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`persona_ci`) REFERENCES `persona` (`ci`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "usuario"
@@ -54,7 +54,7 @@ INSERT INTO `usuario` VALUES (1,1,'usuario1','pass1','usuario'),(2,2,'usuario2',
 
 DROP TABLE IF EXISTS `notas`;
 CREATE TABLE `notas` (
-  `id_nota` int(11) NOT NULL,
+  `id_nota` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id_usuario` int(11) NOT NULL,
   `titulo` varchar(30) DEFAULT NULL,
   `tema` varchar(30) DEFAULT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE `notas` (
   KEY `notas_FKIndex1` (`usuario_id_usuario`),
   KEY `IFK_Rel_02` (`usuario_id_usuario`),
   CONSTRAINT `notas_ibfk_1` FOREIGN KEY (`usuario_id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "notas"
@@ -91,7 +91,7 @@ CREATE TABLE `notas_publicadas` (
   KEY `IFK_Rel_04` (`usuario_id_usuario`),
   CONSTRAINT `notas_publicadas_ibfk_1` FOREIGN KEY (`notas_id_nota`) REFERENCES `notas` (`id_nota`),
   CONSTRAINT `notas_publicadas_ibfk_2` FOREIGN KEY (`usuario_id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #
 # Data for table "notas_publicadas"
