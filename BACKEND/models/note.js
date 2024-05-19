@@ -36,11 +36,12 @@ export default class NoteModel {
       titulo,
       tema,
       descripcion,
-      imagenes
+      imagenes,
+      imageId
     } = note
     try {
-      const query = 'INSERT INTO notas (usuario_id_usuario,titulo,tema,descripcion,imagenes,fechaPost) VALUES (?,?,?,?,?,?)'
-      await connection.query(query, [idUsuario, titulo, tema, descripcion, imagenes, new Date()])
+      const query = 'INSERT INTO notas (usuario_id_usuario,titulo,tema,descripcion,fechaPost,imagenes, imagen_id) VALUES (?,?,?,?,?,?,?)'
+      await connection.query(query, [idUsuario, titulo, tema, descripcion, new Date(), imagenes, imageId])
     } catch (error) {
       console.log(error)
       throw new Error('Error al crear la nota')
@@ -82,6 +83,18 @@ export default class NoteModel {
     } catch (error) {
       console.log(error)
       throw new Error('Error al actualizar la nota')
+    }
+  }
+
+  // Para buscar el id_image de una nota
+  static async searchIdImage ({ idNota }) {
+    try {
+      const query = 'SELECT image_id FROM notas WHERE id_nota = ?'
+      const [note] = await connection.query(query, [idNota])
+      return note
+    } catch (error) {
+      console.error(error)
+      throw new Error(`Fallo el buscar la nota con id ${idNota}`)
     }
   }
 }

@@ -1,0 +1,161 @@
+import { request, response } from 'express'
+import ArticleModel from '../models/article.js'
+
+export default class ArticleController {
+  // obtener todos los articulos ya publicados
+  static async getAll (req = request, res = response) {
+    try {
+      const { idUser } = req
+      const { titulo, tema, init, end, page } = req.query
+      const results = await ArticleModel.getAll({ filters: { titulo, tema }, fechaPost: { init, end }, page, idUser })
+
+      if (results.length === 0) {
+        res.status(404).json({
+          statusCode: 404,
+          message: 'No existen registros'
+        })
+        return
+      }
+
+      return res.json({
+        statusCode: 200,
+        message: 'Solicitud exitosa',
+        data: results
+      })
+    } catch (error) {
+      console.log(error)
+      res.json({
+        statusCode: 500,
+        message: 'Fallo al solicitar datos en el gestor de Base de datos'
+      })
+    }
+  }
+
+  // Para obtener un resultado determinado por el id
+  static async getById (request, response) {
+    try {
+      const { id } = request.params
+      const { idUser } = request.body
+      const result = await ArticleModel.getById({ id, idUser })
+
+      if (result.length === 0) {
+        response.status(404).json({
+          statusCode: 404,
+          message: 'No se encontro la publicacion'
+        })
+        return
+      }
+      response.json({
+        statusCode: 200,
+        message: 'Solicitud exitosa',
+        data: result
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al obtener la publicacion'
+      })
+    }
+  }
+
+  // Para likear una publicacion
+  static async toggleLike (request, response) {
+    try {
+      const { idPub, idUser } = request.body
+      await ArticleModel.toggleLike({ idPub, idUser })
+
+      return response.json({
+        statusCode: 200,
+        message: 'Solicitud exitosa'
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al encorazonar la publicacion'
+      })
+    }
+  }
+
+  // Para obtener todos los comentarios de una publicacion
+  static async getComments (request, response) {
+    try {
+      const { id: idPub } = request.params
+      const { idUser } = request
+      console.log(idUser)
+      const results = await ArticleModel.getComments({ idUser, idPub })
+      return response.json({
+        statusCode: 200,
+        message: 'Solicitud exitosa',
+        data: results
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al solicitar datos en el gestor de Base de datos'
+      })
+    }
+  }
+
+  // Para agregar un comentario en una publicacion
+  static async addComment (request, response) {
+    try {
+      const { idPub, idUser, comment } = request.body
+      await ArticleModel.addComment({ idPub, idUser, comment })
+
+      return response.json({
+        statusCode: 200,
+        message: 'Comentario añadido'
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al encorazonar la publicacion'
+      })
+    }
+  }
+
+  // Para eliminar un comentario en una publicacion
+  static async deleteComment (request, response) {
+    try {
+      const { id } = request.params
+      const { idUser } = request
+
+      const remove = await ArticleModel.canIDelete({ id, idUser })
+      console.log(remove)
+      if (remove.length === 0 || remove.can_i_delete === 0) {
+        return response.json({
+          statusCode: 401,
+          message: 'Usted no puede eliminar este comentario'
+        })
+      }
+
+      const result = await ArticleModel.deleteComment({ idComment: id })
+      if (result === false) {
+        response.json({
+          statusCode: 404,
+          message: 'Nose ha encontrado al comentario'
+        })
+        return
+      }
+      response.json({
+        statusCode: 200,
+        message: 'Comentario eliminado'
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al eliminar el Comentario'
+      })
+    }
+  }
+
+  // Para aprobar una nota a publicacion
+  static async approveNote (request, response) {
+
+  }
+}

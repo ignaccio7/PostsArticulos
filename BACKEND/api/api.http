@@ -9,6 +9,9 @@ GET http://localhost:1234/person
 ### GET a la pagina inicio de PERSONA para obtener por ci
 GET http://localhost:1234/person/10918761
 
+### GET a la pagina inicio de PERSONA para obtener por ci
+GET http://localhost:1234/person/search/11111112
+
 ### POST a la pagina de inicio de PERSONA para crear
 POST  http://localhost:1234/person
 Content-Type: application/json
@@ -78,7 +81,7 @@ POST http://localhost:1234/user/login
 Content-Type: application/json
 
 {
-  "usuario":"ignaccio5",
+  "usuario":"usuario1",
   "pass":"260298nesigABC+-*"
 }
 
@@ -164,8 +167,58 @@ GET http://localhost:1234/note?page=3
 ### PRUEBA DE VALIDACION DE USUARIO
 ### admin GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
 GET http://localhost:1234/note
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW83IiwiaWF0IjoxNzE0NzA1NzYwLCJleHAiOjE3MTQ3MDkzNjB9.rbnOBBccabRZL1PT_iMr2K2aMzR33n1wley2m6TIvn4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZFVzZXIiOjIsInVzZXIiOiJ1c3VhcmlvMiIsImlhdCI6MTcxNTgyNzA3MiwiZXhwIjoxNzE1ODMwNjcyfQ.BnBlNwLv98YZAEc8OVqs7Z2-CkV03WW_SiZaB_tWKwg
 
 ### user GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
 GET http://localhost:1234/note
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW81IiwiaWF0IjoxNzE0NzA1OTg0LCJleHAiOjE3MTQ3MDk1ODR9.-nCbjG7bd0dOrWS6GibjbZQdl0jeDVzR_40D0Y9eAHw
+
+
+### ------------------------------- PROBANDO PERSONA CON EL FORMA DATA ----------------------------------------
+
+### ------------------------------- PROBANDO USER CON EL FORMA DATA ----------------------------------------
+
+### ------------------------------- PROBANDO NOTE CON EL FORMA DATA ----------------------------------------
+
+### ------------------------------- PROBANDO ACCIONES PARA LOS ARTICULOS ----------------------------------------
+### OBTENER TODOS LOS ARTICULOS
+GET http://localhost:1234/article
+
+### OBTENER TODOS LOS ARTICULOS
+GET http://localhost:1234/article
+Content-Type: application/json
+
+{
+  "idUser":1
+}
+
+### OBTENER UN ARTICULO POR ID
+GET http://localhost:1234/article/2
+
+### DAR O QUITAR LIKE A UNA PUBLICACION - puede ser string o number
+POST http://localhost:1234/article/like/
+Content-Type: application/json
+
+{
+  "idPub": "2", 
+  "idUser": 3
+}
+
+### COMENTAR UNA PUBLICACION 
+POST http://localhost:1234/article/comment/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXN1YXJpbzEiLCJpYXQiOjE3MTU5OTI5OTcsImV4cCI6MTcxNTk5NjU5N30._8UuR07XpBhOWjat_-oEvodmNddkkQceQfSfNZg5qz8
+Content-Type: application/json
+
+{
+  "idPub": "2", 
+  "idUser": "3",
+  "comment": "Comentario 5333 con el usuario 3"
+}
+
+### DESCOMENTAR UNA PUBLICACION 
+DELETE http://localhost:1234/article/comment/12
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXN1YXJpbzEiLCJpYXQiOjE3MTU5OTI5OTcsImV4cCI6MTcxNTk5NjU5N30._8UuR07XpBhOWjat_-oEvodmNddkkQceQfSfNZg5qz8
+
+### MOSTRAR LOS COMENTARIOS - solo se podran ver cuando se ingrese a la publicacion
+GET http://localhost:1234/article/comment/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXN1YXJpbzEiLCJpYXQiOjE3MTU5OTI5OTcsImV4cCI6MTcxNTk5NjU5N30._8UuR07XpBhOWjat_-oEvodmNddkkQceQfSfNZg5qz8

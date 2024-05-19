@@ -86,4 +86,16 @@ export default class PersonModel {
       throw new Error('Error al actualizar la persona')
     }
   }
+
+  // Para buscar el id_avatar de una persona
+  static async searchIdAvatar ({ ci }) {
+    try {
+      const query = 'SELECT avatar_id FROM persona WHERE ci = ?'
+      const [person] = await connection.query(query, [ci])
+      return person
+    } catch (error) {
+      console.error(error)
+      throw new Error(`Fallo el buscar la persona con ci ${ci}`)
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import PersonModel from '../models/person.js'
 import { validatePartialPerson, validatePerson } from '../schemas/person.js'
+import { deleteImage, uploadImage } from '../utils/utils.js'
 
 export default class PersonController {
   // Para obtener todos los resultados
@@ -48,7 +49,7 @@ export default class PersonController {
   }
 
   // Para crear una nueva persona
-  static async create (request, response) {
+  /* static async create (request, response) {
     const body = request.body
     const result = validatePerson({ person: body })
 
@@ -70,6 +71,50 @@ export default class PersonController {
       console.log(error)
       response.json({
         statusCode: 500,
+        message: 'Fallo al crear la persona'
+      })
+    }
+  } */
+
+  // Para crear una nueva persona - CON FORMDATA
+  static async create (request, response) {
+    const body = request.body
+    const file = request.file
+    const person = { ...body, ci: Number(body?.ci) }
+    if (file) {
+      person.avatar = file
+    }
+
+    const result = validatePerson({ person })
+
+    if (result.error) {
+      return response.status(422).json({
+        statusCode: 422,
+        message: result
+      })
+    }
+
+    try {
+      if (file) {
+        const { avatar, avatarId } = await uploadImage({ file })
+        result.data.avatar = avatar || ''
+        result.data.avatarId = avatarId || ''
+      } else {
+        result.data.avatar = ''
+        result.data.avatarId = ''
+      }
+
+      const newPerson = await PersonModel.createPerson({ person: result.data })
+      response.status(201).json({
+        statusCode: 201,
+        message: 'Persona creada',
+        data: newPerson
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        error: error.message,
         message: 'Fallo al crear la persona'
       })
     }
@@ -101,7 +146,7 @@ export default class PersonController {
   }
 
   // Para modificar una persona
-  static async update (request, response) {
+  /* static async update (request, response) {
     try {
       const partialPerson = request.body
       console.log(partialPerson)
@@ -138,4 +183,96 @@ export default class PersonController {
       })
     }
   }
+  */
+
+  // Para modificar una persona - CON FORMDATA
+  static async update (request, response) {
+    try {
+      const body = request.body
+      const file = request.file
+      const partialPerson = { ...body }
+      if (file) {
+        partialPerson.avatar = file
+      }
+      if (body?.ci) {
+        partialPerson.ci = Number(body.ci)
+      }
+
+      const result = validatePartialPerson({ person: partialPerson })
+      if (result.error) {
+        return response.status(422).json({
+          statusCode: 422,
+          message: result
+        })
+      }
+
+      const { ci } = request.params
+
+      // para eliminar la imagen si modificara
+      const searchIdAvatar = await PersonModel.searchIdAvatar({ ci })
+      if (searchIdAvatar.length !== 0 && searchIdAvatar[0]?.avatar_id && file) {
+        console.log('El file es:' + file)
+        console.log('public id:' + searchIdAvatar[0].avatar_id)
+        await deleteImage({ publicId: searchIdAvatar[0].avatar_id })
+      }
+
+      // para subir la imagen nueva si existiera
+      console.log(file)
+      if (file) {
+        const { avatar, avatarId } = await uploadImage({ file })
+        result.data.avatar = avatar || ''
+        result.data.avatar_id = avatarId || ''
+      }
+
+      console.log(result)
+      const newPerson = await PersonModel.updatePerson({ ci, partialPerson: result.data })
+
+      if (newPerson === false) {
+        return response.json({
+          statusCode: 404,
+          message: 'Nose ha encontrado a la persona'
+        })
+      }
+
+      response.json({
+        statusCode: 200,
+        message: 'Persona modificada',
+        data: newPerson[0]
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al modificar la persona'
+      })
+    }
+  }
+
+  /* Solo era una prueba para verificar la eliminacion de la imagen
+  static async searchIdImage (request, response) {
+    try {
+      const { ci } = request.params
+      const result = await PersonModel.searchIdAvatar({ ci })
+      console.log(result)
+      console.log(result.avatar_id)
+      if (result.length === 0 || !result[0]?.avatar_id) {
+        response.status(404).json({
+          statusCode: 404,
+          message: `No sea encontro al idimage de la persona con el ci ${ci}`
+        })
+        return
+      }
+      response.json({
+        statusCode: 200,
+        message: 'Solicitud exitosa',
+        data: result
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al obtener la persona'
+      })
+    }
+  } */
 }
