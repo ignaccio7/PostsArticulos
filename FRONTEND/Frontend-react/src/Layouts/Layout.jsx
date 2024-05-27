@@ -1,20 +1,18 @@
 import { Suspense } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 export default function Layout () {
   return (
     <>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/notes">Notes</Link>
-      </nav>
-      <main>
+      <Header />
+      <main className='py-2'>
         <Suspense fallback={<div>Cargando...</div>}>
           <Outlet />
         </Suspense>
       </main>
-      <footer>footer</footer>
+      <Footer />
     </>
   )
 }

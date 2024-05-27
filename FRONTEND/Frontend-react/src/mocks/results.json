@@ -1,0 +1,212 @@
+{
+  "persona": [
+    {
+      "ci": 123456,
+      "nombres": "Juan",
+      "paterno": "Perez",
+      "materno": "Garcia",
+      "telefono": 7654321,
+      "correo": "juan.perez@example.com",
+      "avatar": "juan_avatar.png",
+      "avatar_id": "avatar_123456"
+    },
+    {
+      "ci": 654321,
+      "nombres": "Maria",
+      "paterno": "Lopez",
+      "materno": "Martinez",
+      "telefono": 1234567,
+      "correo": "maria.lopez@example.com",
+      "avatar": "maria_avatar.png",
+      "avatar_id": "avatar_654321"
+    }
+  ],
+  "usuario": [
+    {
+      "id_usuario": 1,
+      "persona_ci": 123456,
+      "usuario": "jperez",
+      "pass": "hashed_password_1",
+      "rol": "admin"
+    },
+    {
+      "id_usuario": 2,
+      "persona_ci": 654321,
+      "usuario": "mlopez",
+      "pass": "hashed_password_2",
+      "rol": "user"
+    }
+  ],
+  "notas": [
+    [
+      {
+        "id_nota": 1,
+        "usuario_id_usuario": 1,
+        "titulo": "Primera Nota",
+        "tema": "Introducción",
+        "descripcion": "Esta es la descripción de la primera nota.",
+        "imagenes": "imagen1.jpg",
+        "fechaPost": "2023-05-01",
+        "imagen_id": "img_1"
+      },
+      {
+        "id_nota": 2,
+        "usuario_id_usuario": 2,
+        "titulo": "Segunda Nota",
+        "tema": "Tutorial",
+        "descripcion": "Esta es la descripción de la segunda nota.",
+        "imagenes": "imagen2.jpg",
+        "fechaPost": "2023-05-02",
+        "imagen_id": "img_2"
+      },
+      {
+        "id_nota": 3,
+        "usuario_id_usuario": 1,
+        "titulo": "Tercera Nota",
+        "tema": "Avanzado",
+        "descripcion": "Descripción de la tercera nota.",
+        "imagenes": "imagen3.jpg",
+        "fechaPost": "2023-05-03",
+        "imagen_id": "img_3"
+      },
+      {
+        "id_nota": 4,
+        "usuario_id_usuario": 2,
+        "titulo": "Cuarta Nota",
+        "tema": "Experto",
+        "descripcion": "Descripción de la cuarta nota.",
+        "imagenes": "imagen4.jpg",
+        "fechaPost": "2023-05-04",
+        "imagen_id": "img_4"
+      },
+      {
+        "id_nota": 5,
+        "usuario_id_usuario": 1,
+        "titulo": "Quinta Nota",
+        "tema": "Introducción",
+        "descripcion": "Esta es la descripción de la quinta nota.",
+        "imagenes": "imagen5.jpg",
+        "fechaPost": "2023-05-05",
+        "imagen_id": "img_5"
+      }
+    ]
+  ],
+  "notas_publicadas": [
+    {
+      "id_publicacion": 1,
+      "notas_id_nota": 1,
+      "usuario_id_usuario": 1,
+      "fechaPub": "2023-05-03"
+    },
+    {
+      "id_publicacion": 2,
+      "notas_id_nota": 2,
+      "usuario_id_usuario": 2,
+      "fechaPub": "2023-05-04"
+    },
+    {
+      "id_publicacion": 3,
+      "notas_id_nota": 3,
+      "usuario_id_usuario": 1,
+      "fechaPub": "2023-05-05"
+    },
+    {
+      "id_publicacion": 4,
+      "notas_id_nota": 4,
+      "usuario_id_usuario": 2,
+      "fechaPub": "2023-05-06"
+    },
+    {
+      "id_publicacion": 5,
+      "notas_id_nota": 5,
+      "usuario_id_usuario": 1,
+      "fechaPub": "2023-05-07"
+    }
+  ],
+  "popularidad": [
+    {
+      "id_publicacion": 1,
+      "id_usuario": 1
+    },
+    {
+      "id_publicacion": 1,
+      "id_usuario": 2
+    },
+    {
+      "id_publicacion": 2,
+      "id_usuario": 1
+    },
+    {
+      "id_publicacion": 2,
+      "id_usuario": 2
+    },
+    {
+      "id_publicacion": 3,
+      "id_usuario": 1
+    },
+    {
+      "id_publicacion": 3,
+      "id_usuario": 2
+    },
+    {
+      "id_publicacion": 4,
+      "id_usuario": 1
+    },
+    {
+      "id_publicacion": 4,
+      "id_usuario": 2
+    },
+    {
+      "id_publicacion": 5,
+      "id_usuario": 1
+    },
+    {
+      "id_publicacion": 5,
+      "id_usuario": 2
+    }
+  ],
+  "comentarios": [
+    {
+      "id_comentario": 1,
+      "id_publicacion": 1,
+      "id_usuario": 2,
+      "comment": "Este es un comentario en la primera nota."
+    },
+    {
+      "id_comentario": 2,
+      "id_publicacion": 2,
+      "id_usuario": 1,
+      "comment": "Este es un comentario en la segunda nota."
+    },
+    {
+      "id_comentario": 3,
+      "id_publicacion": 3,
+      "id_usuario": 2,
+      "comment": "Comentario en la tercera nota."
+    },
+    {
+      "id_comentario": 4,
+      "id_publicacion": 4,
+      "id_usuario": 1,
+      "comment": "Comentario en la cuarta nota."
+    },
+    {
+      "id_comentario": 5,
+      "id_publicacion": 5,
+      "id_usuario": 2,
+      "comment": "Comentario en la quinta nota."
+    },
+    {
+      "id_comentario": 6,
+      "id_publicacion": 1,
+      "id_usuario": 1,
+      "comment": "Segundo comentario en la primera nota."
+    },
+    {
+      "id_comentario": 7,
+      "id_publicacion": 2,
+      "id_usuario": 2,
+      "comment": "Segundo comentario en la segunda nota."
+    }
+  ]
+}
