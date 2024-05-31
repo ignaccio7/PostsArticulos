@@ -4,15 +4,35 @@ import UserModel from '../models/user.js'
 
 const secretKey = config.SECRET
 
-export function generateToken ({ user }) {
+export async function generateToken ({ user }) {
   return jwt.sign({ user }, secretKey, {
     expiresIn: '1h' // 1 min
     // expiresIn: 60 * 60 * 24 // 1 dia
   })
 }
 
+// esta validacion sera para la ruta de articles donde puede o no tener un UserId
+const SKIP_VERIFICATION = Symbol('skipVerification') // TODO eliminar el symbol for y trabajar solo con la referencia SKIP_VERIFICATION
+
+export async function checkToken (request, response, next) {
+  const authorization = request.get('authorization')
+
+  if (!authorization || !authorization.toLowerCase().startsWith('bearer')) {
+    request[SKIP_VERIFICATION] = true // Establece una bandera con Symbol para saltar verificación
+    return next()
+  }
+
+  next()
+}
+
 // middleware
 export async function verifyToken (request, response, next) {
+  // verificamos esta parte por la ruta de articles
+  if (request[SKIP_VERIFICATION]) {
+    return next()
+  }
+  // verificamos esta parte por la ruta de articles
+
   const authorization = request.get('authorization')
 
   if (!authorization || !authorization.toLowerCase().startsWith('bearer')) {
@@ -23,8 +43,10 @@ export async function verifyToken (request, response, next) {
     const decodedToken = jwt.verify(token, secretKey)
     const { user } = decodedToken
     const result = await UserModel.searchByUsername({ username: user })
-    const { rol } = result[0]
+    const { rol, id_usuario: idUser } = result[0]
+    console.log(rol, idUser)
     request.typeUser = rol
+    request.idUser = idUser
     // console.log(decodedToken)
     next()
   } catch (error) {

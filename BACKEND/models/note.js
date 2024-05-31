@@ -18,6 +18,20 @@ export default class NoteModel {
     }
   }
 
+  // obtener totalPages de notas
+  static async getTotalPages ({ filters, fechaPost }) {
+    // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
+    const { sql, values } = getFilters({ filters, fechaPost })
+    try {
+      const query = `select count(*) as total_notas FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario${sql};`
+      const [result] = await connection.query(query, [...values])
+      return result[0]
+    } catch (error) {
+      console.log(error)
+      throw new Error('fallo al solicitar datos')
+    }
+  }
+
   static async getById ({ id }) {
     try {
       const query = 'SELECT n.*, u.usuario FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario AND id_nota = ?'
@@ -36,11 +50,13 @@ export default class NoteModel {
       titulo,
       tema,
       descripcion,
-      imagenes
+      imagenes,
+      imageId
     } = note
     try {
-      const query = 'INSERT INTO notas (usuario_id_usuario,titulo,tema,descripcion,imagenes,fechaPost) VALUES (?,?,?,?,?,?)'
-      await connection.query(query, [idUsuario, titulo, tema, descripcion, imagenes, new Date()])
+      const query = 'INSERT INTO notas (usuario_id_usuario,titulo,tema,descripcion,fechaPost,imagenes, imagen_id) VALUES (?,?,?,?,?,?,?)'
+      await connection.query(query, [idUsuario, titulo, tema, descripcion, new Date(), imagenes, imageId])
+      return note
     } catch (error) {
       console.log(error)
       throw new Error('Error al crear la nota')
@@ -82,6 +98,18 @@ export default class NoteModel {
     } catch (error) {
       console.log(error)
       throw new Error('Error al actualizar la nota')
+    }
+  }
+
+  // Para buscar el id_image de una nota
+  static async searchIdImage ({ idNota }) {
+    try {
+      const query = 'SELECT imagen_id FROM notas WHERE id_nota = ?'
+      const [note] = await connection.query(query, [idNota])
+      return note
+    } catch (error) {
+      console.error(error)
+      throw new Error(`Fallo el buscar la nota con id ${idNota}`)
     }
   }
 }

@@ -1,2 +1,3 @@
 frontend en vue y react
 aqui subes tus cambios
+cuando crees el proyecte de vue con vite

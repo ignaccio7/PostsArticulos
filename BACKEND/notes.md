@@ -15,8 +15,16 @@ jwt
     `npm install jsonwebtoken -E`
 cors
     `npm install cors -E`
+cloudinary
+    `npm i cloudinary -E`
+multer
+    `npm i multer -E`
+bcrypt
+    `npm i bcrypt -E`
 ---
 
 
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+
+nodemailer <- para envio de correo

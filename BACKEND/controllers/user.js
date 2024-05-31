@@ -2,6 +2,8 @@ import { generateToken } from '../middlewares/authJWT.js'
 import UserModel from '../models/user.js'
 import { validatePerson } from '../schemas/person.js'
 import { validatePartialUser, validateUser } from '../schemas/user.js'
+import { uploadImage } from '../utils/utils.js'
+import bcrypt from 'bcrypt'
 
 // TODO en esta tabla falta añadir el rol al momento de registrar y/o modificar
 
@@ -23,6 +25,8 @@ export default class UserController {
     }
   }
 
+  /*
+  * Register user whitout image
   static async signup (request, response) {
     const body = request.body
     console.log(body)
@@ -39,7 +43,6 @@ export default class UserController {
         }
       })
     }
-
     try {
       const newUser = await UserModel.createUserPerson({ person, user })
 
@@ -73,6 +76,63 @@ export default class UserController {
     // await UserModel.createUserPerson({})
     // response.send('abc')
   }
+  */
+  // Register user with Image
+  static async signup (request, response) {
+    // TODO: modificar que el rol del usuario automaticamente sea user por defecto tanto en el controller como en la BD
+    // const { ci, nombres, paterno, materno, telefono, correo, usuario, pass, rol } = request.body
+    const body = request.body
+    const file = request.file
+    const user = { ...body }
+    const person = { ...body, ci: Number(body?.ci), avatar: { ...file } }
+
+    console.log(person)
+    console.log(user)
+
+    const resultPerson = validatePerson({ person })
+    const resultUser = validateUser({ user })
+
+    if (resultUser.error || resultPerson.error) {
+      return response.status(422).json({
+        statusCode: 422,
+        message: {
+          User: resultUser.error,
+          Person: resultPerson.error
+        }
+      })
+    }
+    try {
+      if (file) {
+        const { avatar, avatarId } = await uploadImage({ file })
+        resultPerson.data.avatar = avatar || ''
+        resultPerson.data.avatarId = avatarId || ''
+      } else {
+        resultPerson.data.avatar = ''
+        resultPerson.data.avatarId = ''
+      }
+
+      const hash = await bcrypt.hash(resultUser.data.pass, 10)
+      resultUser.data.pass = hash
+
+      const newUser = await UserModel.createUserPerson({ person: resultPerson.data, user: resultUser.data })
+
+      // aqui generaremos el token
+      const token = await generateToken({ user: user.usuario })
+
+      response.status(201).json({
+        statusCode: 201,
+        message: 'Usuario creada',
+        data: newUser,
+        token
+      })
+    } catch (error) {
+      console.log('errorController', error)
+      response.json({
+        statusCode: error.status ? error.status : 500,
+        message: error.message
+      })
+    }
+  }
 
   static async signin (request, response) {
     const user = request.body
@@ -86,20 +146,40 @@ export default class UserController {
       })
     }
     const { usuario, pass } = user
+
     try {
+      const validUser = await UserModel.getPassUser({ username: usuario })
+      if (validUser.length === 0) {
+        return response.status(404).json({
+          statusCode: 404,
+          message: 'Usuario no encontrado'
+        })
+      }
+      const { pass: passDB } = validUser[0]
+      const isValidPassword = await bcrypt.compare(pass, passDB)
+
+      if (!isValidPassword) {
+        return response.status(404).json({
+          statusCode: 401,
+          message: 'Password incorrecto'
+        })
+      }
+
+      /* Este metodo ya no se necesitaria al validar arriba cada uno por el hash
       const result = await UserModel.verifyUser({ user: usuario, pass })
       if (result.length === 0) {
         return response.status(404).json({
           statusCode: 404,
-          message: 'Usuario o contrasenia incorrectos'
+          message: 'Usuario no encontrado'
+          // message: 'Usuario o contrasenia incorrectos'
         })
-      }
+      } */
       // aqui generaremos el token
-      const token = generateToken({ user: usuario })
+      const token = await generateToken({ user: usuario })
       response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
-        data: result,
+        data: usuario,
         token
       })
     } catch (error) {
@@ -137,6 +217,7 @@ export default class UserController {
     }
   }
 
+  // TODO: modificar este endpoint solo el usuario con su mismo id puede modificar su misma contraseña
   static async update (request, response) {
     try {
       const user = request.body
