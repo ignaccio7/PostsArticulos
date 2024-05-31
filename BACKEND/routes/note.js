@@ -1,6 +1,6 @@
 import multer from 'multer'
 import { Router } from 'express'
-// import { verifyIsAdmin } from '../middlewares/verifyUser.js'
+import { verifyIsAdmin } from '../middlewares/verifyUser.js'
 import NoteController from '../controllers/note.js'
 import { verifyToken } from '../middlewares/authJWT.js'
 
@@ -9,7 +9,7 @@ const upload = multer({ dest: 'images/' })
 const routerNote = Router()
 
 routerNote.use(verifyToken)
-// routerNote.use(verifyIsAdmin)
+routerNote.use(verifyIsAdmin)
 
 routerNote.get('/', NoteController.getAll)
 routerNote.get('/:id', NoteController.getById)

@@ -41,6 +41,7 @@ Content-Type: application/json
 
 ### GET user page
 GET http://localhost:1234/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### POST user page
 POST http://localhost:1234/user
@@ -69,6 +70,7 @@ GET http://localhost:1234/user/1
 
 ### PATCH user for update data
 PATCH http://localhost:1234/user/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 Content-Type: application/json
 
 {
@@ -81,7 +83,7 @@ POST http://localhost:1234/user/login
 Content-Type: application/json
 
 {
-  "usuario":"usuario1",
+  "usuario":"usera",
   "pass":"260298nesigABC+-*"
 }
 
@@ -89,15 +91,15 @@ Content-Type: application/json
 ### AHORA YA ES CON TOKEN ESTE ENDPOINT
 ### GET a la pagina de inicio de PERSONA con uso de TOKEN
 GET http://localhost:1234/person
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW81IiwiaWF0IjoxNzE0MTAxNjIwLCJleHAiOjE3MTQxMDUyMjB9.3XoIePv8zxYPFrrWnTqAM3IlSy08_EhMGUKJ82imDww
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### GET a la pagina inicio de PERSONA para obtener por ci
-GET http://localhost:1234/person/10918761
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW80IiwiaWF0IjoxNzEwMzc4NzA3fQ.3nQLpJXxK2jtp5o9bPPKdqBicrqOtWQWQ1K1V9X6Xlw
+GET http://localhost:1234/person/13123133
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### PATCH a la pagina de inicio de PERSONA para modificar
 PATCH http://localhost:1234/person/10918761
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW80IiwiaWF0IjoxNzEwMzc4NzA3fQ.3nQLpJXxK2jtp5o9bPPKdqBicrqOtWQWQ1K1V9X6Xlw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 Content-Type: application/json
 
 {
@@ -110,12 +112,15 @@ Content-Type: application/json
 
 ### GET a la pagina de inicio de NOTAS no publicadas
 GET http://localhost:1234/note/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### GET por id 
-GET http://localhost:1234/note/17
+GET http://localhost:1234/note/20
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### POST para crear una NOTA
 POST http://localhost:1234/note/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 Content-Type: application/json
 
 {
@@ -127,15 +132,16 @@ Content-Type: application/json
 }
 
 ### DELETE por id 
-DELETE http://localhost:1234/note/17
+DELETE http://localhost:1234/note/10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### POST para crear una NOTA
 PATCH http://localhost:1234/note/17
 Content-Type: application/json
 
 {
-  "usuario_id_usuario": 2,
-  "titulo": "titulo12 nuevo2",
+  "usuario_id_usuario": 11,
+  "titulo": "titulo11 nuevo1",
   "tema": "tema11 nuevo2",
   "descripcion": "descripcion11",
   "imagenes": "imagen111123"
@@ -167,11 +173,11 @@ GET http://localhost:1234/note?page=3
 ### PRUEBA DE VALIDACION DE USUARIO
 ### admin GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
 GET http://localhost:1234/note
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZFVzZXIiOjIsInVzZXIiOiJ1c3VhcmlvMiIsImlhdCI6MTcxNTgyNzA3MiwiZXhwIjoxNzE1ODMwNjcyfQ.BnBlNwLv98YZAEc8OVqs7Z2-CkV03WW_SiZaB_tWKwg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### user GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
-GET http://localhost:1234/note
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW81IiwiaWF0IjoxNzE0NzA1OTg0LCJleHAiOjE3MTQ3MDk1ODR9.-nCbjG7bd0dOrWS6GibjbZQdl0jeDVzR_40D0Y9eAHw
+GET http://localhost:1234/note?titulo=titulo1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 
 ### ------------------------------- PROBANDO PERSONA CON EL FORMA DATA ----------------------------------------
@@ -186,39 +192,52 @@ GET http://localhost:1234/article
 
 ### OBTENER TODOS LOS ARTICULOS
 GET http://localhost:1234/article
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+
+### OBTENER TODOS LOS ARTICULOS con filtros
+GET http://localhost:1234/article?titulo=titulo1&tema=tema
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+
+### OBTENER TODOS LOS ARTICULOS con filtros
+GET http://localhost:1234/article?page=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+
+### OBTENER UN ARTICULO POR ID
+GET http://localhost:1234/article/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+
+### APROBAR UNA O VARIAS PUBLICACIONES
+POST http://localhost:1234/article/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 Content-Type: application/json
 
 {
-  "idUser":1
+  "idNotes": ["19","20"]
 }
-
-### OBTENER UN ARTICULO POR ID
-GET http://localhost:1234/article/2
 
 ### DAR O QUITAR LIKE A UNA PUBLICACION - puede ser string o number
 POST http://localhost:1234/article/like/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 Content-Type: application/json
 
 {
-  "idPub": "2", 
-  "idUser": 3
+  "idPub": "18"
 }
 
 ### COMENTAR UNA PUBLICACION 
 POST http://localhost:1234/article/comment/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXN1YXJpbzEiLCJpYXQiOjE3MTU5OTI5OTcsImV4cCI6MTcxNTk5NjU5N30._8UuR07XpBhOWjat_-oEvodmNddkkQceQfSfNZg5qz8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 Content-Type: application/json
 
 {
-  "idPub": "2", 
-  "idUser": "3",
-  "comment": "Comentario 5333 con el usuario 3"
+  "idPub": "17", 
+  "comment": "Comentario 2 con el usuario 11"
 }
 
 ### DESCOMENTAR UNA PUBLICACION 
-DELETE http://localhost:1234/article/comment/12
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXN1YXJpbzEiLCJpYXQiOjE3MTU5OTI5OTcsImV4cCI6MTcxNTk5NjU5N30._8UuR07XpBhOWjat_-oEvodmNddkkQceQfSfNZg5qz8
+DELETE http://localhost:1234/article/comment/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### MOSTRAR LOS COMENTARIOS - solo se podran ver cuando se ingrese a la publicacion
-GET http://localhost:1234/article/comment/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXN1YXJpbzEiLCJpYXQiOjE3MTU5OTI5OTcsImV4cCI6MTcxNTk5NjU5N30._8UuR07XpBhOWjat_-oEvodmNddkkQceQfSfNZg5qz8
+GET http://localhost:1234/article/comment/17
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk

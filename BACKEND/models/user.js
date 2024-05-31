@@ -60,6 +60,7 @@ export default class UserModel {
     }
   }
 
+  /* Este metodo ya no se necesitaria al validar arriba cada uno por el hash
   static async verifyUser ({ user, pass }) {
     const query = 'SELECT * FROM usuario WHERE usuario=? AND pass=?'
     try {
@@ -69,7 +70,7 @@ export default class UserModel {
       console.error(error)
       throw new Error('Error al intentar logearse')
     }
-  }
+  } */
 
   static async search ({ ci }) {
     const query = 'SELECT persona_ci,usuario,rol FROM usuario WHERE persona_ci = ?'
@@ -103,6 +104,18 @@ export default class UserModel {
   // metodo para el middleware de token
   static async searchByUsername ({ username }) {
     const query = 'SELECT rol, id_usuario FROM usuario WHERE usuario = ?'
+    try {
+      const [result] = await connection.query(query, [username])
+      return result
+    } catch (error) {
+      console.log(error)
+      throw new Error('Fallo en la base de datos al buscar el usuario')
+    }
+  }
+
+  // metodo para obtener el password del usuario
+  static async getPassUser ({ username }) {
+    const query = 'SELECT pass FROM usuario WHERE usuario = ?'
     try {
       const [result] = await connection.query(query, [username])
       return result

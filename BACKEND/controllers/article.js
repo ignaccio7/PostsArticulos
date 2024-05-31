@@ -6,8 +6,11 @@ export default class ArticleController {
   static async getAll (req = request, res = response) {
     try {
       const { idUser } = req
-      const { titulo, tema, init, end, page } = req.query
-      const results = await ArticleModel.getAll({ filters: { titulo, tema }, fechaPost: { init, end }, page, idUser })
+      const { titulo, tema, init, end, page, perPage = 4 } = req.query
+      const results = await ArticleModel.getAll({ filters: { titulo, tema }, fechaPost: { init, end }, page, idUser, perPage })
+
+      const resultTotalPages = await ArticleModel.getTotalPages({ filters: { titulo, tema }, fechaPost: { init, end } })
+      const totalPages = Math.ceil(resultTotalPages.total_notas / perPage)
 
       if (results.length === 0) {
         res.status(404).json({
@@ -20,7 +23,10 @@ export default class ArticleController {
       return res.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
-        data: results
+        data: results,
+        perPage,
+        totalPages,
+        page: page || '1'
       })
     } catch (error) {
       console.log(error)
@@ -35,7 +41,7 @@ export default class ArticleController {
   static async getById (request, response) {
     try {
       const { id } = request.params
-      const { idUser } = request.body
+      const { idUser } = request
       const result = await ArticleModel.getById({ id, idUser })
 
       if (result.length === 0) {
@@ -62,7 +68,8 @@ export default class ArticleController {
   // Para likear una publicacion
   static async toggleLike (request, response) {
     try {
-      const { idPub, idUser } = request.body
+      const { idPub } = request.body
+      const { idUser } = request
       await ArticleModel.toggleLike({ idPub, idUser })
 
       return response.json({
@@ -102,7 +109,8 @@ export default class ArticleController {
   // Para agregar un comentario en una publicacion
   static async addComment (request, response) {
     try {
-      const { idPub, idUser, comment } = request.body
+      const { idPub, comment } = request.body
+      const { idUser } = request
       await ArticleModel.addComment({ idPub, idUser, comment })
 
       return response.json({
@@ -156,6 +164,43 @@ export default class ArticleController {
 
   // Para aprobar una nota a publicacion
   static async approveNote (request, response) {
+    const { idNote } = request.body
+    const { idUser } = request
 
+    try {
+      const result = await ArticleModel.approveNote({ idNote, idUser })
+      response.status(201).json({
+        statusCode: 201,
+        message: 'Nota Aprobada',
+        success: result
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al aprobar la nota'
+      })
+    }
+  }
+
+  // Para aprobar multiples notas a publicacion
+  static async approveMultipleNotes (request, response) {
+    const { idNotes } = request.body
+    const { idUser } = request
+    console.log(idNotes)
+    try {
+      const result = await ArticleModel.approveMultipleNotes({ idNotes, idUser })
+      response.status(201).json({
+        statusCode: 201,
+        message: 'Notas Aprobadas',
+        success: result
+      })
+    } catch (error) {
+      console.log('errorArticleController', error)
+      response.json({
+        statusCode: error.status ? error.status : 500,
+        message: error.message
+      })
+    }
   }
 }

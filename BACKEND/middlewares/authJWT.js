@@ -28,8 +28,6 @@ export async function checkToken (request, response, next) {
 // middleware
 export async function verifyToken (request, response, next) {
   // verificamos esta parte por la ruta de articles
-  const SKIP_VERIFICATION = Symbol.for('skipVerification') // Usamos el mismo Symbol
-
   if (request[SKIP_VERIFICATION]) {
     return next()
   }

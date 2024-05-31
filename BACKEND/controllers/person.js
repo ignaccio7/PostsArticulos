@@ -211,8 +211,8 @@ export default class PersonController {
       // para eliminar la imagen si modificara
       const searchIdAvatar = await PersonModel.searchIdAvatar({ ci })
       if (searchIdAvatar.length !== 0 && searchIdAvatar[0]?.avatar_id && file) {
-        console.log('El file es:' + file)
-        console.log('public id:' + searchIdAvatar[0].avatar_id)
+        // console.log('El file es:' + file)
+        // console.log('public id:' + searchIdAvatar[0].avatar_id)
         await deleteImage({ publicId: searchIdAvatar[0].avatar_id })
       }
 

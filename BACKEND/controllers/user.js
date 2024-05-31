@@ -3,6 +3,7 @@ import UserModel from '../models/user.js'
 import { validatePerson } from '../schemas/person.js'
 import { validatePartialUser, validateUser } from '../schemas/user.js'
 import { uploadImage } from '../utils/utils.js'
+import bcrypt from 'bcrypt'
 
 // TODO en esta tabla falta añadir el rol al momento de registrar y/o modificar
 
@@ -110,6 +111,9 @@ export default class UserController {
         resultPerson.data.avatarId = ''
       }
 
+      const hash = await bcrypt.hash(resultUser.data.pass, 10)
+      resultUser.data.pass = hash
+
       const newUser = await UserModel.createUserPerson({ person: resultPerson.data, user: resultUser.data })
 
       // aqui generaremos el token
@@ -142,20 +146,40 @@ export default class UserController {
       })
     }
     const { usuario, pass } = user
+
     try {
+      const validUser = await UserModel.getPassUser({ username: usuario })
+      if (validUser.length === 0) {
+        return response.status(404).json({
+          statusCode: 404,
+          message: 'Usuario no encontrado'
+        })
+      }
+      const { pass: passDB } = validUser[0]
+      const isValidPassword = await bcrypt.compare(pass, passDB)
+
+      if (!isValidPassword) {
+        return response.status(404).json({
+          statusCode: 401,
+          message: 'Password incorrecto'
+        })
+      }
+
+      /* Este metodo ya no se necesitaria al validar arriba cada uno por el hash
       const result = await UserModel.verifyUser({ user: usuario, pass })
       if (result.length === 0) {
         return response.status(404).json({
           statusCode: 404,
-          message: 'Usuario o contrasenia incorrectos'
+          message: 'Usuario no encontrado'
+          // message: 'Usuario o contrasenia incorrectos'
         })
-      }
+      } */
       // aqui generaremos el token
       const token = await generateToken({ user: usuario })
       response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
-        data: result,
+        data: usuario,
         token
       })
     } catch (error) {
@@ -193,6 +217,7 @@ export default class UserController {
     }
   }
 
+  // TODO: modificar este endpoint solo el usuario con su mismo id puede modificar su misma contraseña
   static async update (request, response) {
     try {
       const user = request.body
