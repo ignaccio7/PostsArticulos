@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components{
+@layer components {
   .container {
-    @apply max-w-[1280px] mx-auto px-8;    
+    @apply max-w-[1280px] mx-auto px-8;
   }
 }
 
@@ -12,16 +12,17 @@
 /*https://utopia.fyi/type/calculator*/
 
 :root {
-  font-family: "Poppins", sans-serif, system-ui, Avenir, Helvetica, Arial, sans-serif;  
+  font-family: "Poppins", sans-serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: light dark;
-  --color-primary: #303841;
-  --color-secondary: #47555E;
-  --color-third: #7AA5D2;
+  --color-primary: #0f1e35;
+  --color-secondary: #232c3e;
+  --color-third: #5d8284;
   --color-text: #EEEEEE;
-  --color-primary-rgb: rgb(48, 56, 65);
-  --color-secondary-rgb: rgb(71, 85, 94);
-  --color-third-rgb: rgb(122, 165, 210);
+  --color-white: #FFFFFF;
+  --color-gray: #969696;
+  --color-black: rgb(18 18 18);
   --color-text-rgb: rgb(238, 238, 238);
+  --color-error: #f14242;
   /* links colors https://colorhunt.co/palette/30384147555e7aa5d2eeeeee */
 
   --step--2: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
@@ -94,6 +95,10 @@ a {
   font-size: var(--step-1);
 }
 
+label {
+  font-size: var(--step-1);
+}
+
 p {
   font-size: var(--step-1);
   line-height: 1.5;
@@ -111,12 +116,44 @@ body {
   /* max-width: 1280px;
   text-align: center;
   margin: 0 auto; */
+  font-family: var(--step-1);
 }
 
-input{
+input {
   font-size: var(--step-0);
 }
 
 label {
   cursor: text;
 }
+
+/* PARA LOS ESTILOS DEL VIEW CREATENOTE */
+
+[contentEditable=true]:empty:before {
+  content: attr(placeholder);
+  color: var(--color-gray);  
+}
+
+[contentEditable=true]{
+  border: none;
+  outline: none;  
+}
+
+[contentEditable=true]:focus {
+  border-bottom: 1px solid var(--color-gray);
+}
+
+/* Estado inicial */
+.new-element {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Estado final */
+.new-element.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+

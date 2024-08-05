@@ -18,6 +18,9 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'react/prop-types': 'off'
+    'react/prop-types': 'off',
+    'no-unused-vars': 'warn',
+    'eslint-disable camelcase': 'off',
+    'no-throw-literal': 'off'
   },
 }

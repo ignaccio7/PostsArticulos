@@ -6,7 +6,7 @@ export default class ArticleController {
   static async getAll (req = request, res = response) {
     try {
       const { idUser } = req
-      const { titulo, tema, init, end, page, perPage = 4 } = req.query
+      const { titulo, tema, init, end, page, perPage = 8 } = req.query
       const results = await ArticleModel.getAll({ filters: { titulo, tema }, fechaPost: { init, end }, page, idUser, perPage })
 
       const resultTotalPages = await ArticleModel.getTotalPages({ filters: { titulo, tema }, fechaPost: { init, end } })

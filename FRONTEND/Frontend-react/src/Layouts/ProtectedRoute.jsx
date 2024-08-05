@@ -10,7 +10,7 @@ export default function ProtectedRoute () {
 
   return (
     <>
-      <h2>Protegida</h2>
+      {/* <h2>Protegida</h2> */}
       <Outlet />
     </>
   )

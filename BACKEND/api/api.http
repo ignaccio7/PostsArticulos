@@ -112,11 +112,11 @@ Content-Type: application/json
 
 ### GET a la pagina de inicio de NOTAS no publicadas
 GET http://localhost:1234/note/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTgxNjAyNjQsImV4cCI6MTcxODE2Mzg2NH0.7exdITJpMQzEIqH5zIKDobq6LTxPxJ5-_ZVYlSTjJKs
 
 ### GET por id 
-GET http://localhost:1234/note/20
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+GET http://localhost:1234/note?page=3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTgxNjAyNjQsImV4cCI6MTcxODE2Mzg2NH0.7exdITJpMQzEIqH5zIKDobq6LTxPxJ5-_ZVYlSTjJKs
 
 ### POST para crear una NOTA
 POST http://localhost:1234/note/
@@ -173,7 +173,11 @@ GET http://localhost:1234/note?page=3
 ### PRUEBA DE VALIDACION DE USUARIO
 ### admin GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
 GET http://localhost:1234/note
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTgxNjAyNjQsImV4cCI6MTcxODE2Mzg2NH0.7exdITJpMQzEIqH5zIKDobq6LTxPxJ5-_ZVYlSTjJKs
+
+### admin GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
+GET http://localhost:1234/note?page=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTgxNjAyNjQsImV4cCI6MTcxODE2Mzg2NH0.7exdITJpMQzEIqH5zIKDobq6LTxPxJ5-_ZVYlSTjJKs>
 
 ### user GET a la pagina de inicio de NOTAS no publicadas prueba PAGINACION
 GET http://localhost:1234/note?titulo=titulo1
@@ -191,8 +195,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiL
 GET http://localhost:1234/article
 
 ### OBTENER TODOS LOS ARTICULOS
-GET http://localhost:1234/article
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+GET http://localhost:1234/article?page=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTgxNjAyNjQsImV4cCI6MTcxODE2Mzg2NH0.7exdITJpMQzEIqH5zIKDobq6LTxPxJ5-_ZVYlSTjJKs
 
 ### OBTENER TODOS LOS ARTICULOS con filtros
 GET http://localhost:1234/article?titulo=titulo1&tema=tema
@@ -208,11 +212,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiL
 
 ### APROBAR UNA O VARIAS PUBLICACIONES
 POST http://localhost:1234/article/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTgxNjAyNjQsImV4cCI6MTcxODE2Mzg2NH0.7exdITJpMQzEIqH5zIKDobq6LTxPxJ5-_ZVYlSTjJKs
 Content-Type: application/json
 
 {
-  "idNotes": ["19","20"]
+  "idNotes": ["4"]
 }
 
 ### DAR O QUITAR LIKE A UNA PUBLICACION - puede ser string o number

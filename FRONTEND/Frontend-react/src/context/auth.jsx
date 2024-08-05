@@ -5,7 +5,7 @@ export const AuthContext = createContext()
 
 // 2. Crear el Provider para proveer el contexto
 export function AuthProvider ({ children }) {
-  const [auth, setAuth] = useState(false)
+  const [auth, setAuth] = useState(true)
 
   const login = () => {
     setAuth(true)

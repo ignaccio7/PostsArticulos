@@ -1,0 +1,186 @@
+.container-forms {  
+  max-width: clamp(300px, 90%, 700px);
+  margin-inline: auto;
+  overflow: hidden;
+  margin-block: 20px;
+}
+
+.forms {
+  width: 200%;
+  display: flex;  
+  transition: transform 500ms ease-in-out, height 500ms ease;
+}
+
+.form-login,
+.form-register {
+  width: 100%;  
+  backdrop-filter: blur(10px);
+  color: var(--color-white);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  border: 1px solid #ffffff80;
+  border-radius: 10px;
+  justify-content: center;
+}
+
+.form__credentials {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.form__credentials label {
+  display: flex;
+  padding: 8px;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  border-radius: 1rem;
+  border: 1px solid var(--color-white);
+  width: 90%;
+}
+
+.form__credentials input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  flex-grow: 1;
+  font-size: var(--step-1);
+}
+
+.form__credentials .avatar {
+  width: 100%;
+  font-size: var(--step-1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;  
+}
+
+.form__credentials input[type="file"]{
+  cursor: pointer; 
+  width: 100%; 
+}
+.form__credentials input[type="file"]::file-selector-button {
+  display: none;  
+}
+
+.form__credentials label:focus-within {
+  border: 1px solid var(--color-third);
+}
+
+.form__credentials input::placeholder {
+  color: var(--color-white);
+}
+
+.form__actions>div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;  
+}
+
+.form__actions label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--step-0);
+  cursor: pointer;
+}
+
+.container-forms a {
+  font-size: var(--step-0);
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.form__actions button {
+  width: 90%;
+  padding: 10px;
+  font-size: var(--step-1);
+  background-color: var(--color-secondary);
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  transition: background-color ease .5s, color ease .5s;  
+}
+
+.form__actions button:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.container-forms footer {
+  font-size: var(--step-0);
+}
+
+.container-forms footer label {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-register .form__credentials {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.form-register .form__credentials label {
+  width: auto;
+  flex-grow: 1;
+  padding: 5px;
+}
+
+#change-form {
+  display: none;
+}
+
+#change-form:checked~.forms {
+  transform: translateX(-50%);
+  height: 450px;
+}
+
+.container-forms .forms {
+  height: 400px;
+}
+
+@media (max-width: 520px) {
+  #change-form:checked~.forms {
+    transform: translateX(-50%);
+    height: 600px;
+  }
+}
+
+.container-forms span.error{
+  font-size: var(--step-0);
+  color: var(--color-error);
+}
+
+/* para los errores en el formulario de registro */
+.form-register label {
+  position: relative;  
+}
+.form-register label.error{
+  border-color: rgb(231, 75, 75);
+}
+
+.form-register label div{
+  display: none;
+  position: absolute;
+  background-color: #dc3545;
+  top: -30px;
+  font-size: calc(var(--step--1) + 3px);  
+  padding: 5px;
+} 
+
+.form-register label.error:hover div{
+  display: block;
+}
+
+.form-register label.error:focus-within div{
+  display: block;
+}

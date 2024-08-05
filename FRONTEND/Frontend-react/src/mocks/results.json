@@ -38,58 +38,126 @@
     }
   ],
   "notas": [
-    [
-      {
-        "id_nota": 1,
-        "usuario_id_usuario": 1,
-        "titulo": "Primera Nota",
-        "tema": "Introducción",
-        "descripcion": "Esta es la descripción de la primera nota.",
-        "imagenes": "imagen1.jpg",
-        "fechaPost": "2023-05-01",
-        "imagen_id": "img_1"
-      },
-      {
-        "id_nota": 2,
-        "usuario_id_usuario": 2,
-        "titulo": "Segunda Nota",
-        "tema": "Tutorial",
-        "descripcion": "Esta es la descripción de la segunda nota.",
-        "imagenes": "imagen2.jpg",
-        "fechaPost": "2023-05-02",
-        "imagen_id": "img_2"
-      },
-      {
-        "id_nota": 3,
-        "usuario_id_usuario": 1,
-        "titulo": "Tercera Nota",
-        "tema": "Avanzado",
-        "descripcion": "Descripción de la tercera nota.",
-        "imagenes": "imagen3.jpg",
-        "fechaPost": "2023-05-03",
-        "imagen_id": "img_3"
-      },
-      {
-        "id_nota": 4,
-        "usuario_id_usuario": 2,
-        "titulo": "Cuarta Nota",
-        "tema": "Experto",
-        "descripcion": "Descripción de la cuarta nota.",
-        "imagenes": "imagen4.jpg",
-        "fechaPost": "2023-05-04",
-        "imagen_id": "img_4"
-      },
-      {
-        "id_nota": 5,
-        "usuario_id_usuario": 1,
-        "titulo": "Quinta Nota",
-        "tema": "Introducción",
-        "descripcion": "Esta es la descripción de la quinta nota.",
-        "imagenes": "imagen5.jpg",
-        "fechaPost": "2023-05-05",
-        "imagen_id": "img_5"
-      }
-    ]
+    {
+      "id_nota": 1,
+      "usuario_id_usuario": 1,
+      "titulo": "Primera Nota",
+      "tema": "Introducción",
+      "descripcion": "Esta es la descripción de la primera nota.",
+      "imagenes": "https://assets.codepen.io/2585/Whoa.svg",
+      "fechaPost": "2023-05-01",
+      "imagen_id": "img_1"
+    },
+    {
+      "id_nota": 2,
+      "usuario_id_usuario": 2,
+      "titulo": "Segunda Nota",
+      "tema": "Tutorial",
+      "descripcion": "Esta es la descripción de la segunda nota.",
+      "imagenes": "https://assets.codepen.io/2585/Walking+Contradiction.svg",
+      "fechaPost": "2023-05-02",
+      "imagen_id": "img_2"
+    },
+    {
+      "id_nota": 3,
+      "usuario_id_usuario": 1,
+      "titulo": "Tercera Nota",
+      "tema": "Avanzado",
+      "descripcion": "Descripción de la tercera nota.",
+      "imagenes": "https://assets.codepen.io/2585/Polka+Pup.svg",
+      "fechaPost": "2023-05-03",
+      "imagen_id": "img_3"
+    },
+    {
+      "id_nota": 4,
+      "usuario_id_usuario": 2,
+      "titulo": "Cuarta Nota",
+      "tema": "Experto",
+      "descripcion": "Descripción de la cuarta nota.",
+      "imagenes": "https://assets.codepen.io/2585/Pilot.svg",
+      "fechaPost": "2023-05-04",
+      "imagen_id": "img_4"
+    },
+    {
+      "id_nota": 5,
+      "usuario_id_usuario": 1,
+      "titulo": "Quinta Nota",
+      "tema": "Introducción",
+      "descripcion": "Esta es la descripción de la quinta nota.",
+      "imagenes": "https://assets.codepen.io/2585/Cube+Leg.svg",
+      "fechaPost": "2023-05-05",
+      "imagen_id": "img_5"
+    },
+    {
+      "id_nota": 6,
+      "usuario_id_usuario": 2,
+      "titulo": "Segunda Nota",
+      "tema": "Tutorial",
+      "descripcion": "Esta es la descripción de la segunda nota.",
+      "imagenes": "https://assets.codepen.io/2585/Growth.svg",
+      "fechaPost": "2023-05-02",
+      "imagen_id": "img_2"
+    },
+    {
+      "id_nota": 7,
+      "usuario_id_usuario": 1,
+      "titulo": "Tercera Nota",
+      "tema": "Avanzado",
+      "descripcion": "Descripción de la tercera nota.",
+      "imagenes": "https://assets.codepen.io/2585/Gamestation.svg",
+      "fechaPost": "2023-05-03",
+      "imagen_id": "img_3"
+    },
+    {
+      "id_nota": 8,
+      "usuario_id_usuario": 2,
+      "titulo": "Octava Nota",
+      "tema": "Experto",
+      "descripcion": "Descripción de la cuarta nota.",
+      "imagenes": "https://assets.codepen.io/2585/Kiddo.svg",
+      "fechaPost": "2023-05-04",
+      "imagen_id": "img_4"
+    },
+    {
+      "id_nota": 9,
+      "usuario_id_usuario": 1,
+      "titulo": "Quinta Nota",
+      "tema": "Introducción",
+      "descripcion": "Esta es la descripción de la quinta nota.",
+      "imagenes": "https://assets.codepen.io/2585/Reflecting.svg",
+      "fechaPost": "2023-05-05",
+      "imagen_id": "img_5"
+    },
+    {
+      "id_nota": 10,
+      "usuario_id_usuario": 1,
+      "titulo": "Quinta Nota",
+      "tema": "Introducción",
+      "descripcion": "Esta es la descripción de la quinta nota.",
+      "imagenes": "https://assets.codepen.io/2585/Rogue.svg",
+      "fechaPost": "2023-05-05",
+      "imagen_id": "img_5"
+    },
+    {
+      "id_nota": 11,
+      "usuario_id_usuario": 1,
+      "titulo": "Quinta Nota",
+      "tema": "Introducción",
+      "descripcion": "Esta es la descripción de la quinta nota.",
+      "imagenes": "https://assets.codepen.io/2585/Waiting.svg",
+      "fechaPost": "2023-05-05",
+      "imagen_id": "img_5"
+    },
+    {
+      "id_nota": 12,
+      "usuario_id_usuario": 1,
+      "titulo": "Quinta Nota",
+      "tema": "Introducción",
+      "descripcion": "Esta es la descripción de la quinta nota.",
+      "imagenes": "https://assets.codepen.io/2585/Runner.svg",
+      "fechaPost": "2023-05-05",
+      "imagen_id": "img_5"
+    }
   ],
   "notas_publicadas": [
     {

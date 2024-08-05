@@ -1,25 +1,15 @@
 /**********************************     SLIDER      ****************/
 /************************ SLIDERS CARDS *********************/
 .slider .container-slider {
-  background-color: red;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
 }
-.slider .main-card {
-  flex-basis: clamp(188px,25%, 250px);
-}
-.slider .main-articles  {
+
+.slider .main-articles {  
   scroll-behavior: smooth;
-  background: rgb(48, 48, 48);
-  background: radial-gradient(
-    circle,
-    rgba(48, 48, 48, 1) 0%,
-    rgba(79, 79, 79, 1) 46%,
-    rgba(171, 171, 171, 1) 100%
-  );
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 100%;
@@ -27,37 +17,40 @@
   padding-top: 15px;
   flex-basis: clamp(540px, 70%, 900px);
   height: 450px;
-  /* para mobile deberia desaparecer este slider se nota bien hasta 420px*/        
   overflow-y: hidden;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
+  scrollbar-color: var(--color-secondary) var(--color-primary);
+  scrollbar-width: thin;
 }
 
-.slider  section {  
+.slider .main-articles section {
   scroll-margin-top: 0vh;
   height: 400px;
   padding-inline: 10px;
   scroll-snap-align: start;
   display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 200px));
+  grid-template-columns: repeat(3, minmax(150px, 250px));
   align-items: center;
-  justify-content: center;  
+  justify-content: center;
   width: 100%;
   gap: 10px;
 }
 
-.slider  article {
-  background-color: #f6f6f6;
-  border: 1px solid #d2d2d2;        
-  height: 100%;  
+.card {
+  background-color: var(--color-secondary);
+  border: 1px solid var(--color-white);
+  min-height: 400px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: start;
   padding: 1rem;
   border-radius: 1rem;
   /* para la animacion */
   animation: fancy-in linear both;
   animation-timeline: view(x);
+  gap: 1rem;
 
   & img {
     width: 100%;
@@ -66,27 +59,76 @@
     object-position: center;
   }
 
-  & h5 {
-    color: lightseagreen;
+  & .content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+
+    & h5 {
+      color: lightseagreen;
+    }
+
+    & p {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      overflow: hidden;
+      text-align: justify;
+    }
+
+    & a {
+      cursor: pointer;
+      align-self: flex-end;
+      text-decoration: none;
+    }
+  }
+}
+
+.slider .main-card::before{
+  content: "";
+  background: linear-gradient(130deg, #ff7a18, #af002d 41.07%, #319197 76.05%);
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);  
+  border-radius: 12px;  
+}
+
+.slider .main-card {
+  position: relative;
+  flex-basis: clamp(188px, 25%, 300px);
+  max-width: 300px;
+  flex-grow: 1;
+  z-index: 2;
+
+  & img {
+    max-height: 180px;
   }
 
-  & p {
-    font-size: 12px;
+  & .card {
+    background-color: var(--color-primary);
+    border: none;
+
+    & p {
+      -webkit-line-clamp: 6;
+    }
+
   }
 
-  & a {
-    font-size: 12px;
-    text-decoration: none;
-  }
 }
 
 /* card entry/exit animations */
 @keyframes fancy-in {
+
   /* Al entrar cuando se este viendo la card se trasladara 
   25 del ancho de la pantalla */
   0% {
     transform: translateX(25vw);
   }
+
   /* Cuando este del 20 al 80% no se trasladara y se mostrara
   sin opacidad */
   20%,
@@ -94,6 +136,7 @@
     opacity: 1;
     transform: none;
   }
+
   /* Aqui la card se trasladara el ancho de su tamaño para que
   no desaparezca de la pantalla e ira volviendose opaco */
   100% {
@@ -101,4 +144,68 @@
     opacity: 0;
   }
 }
+
+@media (max-width: 796px) {
+  .slider .main-articles {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+    width: 100%;
+    flex-basis: auto;
+    gap: 10px;
+    overflow-x: hidden;
+  }
+
+  .slider .main-articles section {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: 0;
+    gap: 10px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 600px;
+    margin-inline: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-height: auto;
+    gap: 0;
+
+    & .content {
+      flex-grow: 1;
+      flex-direction: column;
+      padding-inline: 10px;
+
+      & p {
+        -webkit-line-clamp: 3;
+      }
+    }
+
+  }
+
+  .slider .main-card {
+    width: 100%;
+    max-width: 600px;
+    margin-inline: auto;
+    height: 150px;    
+
+    & .content {
+      flex-grow: 1;
+      flex-direction: column;
+      padding-inline: 10px;
+
+      & p {
+        -webkit-line-clamp: 4;
+      }
+    }
+
+  }
+
+}
+
 /**********************************     SLIDER      ****************/

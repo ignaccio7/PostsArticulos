@@ -8,10 +8,14 @@ const upload = multer({ dest: 'images/' })
 
 const routerPerson = Router()
 
-routerPerson.use(verifyToken)
+// routerPerson.use(verifyToken)
 
 // routerPerson.get('/', verifyToken, PersonController.getAll)
-routerPerson.get('/', verifyIsAdmin, PersonController.getAll)
+
+// cambiar esta mrd
+// routerPerson.get('/', verifyIsAdmin, PersonController.getAll)
+routerPerson.get('/', PersonController.getAll)
+
 routerPerson.get('/:ci', verifyIsAdmin, PersonController.getById)
 // routerPerson.post('/', PersonController.create)
 // routerPerson.post('/', upload.single('avatar'), PersonController.create) <- el post solo se realizara al momento de registrarse el usuario
