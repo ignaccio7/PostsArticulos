@@ -10,14 +10,34 @@ const PathsPublic = {
 }
 
 const PathsProtected = {
-  NOTES: {
-    path: '/notes',
-    name: 'Notas'
+  NOTE: {
+    name: 'Notas',
+    path: '/dropdown',
+    routes: {
+      NOTES: {
+        path: '/notes',
+        name: 'Mis Notas'
+      },
+      CREATE_NOTE: {
+        path: '/create',
+        name: 'Crear Nota'
+      }
+    }
   },
-  CREATE_NOTE: {
-    path: '/create',
-    name: 'Crear nota'
-  },
+  // ARTICLES: {
+  //   name: 'Articulos',
+  //   path: '/dropdown',
+  //   routes: {
+  //     ARTICLE: {
+  //       path: '/articles',
+  //       name: 'Mis Articulos'
+  //     },
+  //     CREATE_NOTE: {
+  //       path: '/create',
+  //       name: 'Crear Articulo'
+  //     }
+  //   }
+  // },
   // ARTICLES: {
   //   path: '/articles',
   //   name: 'Articulos'

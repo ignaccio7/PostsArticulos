@@ -34,6 +34,7 @@ export async function verifyToken (request, response, next) {
   // verificamos esta parte por la ruta de articles
 
   const authorization = request.get('authorization')
+  console.log(authorization)
 
   if (!authorization || !authorization.toLowerCase().startsWith('bearer')) {
     return response.status(401).json({ statusCode: 401, message: 'Token no encontrado' })

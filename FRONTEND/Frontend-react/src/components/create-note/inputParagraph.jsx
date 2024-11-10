@@ -1,11 +1,16 @@
 import { useEffect, useRef } from 'react'
 
-export default function InputParagraph ({ id }) {
+export default function InputParagraph ({ id, content = '' }) {
   const refInput = useRef('')
 
   useEffect(() => {
     refInput.current.focus()
   }, [])
+
+  useEffect(() => {
+    refInput.current.innerHTML = content
+  }, [content])
+
   return (
     <div
       data-paragraph

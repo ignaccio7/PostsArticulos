@@ -83,22 +83,31 @@ export default class UserController {
     // const { ci, nombres, paterno, materno, telefono, correo, usuario, pass, rol } = request.body
     const body = request.body
     const file = request.file
-    const user = { ...body }
+    const user = { usuario: body.usuario, pass: body.password }
     const person = { ...body, ci: Number(body?.ci), avatar: { ...file } }
 
-    console.log(person)
-    console.log(user)
+    console.log({ person })
+    console.log({ user })
 
     const resultPerson = validatePerson({ person })
     const resultUser = validateUser({ user })
 
+    console.log({ resultPerson })
+    console.log({ resultUser })
+
     if (resultUser.error || resultPerson.error) {
+      let errorMessage = resultUser?.error?.issues[0]?.message ?? null
+      errorMessage = errorMessage ?? resultPerson?.error?.issues[0]?.message ?? 'Error en los campos ingresados'
+
+      console.log({ errorMessage })
+      // TODO: CONTROLAR EL ERROR QUE LLEGA DEL BACKEND AL REGISTRAR EL USUARIO
+
       return response.status(422).json({
         statusCode: 422,
-        message: {
-          User: resultUser.error,
-          Person: resultPerson.error
-        }
+        message: errorMessage
+        // {User: resultUser.error,
+        // Person: resultPerson.error}
+
       })
     }
     try {
@@ -127,8 +136,9 @@ export default class UserController {
       })
     } catch (error) {
       console.log('errorController', error)
-      response.json({
-        statusCode: error.status ? error.status : 500,
+      const errorStatus = error.status ? error.status : 500
+      response.status(errorStatus).json({
+        statusCode: errorStatus,
         message: error.message
       })
     }
@@ -142,7 +152,8 @@ export default class UserController {
     if (resultUser.error) {
       return response.status(422).json({
         statusCode: 422,
-        message: resultUser.error
+        // message: resultUser.error
+        message: resultUser?.error?.issues[0]?.message ?? 'Error en los campos ingresados'
       })
     }
     const { usuario, pass } = user

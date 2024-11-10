@@ -1,11 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-import InputTitle from '../components/create-note/InputTitle'
-import InputSubtitle from '../components/create-note/InputSubtitle'
-import InputParagraph from '../components/create-note/inputParagraph'
-import InputImage from '../components/create-note/inputImage'
-import Button from '../components/ui/Button'
-import InputIA from '../components/create-note/InputIA'
-import SidebarButtons from '../components/create-note/sidebarButtons'
+import InputTitle from '../../components/create-note/InputTitle'
+import InputSubtitle from '../../components/create-note/InputSubtitle'
+import InputParagraph from '../../components/create-note/inputParagraph'
+import InputImage from '../../components/create-note/inputImage'
+import Button from '../../components/ui/Button'
+import InputIA from '../../components/create-note/InputIA'
+import SidebarButtons from '../../components/create-note/sidebarButtons'
+import { useSessionStore } from '../../store/session'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import Note from '../../services/Notes'
 
 const ID_ELEMENT = {
   title: 'T',
@@ -16,6 +20,10 @@ const ID_ELEMENT = {
 }
 
 export default function CreateNote () {
+  const accessToken = useSessionStore(state => state.accessToken)
+
+  const navigate = useNavigate()
+
   const [loaded, setLoaded] = useState(false)
   const formRef = useRef(null)
   const [elements, setElements] = useState([
@@ -35,9 +43,9 @@ export default function CreateNote () {
     setLoaded(true)
   }, [])
 
-  useEffect(() => {
-    console.log(formRef.current)
-  }, [elements])
+  // useEffect(() => {
+  //   console.log(formRef.current)
+  // }, [elements])
 
   const addNewElement = ({ tag }) => {
     const newId = elements.filter(el => el.tag === tag).length + 1
@@ -49,12 +57,19 @@ export default function CreateNote () {
   }
 
   const deleteElement = () => {
+    if (elements.length - 1 < 2) return
     const newElements = elements.slice(0, elements.length - 1)
     setElements(newElements)
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
+    console.log(formRef.current)
+
+    const firstTitle = formRef.current.querySelector('#T1')?.value
+    const firstParagraph = formRef.current.querySelector('#P1')?.textContent
+
+    if (!firstTitle || !firstParagraph) return
 
     const formData = new FormData()
 
@@ -62,15 +77,24 @@ export default function CreateNote () {
       if (el.tag === 'title' || el.tag === 'subtitle') {
         formData.set(el.id, formRef.current.querySelector(`#${el.id}`).value)
       } else if (el.tag === 'image') {
-        formData.set(el.id, formRef.current.querySelector(`#${el.id}`).files[0])
+        formData.append('imagenes', formRef.current.querySelector(`#${el.id}`).files[0])
       } else {
-        formData.set(el.id, formRef.current.querySelector(`#${el.id}`).textContent)
+        formData.set(el.id, formRef.current.querySelector(`#${el.id}`).innerHTML)
       }
     })
     formData.set('order', JSON.stringify(elements))
     console.log(formData)
     console.log(Object.fromEntries(formData))
-    // TODO send save note
+
+    try {
+      const res = await Note.createNote({ accessToken, formData })
+      console.log(res)
+      toast.success('Nota creada')
+      navigate('/notes')
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
   }
 
   if (!loaded) {
@@ -85,6 +109,7 @@ export default function CreateNote () {
         ref={formRef}
         onSubmit={handleSubmit}
         id='createForm'
+        encType="multipart/form-data"
       >
         {
           elements.map(element => {
@@ -114,7 +139,7 @@ export default function CreateNote () {
             // }
           })
         }
-        <Button size='lg'>
+        <Button size='lg' type='submit'>
           Crear nota
         </Button>
       </form>

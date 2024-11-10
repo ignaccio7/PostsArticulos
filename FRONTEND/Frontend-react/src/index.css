@@ -157,3 +157,45 @@ label {
 }
 
 
+/* BOTONES */
+.btn-default {
+  @apply text-white bg-secondary hover:bg-primary hover:text-white;
+}
+
+.btn-primary {
+  @apply text-white border border-blue-600 bg-blue-600 hover:bg-transparent hover:border-blue-500;
+}
+
+.btn-danger {
+  @apply text-white border border-red-600 bg-red-600 hover:bg-transparent hover:border-red-500;
+}
+
+/**************** DIALOG ******************/
+dialog::backdrop {
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+dialog[open] {
+  animation: show .3s ease normal;
+}
+
+dialog.hide {
+  animation: hide-animation .3s ease forwards;
+}
+
+@keyframes show {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes hide-animation {
+  to {
+    transform: scale(0);
+    display: none;
+  }
+}
+

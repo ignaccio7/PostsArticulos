@@ -12,6 +12,10 @@ GET http://localhost:1234/person/10918761
 ### GET a la pagina inicio de PERSONA para obtener por ci
 GET http://localhost:1234/person/search/11111112
 
+### GET a la pagina inicio de PERSONA para obtener por username
+GET http://localhost:1234/person/search/usera
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MjcxNDMwNTMsImV4cCI6MTcyNzE0NjY1M30.BU3rtZCtHn_McsAIl9idwoG6biU3H1GcmUrpr1FDqho
+
 ### POST a la pagina de inicio de PERSONA para crear
 POST  http://localhost:1234/person
 Content-Type: application/json
@@ -83,7 +87,7 @@ POST http://localhost:1234/user/login
 Content-Type: application/json
 
 {
-  "usuario":"usera",
+  "usuario":"ignaccio7",
   "pass":"260298nesigABC+-*"
 }
 

@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { IconLock, IconUser } from '../ui/Icons'
 import User from '../../services/User'
 import { toast } from 'sonner'
+import { useAuth } from '../../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
+import { useSessionStore } from '../../store/session'
 
 const INITIAL_USER = {
   user: '',
@@ -17,6 +20,11 @@ export default function FormLogin () {
   const [user, setUser] = useState(INITIAL_USER)
   const [error, setError] = useState(INITIAL_USER_ERRORS)
   const isSubmitted = useRef(false)
+
+  const auth = useAuth()
+  const navigate = useNavigate()
+
+  const loginUser = useSessionStore(state => state.loginUser)
 
   const handleChange = (event) => {
     setUser((prevState) => {
@@ -59,11 +67,14 @@ export default function FormLogin () {
     const newErrors = validationForm({ username: user.user, password: user.pass })
     setError(newErrors)
     if (newErrors.userError !== '' || newErrors.passError !== '') return
-    console.log('SIGNIN')
+    // console.log('SIGNIN')
     try {
-      const data = await User.signin({ user })
-      console.log('data es:')
-      console.log(data)
+      const { data, token } = await User.signin(user)
+      loginUser({ username: data, token })
+
+      auth.login()
+      toast.success('Sesión iniciada exitosamente')
+      navigate('/notes', { replace: true })
     } catch (error) {
       console.log('Error in request')
       console.log(error)

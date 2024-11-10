@@ -1,18 +1,21 @@
 import { useForm } from 'react-hook-form'
 import { IconBadge, IconEmail, IconImage, IconLock, IconPhone, IconText, IconUser } from '../ui/Icons'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema } from '../../schemas/User.schema'
 import { toast } from 'sonner'
+import User from '../../services/User'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function FormRegister () {
+  const auth = useAuth()
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting }
   } =
     useForm({ resolver: zodResolver(registerSchema) })
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const onSubmit = async (data) => {
     try {
@@ -26,12 +29,15 @@ export default function FormRegister () {
       formData.append('correo', data.correo)
       formData.append('usuario', data.usuario)
       formData.append('password', data.password)
-      console.log(data.avatar)
+      // console.log(data.avatar)
       if (data.avatar && data.avatar[0]) {
         formData.append('avatar', data.avatar[0]) // Acceder al primer archivo
       }
 
-      console.log(data)
+      await User.registerUser({ payload: formData })
+      auth.login()
+      toast.success('Usuario registrado exitosamente')
+      navigate('/notes', { replace: true })
     } catch (error) {
       console.log(error)
       toast.error(error.message)

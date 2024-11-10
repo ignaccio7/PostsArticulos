@@ -18,6 +18,7 @@ export default {
         gray: 'var(--color-gray)'
       },
       fontSize: {
+        step0: 'var(--step-0)',
         step1: 'var(--step-1)',
         step2: 'var(--step-2)',
         step3: 'var(--step-3)',

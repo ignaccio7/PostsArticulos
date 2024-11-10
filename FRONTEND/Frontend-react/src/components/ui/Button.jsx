@@ -5,7 +5,14 @@ const SIZE_BUTTON = {
   xl: '700px'
 }
 
-export default function Button ({ className, size, onClick, children }) {
+const THEME_BUTTON = {
+  default: 'btn-default',
+  primary: 'btn-primary',
+  danger: 'btn-danger'
+}
+
+export default function Button ({ className, size, type = 'button', theme = 'default', onClick, children }) {
+  const selectedTheme = THEME_BUTTON[theme]
   return (
     <button
       className={`        
@@ -14,17 +21,15 @@ export default function Button ({ className, size, onClick, children }) {
         px-2
         py-2
         text-step1
-        bg-secondary
-        border-none
         rounded-xl
         font-bold
         transition-colors
         duration-500
         ease-in-out
-        hover:bg-primary
-        hover:text-white      
+        ${selectedTheme}
     ${className}`}
     onClick={onClick}
+    type={type}
     style={{ width: SIZE_BUTTON[size] }}
     >
       {children}

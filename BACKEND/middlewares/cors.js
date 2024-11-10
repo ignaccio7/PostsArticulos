@@ -18,6 +18,7 @@ export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => {
       if (acceptedOrigins.includes(origin)) {
         return callback(null, true)
       }
+
       if (!origin) { // este es en caso de que solicitemos del mismo dominio ya que envia undefined
         return callback(null, true)
       }

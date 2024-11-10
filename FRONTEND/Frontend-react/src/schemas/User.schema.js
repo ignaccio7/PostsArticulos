@@ -32,14 +32,21 @@ const registerSchema = z.object({
     message: 'Debe incluir: num,simb,may,min'
   }),
   ci: z.string({ required_error: 'Cedula es requerido' }).min(5, { message: '5 caracteres como maximo' }).max(11, { message: '11 caracteres como maximo' }),
-  nombres: z.string({ message: 'Nombre es requerido' }).trim().min(3, { message: '3 caracteres como minimo' }),
-  paterno: z.string().trim().min(3, { message: '3 caracteres como minimo' }),
-  materno: z.string().trim().min(3, { message: '3 caracteres como minimo' }),
+  nombres: z.string({ message: 'Nombre es requerido' }).trim().min(3, { message: '3 caracteres como minimo' }).max(30, { message: '30 caracteres como maximo' }),
+  paterno: z.string().trim().min(3, { message: '3 caracteres como minimo' }).max(30, { message: '30 caracteres como maximo' }),
+  materno: z.string().trim().min(3, { message: '3 caracteres como minimo' }).max(30, { message: '30 caracteres como maximo' }),
   telefono: z.string().regex(phoneNumber, 'No puede iniciar con 0 o 1').length(8, { message: '8 numeros como longitud' }),
   correo: z.string().email({ message: 'Email invalido' }),
   avatar: AvatarSchema.optional({ type_error: 'Solo archivos jpeg|jpg|png|webp' })
 })
 
+const partialRegisterSchema = registerSchema.omit({
+  ci: true,
+  usuario: true,
+  password: true
+})
+
 export {
-  registerSchema
+  registerSchema,
+  partialRegisterSchema
 }

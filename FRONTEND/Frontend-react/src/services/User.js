@@ -6,29 +6,40 @@ class User {
       usuario: user,
       pass
     }
+
     try {
-      const requestOptions = { 'Content-Type': 'application/json' }
       const res = await RequestService.postRequestJSON({
         url: 'user/login',
-        requestOptions,
         body: payload
       })
+
       return res
     } catch (error) {
       throw {
         status: error.status ?? 500,
-        message: error.message || 'An error occurred',
+        message: error.message || 'Ocurrio un error al intentar iniciar sesión',
         success: false
       }
     }
   }
 
-  static async registerSchema ({ payload }) {
-    // try {
-    //   const res = await RequestService.postRequestJSON
-    // } catch (error) {
+  static async registerUser ({ payload }) {
+    try {
+      // console.log(payload)
 
-    // }
+      const res = await RequestService.postRequestFormData({
+        url: 'user',
+        body: payload
+      })
+
+      return res
+    } catch (error) {
+      throw {
+        status: error.status ?? 500,
+        message: error.message || 'Ocurrio un error al intentar registrar',
+        success: false
+      }
+    }
   }
 }
 

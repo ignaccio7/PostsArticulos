@@ -27,6 +27,18 @@ export default class PersonModel {
     }
   }
 
+  // Para obtener un resultado determinado por el nombre de usuario
+  static async getByUsername ({ username }) {
+    try {
+      const query = 'select p.ci, p.nombres, p.paterno, p.materno, p.telefono, p.correo, p.avatar from persona p , usuario u where u.persona_ci = p.ci and u.usuario = ?;'
+      const [person] = await connection.query(query, [username])
+      return person
+    } catch (error) {
+      console.error(error)
+      throw new Error(`Fallo el buscar la persona con ci ${username}`)
+    }
+  }
+
   // Para crear una nueva persona
   static async createPerson ({ person }) {
     const {

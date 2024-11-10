@@ -4,13 +4,14 @@ import { lazy } from 'react'
 
 import { PathsPublic, PathsProtected } from './pathConstants'
 import Home from '../pages/Home'
-import Notes from '../pages/Notes'
+import Notes from '../pages/note/Notes'
 
 const Login = lazy(() => import('../pages/Login'))
 // const Articles = lazy(() => import('../pages/Articles'))
 const Profile = lazy(() => import('../pages/Profile'))
 // const CreateNote = lazy(() => import('../pages/CreateNotes'))
-const CreateNote = lazy(() => import('../pages/CreateNotes'))
+const CreateNote = lazy(() => import('../pages/note/CreateNotes'))
+const UpdateNote = lazy(() => import('../pages/note/UpdateNote'))
 
 // ************************* PUBLIC ROUTES
 const publicRoutes = [
@@ -26,17 +27,21 @@ const publicRoutes = [
 
 // ************************* PROTECTED ROUTES
 const protectedRoutes = [
-  {
-    path: PathsProtected.NOTES.path,
-    element: <Notes />
-  },
   // {
   //   path: PathsProtected.ARTICLES.path,
   //   element: <Articles />
   // },
   {
-    path: PathsProtected.CREATE_NOTE.path,
+    path: PathsProtected.NOTE.routes.NOTES.path,
+    element: <Notes />
+  },
+  {
+    path: PathsProtected.NOTE.routes.CREATE_NOTE.path,
     element: <CreateNote />
+  },
+  {
+    path: '/update/:id',
+    element: <UpdateNote />
   },
   {
     path: PathsProtected.PROFILE.path,

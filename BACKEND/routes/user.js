@@ -1,11 +1,9 @@
-import multer from 'multer'
 import { Router } from 'express'
 // import { validateUser } from '../schemas/user.js'
 import UserController from '../controllers/user.js'
 import { verifyToken } from '../middlewares/authJWT.js'
 import { verifyIsAdmin } from '../middlewares/verifyUser.js'
-
-const upload = multer({ dest: 'images/' })
+import { upload } from '../middlewares/uploadImage.js'
 
 const routerUser = Router()
 

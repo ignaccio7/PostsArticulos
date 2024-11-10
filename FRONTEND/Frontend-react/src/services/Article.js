@@ -1,17 +1,17 @@
 import RequestService from '../helpers/request'
-// import { sleep } from '../utils/utils'
-// import { notas } from '../mocks/results.json'
+import { sleep } from '../utils/utils'
+import { notas } from '../mocks/results.json'
 
 export default class Article {
   static async getAll () {
-    // const articles = [...notas]
-    // await sleep(3)
-    let articles = []
+    const articles = [...notas]
+    await sleep(3)
+    // let articles = []
     try {
       // Forzar un error aquí
       // throw new Error('Forced error for testing purposes')
-      const res = await RequestService.getRequest('article')
-      articles = res.data
+      // const res = await RequestService.getRequest('article')
+      // articles = res.data
     } catch (error) {
       throw {
         status: error.status,

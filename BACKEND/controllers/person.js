@@ -48,6 +48,33 @@ export default class PersonController {
     }
   }
 
+  // Para obtener un resultado determinado por el ci
+  static async getByUsername (request, response) {
+    try {
+      const { user } = request.params
+      const result = await PersonModel.getByUsername({ username: user })
+
+      if (result.length === 0) {
+        response.status(404).json({
+          statusCode: 404,
+          message: `No se encontro a la persona con el user ${user}`
+        })
+        return
+      }
+      response.json({
+        statusCode: 200,
+        message: 'Solicitud exitosa',
+        data: result
+      })
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al obtener la persona'
+      })
+    }
+  }
+
   // Para crear una nueva persona
   /* static async create (request, response) {
     const body = request.body
@@ -191,12 +218,15 @@ export default class PersonController {
       const body = request.body
       const file = request.file
       const partialPerson = { ...body }
+      console.log(file)
       if (file) {
         partialPerson.avatar = file
       }
       if (body?.ci) {
         partialPerson.ci = Number(body.ci)
       }
+
+      console.log(partialPerson)
 
       const result = validatePartialPerson({ person: partialPerson })
       if (result.error) {
@@ -205,6 +235,8 @@ export default class PersonController {
           message: result
         })
       }
+
+      console.log(result)
 
       const { ci } = request.params
 
@@ -234,6 +266,10 @@ export default class PersonController {
         })
       }
 
+      if (newPerson[0]?.avatar_id) {
+        delete newPerson[0].avatar_id
+      }
+
       response.json({
         statusCode: 200,
         message: 'Persona modificada',
@@ -244,6 +280,39 @@ export default class PersonController {
       response.json({
         statusCode: 500,
         message: 'Fallo al modificar la persona'
+      })
+    }
+  }
+
+  static async deleteImageProfile (request, response) {
+    try {
+      const { ci } = request.params
+      const searchIdAvatar = await PersonModel.searchIdAvatar({ ci })
+
+      let data = false
+
+      if (searchIdAvatar.length !== 0 && searchIdAvatar[0]?.avatar_id) {
+        data = await deleteImage({ publicId: searchIdAvatar[0].avatar_id })
+      }
+
+      if (data) {
+        await PersonModel.updatePerson({ ci, partialPerson: { avatar: '', avatar_id: '' } })
+
+        response.status(200).json({
+          statusCode: 200,
+          message: 'Imagen eliminada correctamente'
+        })
+      } else {
+        response.status(404).json({
+          statusCode: 404,
+          message: 'No se ha encontrado la imagen'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      response.json({
+        statusCode: 500,
+        message: 'Fallo al eliminar la imagen'
       })
     }
   }

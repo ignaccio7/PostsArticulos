@@ -3,10 +3,13 @@ import App from './App.jsx'
 import '@fontsource/poppins'
 import './index.css'
 import { AuthProvider } from './context/auth.jsx'
+import { ModalProvider } from './context/modal.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <AuthProvider>
-    <App />
-  </AuthProvider>
+  <ModalProvider>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </ModalProvider>
 
 )

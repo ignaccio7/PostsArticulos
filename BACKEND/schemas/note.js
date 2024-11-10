@@ -4,15 +4,19 @@ import z from 'zod'
 const typeImage = new RegExp(/image\/(jpeg|jpg|png|webp)$/)
 const ImageSchema = z.object({
   mimetype: z.string().regex(typeImage, 'Invalid type').optional()
+}).array()
+
+const baseNoteSchema = z.object({
+  // usuario_id_usuario: z.number({ required_error: 'Ci is required' }).int().positive().min(1).max(99999999999),
+  T1: z.string().trim().min(10, { message: 'Title must be 10 or more characters long' }).max(30, { message: 'Title must be 30 characters long or fewer' }),
+  // tema: z.string().trim().min(10, { message: 'Theme must be 10 or more characters long' }).max(30, { message: 'Theme must be 30 characters long or fewer' }),
+  P1: z.string().min(10, { message: 'Description must be 10 or more characters long' }),
+  order: z.string().min(1, { message: 'Debe agregar por lo menos un campo' })
 })
 
-const notesSchema = z.object({
-  // usuario_id_usuario: z.number({ required_error: 'Ci is required' }).int().positive().min(1).max(99999999999),
-  titulo: z.string().trim().min(10, { message: 'Title must be 10 or more characters long' }).max(30, { message: 'Title must be 30 characters long or fewer' }),
-  tema: z.string().trim().min(10, { message: 'Theme must be 10 or more characters long' }).max(30, { message: 'Theme must be 30 characters long or fewer' }),
-  descripcion: z.string().min(10, { message: 'Description must be 10 or more characters long' }),
+// Extiende baseNoteSchema con campos opcionales y dinámicos
+const notesSchema = baseNoteSchema.passthrough().extend({
   imagenes: ImageSchema.optional()
-  // imagenes: z.string()
 })
 
 function validateNote ({ note }) {
