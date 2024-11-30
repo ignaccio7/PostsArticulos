@@ -124,6 +124,7 @@ export default class UserController {
       resultUser.data.pass = hash
 
       const newUser = await UserModel.createUserPerson({ person: resultPerson.data, user: resultUser.data })
+      delete newUser?.person?.avatarId
 
       // aqui generaremos el token
       const token = await generateToken({ user: user.usuario })
@@ -150,10 +151,11 @@ export default class UserController {
     const resultUser = validateUser({ user })
 
     if (resultUser.error) {
+      const zodError = resultUser?.error?.issues?.map(e => e.message)[0] || 'Invalid fields'
       return response.status(422).json({
         statusCode: 422,
         // message: resultUser.error
-        message: resultUser?.error?.issues[0]?.message ?? 'Error en los campos ingresados'
+        message: zodError
       })
     }
     const { usuario, pass } = user
@@ -236,9 +238,10 @@ export default class UserController {
       const resultUser = validatePartialUser({ user })
 
       if (resultUser.error) {
+        const zodError = resultUser?.error?.issues?.map(e => e.message)[0] || 'Invalid fields'
         return response.status(422).json({
           statusCode: 422,
-          message: resultUser.error
+          message: zodError
         })
       }
       const { usuario, pass } = user

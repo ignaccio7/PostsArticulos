@@ -147,9 +147,11 @@ export default class NoteController {
     const result = validateNote({ note })
 
     if (result.error) {
+      // sacando el 1er error
+      const zodError = result?.error?.issues?.map(e => e.message)[0] || 'Invalid fields'
       return response.status(422).json({
         statusCode: 422,
-        message: result
+        message: zodError
       })
     }
 
@@ -208,13 +210,16 @@ export default class NoteController {
       const { id } = request.params
 
       /** Estamos aumentando esta parte */
+      console.log('1')
 
       const searchImages = await NoteModel.searchIdsImages({ idNota: id })
+      console.log('2')
 
       if (searchImages.length > 0) {
         const idsImages = searchImages.flatMap(i => i.image_id)
         await deleteImages({ publicImagesIds: idsImages })
       }
+      console.log('3')
 
       /** Estamos aumentando esta parte */
 
@@ -232,9 +237,9 @@ export default class NoteController {
       })
     } catch (error) {
       console.log(error)
-      response.json({
+      response.status(500).json({
         statusCode: 500,
-        message: 'Fallo al eliminar la nota'
+        message: error.message
       })
     }
   }
@@ -306,9 +311,10 @@ export default class NoteController {
       console.log(partialNote)
       const result = validatePartialNote({ note: partialNote })
       if (result.error) {
+        const zodError = result?.error?.issues?.map(e => e.message)[0] || 'Invalid fields'
         return response.status(422).json({
           statusCode: 422,
-          message: result
+          message: zodError
         })
       }
       const { id } = request.params

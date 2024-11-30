@@ -97,9 +97,13 @@ export default class NoteModel {
       if (deleteNote.affectedRows === 0) {
         return false
       }
+      console.info('Nota eliminada')
       return true
     } catch (error) {
       console.log(error)
+      if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+        throw new Error('No puedes eliminar esta nota porque esta publicada')
+      }
       throw new Error('Error al eliminar la nota')
     }
   }

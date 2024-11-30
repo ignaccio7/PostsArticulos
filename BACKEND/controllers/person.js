@@ -286,6 +286,8 @@ export default class PersonController {
 
   static async deleteImageProfile (request, response) {
     try {
+      console.log('esta eliminando la imagen')
+
       const { ci } = request.params
       const searchIdAvatar = await PersonModel.searchIdAvatar({ ci })
 
