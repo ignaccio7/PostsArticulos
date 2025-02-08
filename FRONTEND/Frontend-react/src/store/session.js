@@ -7,12 +7,13 @@ const useSessionStore = create(
       return {
         username: '',
         accessToken: '',
+        rol: '',
 
-        loginUser: async ({ username, token }) => {
-          set({ username, accessToken: token })
+        loginUser: async ({ username, token, rol }) => {
+          set({ username, accessToken: token, rol })
         },
         logoutUser: () => {
-          set({ username: '', accessToken: '' })
+          set({ username: '', accessToken: '', rol: '' })
         }
       }
     },

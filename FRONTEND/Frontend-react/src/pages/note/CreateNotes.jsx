@@ -38,6 +38,7 @@ export default function CreateNote () {
       prevElement: 'T1'
     }
   ])
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     setLoaded(true)
@@ -63,28 +64,63 @@ export default function CreateNote () {
   }
 
   const handleSubmit = async (event) => {
+    setIsSubmitting(true)
     event.preventDefault()
     console.log(formRef.current)
 
     const firstTitle = formRef.current.querySelector('#T1')?.value
     const firstParagraph = formRef.current.querySelector('#P1')?.textContent
 
-    if (!firstTitle || !firstParagraph) return
+    if (!firstTitle || !firstParagraph) {
+      setIsSubmitting(false)
+      return toast.error('Debe ingresar por lo menos un titulo y una descripcion')
+    }
 
     const formData = new FormData()
 
-    elements.forEach(el => {
+    // elements.forEach(el => {
+    //   if (el.tag === 'title' || el.tag === 'subtitle') {
+    //     formData.set(el.id, formRef.current.querySelector(`#${el.id}`).value)
+    //   } else if (el.tag === 'image') {
+    //     formData.append('imagenes', formRef.current.querySelector(`#${el.id}`).files[0])
+    //   } else {
+    //     // formData.set(el.id, formRef.current.querySelector(`#${el.id}`).innerHTML)
+    //     const content = formRef.current.querySelector(`#${el.id}`).innerText
+    //     if (content.trim() === '') return toast.error('No puedes registrar campos vacios')
+    //     const sanitizedContent = content.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    //     formData.set(el.id, sanitizedContent)
+    //   }
+    // })
+    // Transformamos a un for of respecto a que no es bloqueante el forEach
+    for (const el of elements) {
+      const element = formRef.current.querySelector(`#${el.id}`)
+
       if (el.tag === 'title' || el.tag === 'subtitle') {
-        formData.set(el.id, formRef.current.querySelector(`#${el.id}`).value)
+        if (element.value.trim() === '') {
+          setIsSubmitting(false)
+          return toast.error('No puedes registrar campos vacíos')
+        }
+        formData.set(el.id, element.value)
       } else if (el.tag === 'image') {
-        formData.append('imagenes', formRef.current.querySelector(`#${el.id}`).files[0])
+        formData.append('imagenes', element.files[0])
       } else {
-        formData.set(el.id, formRef.current.querySelector(`#${el.id}`).innerHTML)
+        const content = element.innerText.trim()
+
+        if (content === '') {
+          setIsSubmitting(false)
+          return toast.error('No puedes registrar campos vacíos')
+        }
+
+        const sanitizedContent = content.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        formData.set(el.id, sanitizedContent)
       }
-    })
+    }
+
     formData.set('order', JSON.stringify(elements))
     console.log(formData)
     console.log(Object.fromEntries(formData))
+
+    setIsSubmitting(false)
 
     try {
       const res = await Note.createNote({ accessToken, formData })
@@ -94,6 +130,8 @@ export default function CreateNote () {
     } catch (error) {
       console.log(error)
       toast.error(error.message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -139,7 +177,7 @@ export default function CreateNote () {
             // }
           })
         }
-        <Button size='lg' type='submit'>
+        <Button size='lg' type='submit' isSubmitting={isSubmitting}>
           Crear nota
         </Button>
       </form>

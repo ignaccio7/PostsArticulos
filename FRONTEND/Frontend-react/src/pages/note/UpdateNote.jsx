@@ -39,6 +39,8 @@ export default function UpdateNote () {
       prevElement: 'T1'
     }
   ])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState(false)
 
   const { openModal } = useModal()
 
@@ -48,11 +50,16 @@ export default function UpdateNote () {
       .then(data => {
         if (data.statusCode !== 200) navigate('/notes')
 
-        console.log(data)
+        // console.log(data)
         setElements(data.data.jsonData)
       })
       .catch((e) => {
         console.log(e)
+        setError(e.message)
+        // TODO: validar cuando va a una ruta a update/41 que es de otro usuario te manda al login y luego a notes que sea una sola redireccion
+        // if (e.status === 401) navigate('/login')
+        // else navigate('/notes')
+        // navigate('/notes')
       })
     // if (!id) redirect('/')
   }, [])
@@ -77,30 +84,65 @@ export default function UpdateNote () {
   }
 
   const handleSubmit = async (event) => {
+    setIsSubmitting(true)
     event.preventDefault()
 
     const formData = new FormData()
 
-    elements.forEach(el => {
+    // elements.forEach(el => {
+    //   if (el.tag === 'title' || el.tag === 'subtitle') {
+    //     formData.set(el.id, formRef.current.querySelector(`#${el.id}`).value)
+    //   } else if (el.tag === 'image') {
+    //     if (formRef.current.querySelector(`#${el.id}`).type === 'text') {
+    //       formData.set('imagenes', formRef.current.querySelector(`#${el.id}`).value)
+    //     } else {
+    //       formData.append('imagenes', formRef.current.querySelector(`#${el.id}`).files[0])
+    //     }
+    //   } else {
+    //     // formData.set(el.id, formRef.current.querySelector(`#${el.id}`).innerHTML)
+    //     const content = formRef.current.querySelector(`#${el.id}`).innerText
+    //     console.log('El contenido es', content)
+
+    //     if (content.trim().length === 0) return toast.error('No puedes registrar campos vacios')
+    //     const sanitizedContent = content.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    //     formData.set(el.id, sanitizedContent)
+    //   }
+    // })
+    // Lo pasaremos a un for of respecto  a que no es bloqueante el forEach
+    for (const el of elements) {
       if (el.tag === 'title' || el.tag === 'subtitle') {
+        if (formRef.current.querySelector(`#${el.id}`).value.trim().length === 0) {
+          setIsSubmitting(false)
+          toast.error('No puedes registrar campos vacios')
+          return // Salimos del bucle si encontramos un campo vacío
+        }
         formData.set(el.id, formRef.current.querySelector(`#${el.id}`).value)
       } else if (el.tag === 'image') {
-        if (formRef.current.querySelector(`#${el.id}`).type === 'text') {
-          formData.set('imagenes', formRef.current.querySelector(`#${el.id}`).value)
+        const inputElement = formRef.current.querySelector(`#${el.id}`)
+        if (inputElement.type === 'text') {
+          formData.set('imagenes', inputElement.value)
         } else {
-          formData.append('imagenes', formRef.current.querySelector(`#${el.id}`).files[0])
+          formData.append('imagenes', inputElement.files[0])
         }
       } else {
-        formData.set(el.id, formRef.current.querySelector(`#${el.id}`).innerHTML)
+        const content = formRef.current.querySelector(`#${el.id}`).innerText
+
+        if (content.trim().length === 0) {
+          setIsSubmitting(false)
+          toast.error('No puedes registrar campos vacios')
+          return // Salimos del bucle si encontramos un campo vacío
+        }
+
+        const sanitizedContent = content.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        formData.set(el.id, sanitizedContent)
       }
-    })
+    }
 
     // ACTUALIZAR
     formData.set('order', JSON.stringify(elements))
     console.log(formData)
     console.log(Object.fromEntries(formData))
 
-    // TODO send save note
     console.log('Los elementos')
     console.log(elements)
 
@@ -112,6 +154,8 @@ export default function UpdateNote () {
     } catch (error) {
       console.log(error)
       toast.error(error.message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -119,6 +163,8 @@ export default function UpdateNote () {
     // TODO agregar la paginacion y arreglar los filtros
     try {
       const res = await Note.deleteNote({ idNote: id, accessToken })
+      console.log('Se ah eliminado la nota')
+
       console.log(res)
       toast.success('Nota eliminada')
       navigate('/notes')
@@ -131,6 +177,8 @@ export default function UpdateNote () {
   if (!loaded) {
     return (<div>Cargando...</div>)
   }
+
+  if (error) return (<div className='text-center text-step1 w-full h-full mt-32 flex flex-col text-zinc-400'>Error: {error}</div>)
 
   return (
     <div className="container relative mb-8">
@@ -175,7 +223,7 @@ export default function UpdateNote () {
           })
         }
         <div className="buttons flex gap-4">
-          <Button size='lg' type='submit' theme='primary'>
+          <Button size='lg' type='submit' theme='primary' isSubmitting={isSubmitting}>
             Actualizar nota
           </Button>
           <Button size='lg' onClick={openModal} theme='danger'>

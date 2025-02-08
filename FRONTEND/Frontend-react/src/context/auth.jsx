@@ -9,7 +9,8 @@ export function AuthProvider ({ children }) {
 
   useEffect(() => {
     const authLocalStorage = localStorage.getItem('auth')
-    if (authLocalStorage) setAuth(!!authLocalStorage)
+
+    if (authLocalStorage && authLocalStorage === 'true') setAuth(!!authLocalStorage)
   }, [])
 
   const login = () => {

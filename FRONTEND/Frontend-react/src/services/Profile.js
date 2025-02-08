@@ -10,7 +10,7 @@ class ProfileService {
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar obtener perfil',
         success: false
       }
@@ -26,7 +26,7 @@ class ProfileService {
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar obtener perfil',
         success: false
       }
@@ -38,11 +38,15 @@ class ProfileService {
       Authorization: `Bearer ${accessToken}`
     }
     try {
-      const res = await RequestService.deleteRequest(`person/image/${ci}`, requestOptions)
+      console.log({ ci, accessToken })
+
+      const res = await RequestService.deleteRequest({ url: `person/image/${ci}`, requestOptions })
+      console.log('abc')
+
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar eliminar foto',
         success: false
       }

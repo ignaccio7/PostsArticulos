@@ -3,12 +3,31 @@ import NavLink from './ui/NavLink'
 import { PathsProtected, PathsPublic } from '../routes/pathConstants'
 import { useAuth } from '../hooks/useAuth'
 import Dropdown from './ui/Dropdown'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { useSessionStore } from '../store/session'
+import { useNotesforApprove } from '../hooks/useNotes'
+import { IconLoginUser, IconUser } from './ui/Icons'
+import { useRef, useState } from 'react'
 
 export default function NavBar () {
   const { auth, logout } = useAuth()
-  const pathsProtected = auth ? Object.values(PathsProtected) : []
+  const logoutUser = useSessionStore(state => state.logoutUser)
+  const { removeNotesForApprove } = useNotesforApprove()
+
+  let pathsProtected = auth ? Object.values(PathsProtected) : []
+  const location = useLocation()
   const navigate = useNavigate()
+
+  const rol = useSessionStore(state => state.rol)
+
+  pathsProtected = pathsProtected.filter(p => p.rol.includes(rol))
+
+  const [isOpen, setIsOpen] = useState(false)
+  const dropdownMenu = useRef(null)
+  const dropdownUser = () => {
+    setIsOpen(!isOpen)
+    dropdownMenu.current.style = isOpen ? 'opacity: 0' : 'opacity: 1'
+  }
 
   return (
     <div className="nav hidden peer-checked:flex absolute top-28 flex-col gap-4 px-4 inset-x-0 mx-8 bg-primary py-4 rounded-md h-auto shadow-xl shadow-black
@@ -22,7 +41,9 @@ export default function NavBar () {
             if (route.path === '/login' && auth) {
               return <button key='logout' onClick={() => {
                 logout()
-                navigate('/')
+                logoutUser()
+                removeNotesForApprove()
+                if (location.pathname !== '/') navigate('/')
               }} className='text-step1 hover:bg-secondary p-4 rounded-md sm:w-auto h-full w-full text-left order-4'>Salir</button>
             }
             return (<NavLink key={route.path} to={route.path}>{route.name}</NavLink>)
@@ -39,28 +60,54 @@ export default function NavBar () {
             }
             return (<NavLink key={route.path} to={route.path}>{route.name}</NavLink>)
           })
-        }
 
-        {/* Dropdown Menu */}
-        {/* <label
-          htmlFor='dropdownButton'
-          className='dropdownMenu text-step1 cursor-pointer hover:bg-secondary h-full w-full text-left
-          sm:w-auto sm:flex sm:relative'
-        >
-          <input type="checkbox" id='dropdownButton' className='peer hidden' />
-          <span className='flex items-center w-full sm:w-auto peer-checked:bg-secondary p-4'>Notas</span>
-          <div className="dropdownSubMenu hidden peer-checked:flex flex-col text-left
-          sm:absolute sm:top-28 sm:left-0 sm:bg-secondary sm:z-40
-          sm:shadow-lg sm:shadow-black
-          sm:peer-checked:border-b ">
-            <NavLink className='sm:w-[120px]' to='/notes2'>Crear Nota</NavLink>
-            <NavLink className='sm:w-[120px]' to='/notes2'>Mis Notas</NavLink>
-          </div>
-        </label> */}
+        }
       </nav>
 
       <div className="search w-full sm:w-72">
         <InputSearch />
+      </div>
+      <div className="user w-full sm:w-fit h-auto sm:h-20 relative">
+        <div className='w-full h-full flex flex-row gap-3 items-center text-step1 sm:hidden'>
+          {!auth
+            ? <Link to={'/login'} className='flex flex-row gap-2 items-center px-2 py-3 w-full'> <IconLoginUser /> <span className='block sm:hidden'>Inicia sesion</span> </Link>
+            : <div className='flex flex-col w-full'><button key='logout' onClick={() => {
+              logout()
+              logoutUser()
+              removeNotesForApprove()
+              if (location.pathname !== '/') navigate('/')
+            }} className='hover:bg-secondary w-full text-left flex flex-row gap-2 items-center px-2 py-3 rounded-sm'>
+              <IconUser /> Salir</button>
+              <span className='px-2 py-1 text-right sm:text-left text-zinc-400 text-step0'>User </span></div>}
+        </div>
+
+        <button className='hidden sm:flex items-center hover:bg-secondary p-4 h-full' onClick={dropdownUser}>
+          <IconUser />
+        </button>
+
+        <div ref={dropdownMenu}
+          className="hidden w-full sm:absolute text-step0 min-w-60 sm:w-fit right-0 top-18 sm:flex flex-col rounded-sm opacity-0 bg-primary shadow-lg shadow-black border-b border-white">
+          {
+            auth
+              ? (
+              <div className='flex flex-col gap-1 text-step1'>
+                <span className='truncate px-4 py-1 text-right text-step0 text-zinc-400'>User </span>
+                <Link to={'/profile'} className='w-full h-full p-3 hover:bg-secondary'>
+                  Perfil
+                </Link>
+                <button onClick={() => {
+                  logout()
+                  logoutUser()
+                  removeNotesForApprove()
+                  if (location.pathname !== '/') navigate('/')
+                }} className='text-start p-3 hidden sm:block hover:bg-secondary'>
+                  Salir
+                </button>
+              </div>
+                )
+              : <Link to={'/login'} className='flex flex-row gap-2 items-center px-2 py-3 w-full hover:bg-secondary'> <span>Inicia sesion</span> </Link>
+          }
+        </div>
       </div>
     </div>
   )

@@ -12,14 +12,17 @@ class RequestService {
 
       if (!response.ok) {
         const errorMessage = await response.json()
-        throw new Error(errorMessage?.message || 'Error al enviar datos al servidor')
+        throw errorMessage
       }
 
       const data = await response.json()
       return data
     } catch (error) {
-      // console.log(error)
-      throw new Error(error)
+      console.log('errro')
+
+      console.log(error)
+      throw error
+      // throw new Error('Error al comunicarse con el servidor')
     }
   }
 
@@ -36,14 +39,15 @@ class RequestService {
 
       if (!response.ok) {
         const errorMessage = await response.json()
-        throw new Error(errorMessage?.message || 'Error al enviar datos al servidor')
+        throw errorMessage
       }
 
       const data = await response.json()
       return data
     } catch (error) {
-      // console.log(error)
-      throw new Error(error)
+      console.log(error)
+      throw error
+      // throw new Error('Error al comunicarse con el servidor')
     }
   }
 
@@ -59,13 +63,14 @@ class RequestService {
 
       if (!response.ok) {
         const errorMessage = await response.json()
-        throw new Error(errorMessage?.message || 'Error al enviar datos al servidor')
+        throw errorMessage
       }
       const data = await response.json()
       return data
     } catch (error) {
-      // console.log(error)
-      throw new Error(error)
+      console.log(error)
+      throw error
+      // throw new Error('Error al comunicarse con el servidor')
     }
   }
 
@@ -86,30 +91,39 @@ class RequestService {
       const data = await response.json()
       return data
     } catch (error) {
-      // console.log(error)
-      throw new Error(error)
+      console.log(error)
+      throw error
+      // throw new Error('Error al comunicarse con el servidor')
     }
   }
 
   static async deleteRequest ({ url = '', requestOptions = {} }) {
     try {
+      console.log('a')
+
       const response = await fetch(`${BASE_URL}/${url}`, {
         method: 'DELETE',
         headers: {
           ...requestOptions
         }
       })
+      console.log('b')
 
       if (!response.ok) {
+        console.log('c')
         const errorMessage = await response.json()
-        throw new Error(errorMessage?.message || 'Error al enviar datos al servidor')
+        throw errorMessage
       }
+      console.log('d')
 
       const data = await response.json()
+      console.log(data)
+
       return data
     } catch (error) {
-      // console.log(error)
-      throw new Error(error)
+      console.log(error)
+      throw error
+      // throw new Error('Error al comunicarse con el servidor')
     }
   }
 }

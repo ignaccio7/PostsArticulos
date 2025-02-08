@@ -249,3 +249,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiL
 ### MOSTRAR LOS COMENTARIOS - solo se podran ver cuando se ingrese a la publicacion
 GET http://localhost:1234/article/comment/17
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+
+
+### OBTENER UN ARTICULO POR ID
+GET http://localhost:1234/article/1

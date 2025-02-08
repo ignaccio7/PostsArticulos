@@ -11,7 +11,15 @@ const THEME_BUTTON = {
   danger: 'btn-danger'
 }
 
-export default function Button ({ className, size, type = 'button', theme = 'default', onClick, children }) {
+export default function Button ({
+  className,
+  size,
+  type = 'button',
+  theme = 'default',
+  onClick,
+  isSubmitting = false,
+  children
+}) {
   const selectedTheme = THEME_BUTTON[theme]
   return (
     <button
@@ -26,11 +34,13 @@ export default function Button ({ className, size, type = 'button', theme = 'def
         transition-colors
         duration-500
         ease-in-out
+        cursor-pointer
         ${selectedTheme}
     ${className}`}
     onClick={onClick}
     type={type}
     style={{ width: SIZE_BUTTON[size] }}
+    disabled={isSubmitting}
     >
       {children}
     </button>

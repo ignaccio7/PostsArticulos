@@ -62,7 +62,7 @@
   CREATE TABLE `notas` (
     `id_nota` int(11) NOT NULL AUTO_INCREMENT,
     `usuario_id_usuario` int(11) NOT NULL,
-    `titulo` varchar(30) DEFAULT NULL,
+    `titulo` varchar(50) DEFAULT NULL,
     `descripcion` varchar(100) DEFAULT NULL,
     `fechaPost` date DEFAULT NULL,
     `jsonData` json DEFAULT NULL,
@@ -135,7 +135,7 @@
     `id_publicacion` int(11) NOT NULL,
     `id_usuario` int(11) NOT NULL,
     PRIMARY KEY (`id_publicacion`, `id_usuario`),
-    CONSTRAINT `popularidad_ibfk_1` FOREIGN KEY (`id_publicacion`) REFERENCES `notas_publicadas` (`id_publicacion`),
+    CONSTRAINT `popularidad_ibfk_1` FOREIGN KEY (`id_publicacion`) REFERENCES `notas_publicadas` (`id_publicacion`) ON DELETE CASCADE,
     CONSTRAINT `popularidad_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -148,10 +148,12 @@
     PRIMARY KEY (`id_comentario`),
     KEY `comentarios_FKIndex1` (`id_publicacion`),
     KEY `comentarios_FKIndex2` (`id_usuario`),
-    CONSTRAINT `comentarios_ibfk_1` FOREIGN KEY (`id_publicacion`) REFERENCES `notas_publicadas` (`id_publicacion`),
+    CONSTRAINT `comentarios_ibfk_1` FOREIGN KEY (`id_publicacion`) REFERENCES `notas_publicadas` (`id_publicacion`) ON DELETE CASCADE,
     CONSTRAINT `comentarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+  ALTER TABLE `comentarios`
+  ADD COLUMN `fechaPub` DATETIME DEFAULT CURRENT_TIMESTAMP;
 
   -- Crea la tabla de imágenes asociadas a notas
   -- CREATE TABLE `imagen_nota` (

@@ -39,7 +39,7 @@ export default function ModalConfirm ({ action = () => { }, children }) {
           {children}
         </h3>
         <div className="buttons flex gap-4">
-          <button className='bg-red-600 text-step1 text-white p-2 rounded-xl' onClick={async () => { await action(); closeModal() }}>Eliminar foto</button>
+          <button className='bg-red-600 text-step1 text-white p-2 rounded-xl' onClick={async () => { await action(); closeModal() }}>Eliminar</button>
           {/* onClick={() => setModal(false)} */}
           <button className='bg-blue-600 text-step1 text-white p-2 rounded-xl'
             onClick={closeModalConfirm}>Cancelar</button>

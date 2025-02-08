@@ -70,7 +70,7 @@ export default function FormLogin () {
     // console.log('SIGNIN')
     try {
       const { data, token } = await User.signin(user)
-      loginUser({ username: data, token })
+      loginUser({ username: data.usuario, token, rol: data.rol })
 
       auth.login()
       toast.success('Sesión iniciada exitosamente')

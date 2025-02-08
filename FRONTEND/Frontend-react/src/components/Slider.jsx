@@ -22,16 +22,35 @@ export default function Slider ({ popularArticles }) {
         <>
           <h2 className="md:text-center mb-4">Los {popularArticles.length} Articulos más destacados</h2>
           <div className="container-slider">
-            <div className="main-card">
-              <Card title={mainNote?.title} description={mainNote?.description} image={mainNote?.image} idNota={mainNote?.id} />
+            <div className="main-card mb-2 md:mb-0">
+              <Card
+                title={mainNote?.title}
+                description={mainNote?.description}
+                image={mainNote?.image}
+                idNotaPub={mainNote?.id}
+                link={mainNote?.link}
+                author={mainNote?.author}
+                likes={mainNote?.likes}
+                comments={mainNote?.comments}
+                islike={mainNote?.islike}
+              />
             </div>
-            <div className="main-articles">
+            <div className="main-articles flex flex-col">
               {
                 topNotes.map((tNote, index) => {
                   return (
                     <section key={index} id={`section-${index}`}>
                       {
-                        tNote.map(note => <Card key={note.id} title={note.title} description={note.description} image={note.image} idNota={note.id} />)
+                        tNote.map(note => <Card key={note?.id}
+                          title={note?.title}
+                          description={note?.description}
+                          image={note?.image}
+                          idNotaPub={note?.id}
+                          link={note?.link}
+                          author={note?.author}
+                          likes={note?.likes}
+                          comments={note?.comments}
+                          islike={note?.islike} />)
                       }
                     </section>
                   )

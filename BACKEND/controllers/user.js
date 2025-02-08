@@ -2,7 +2,7 @@ import { generateToken } from '../middlewares/authJWT.js'
 import UserModel from '../models/user.js'
 import { validatePerson } from '../schemas/person.js'
 import { validatePartialUser, validateUser } from '../schemas/user.js'
-import { uploadImage } from '../utils/utils.js'
+import { deleteLocalImage, uploadImage } from '../utils/utils.js'
 import bcrypt from 'bcrypt'
 
 // TODO en esta tabla falta añadir el rol al momento de registrar y/o modificar
@@ -79,7 +79,6 @@ export default class UserController {
   */
   // Register user with Image
   static async signup (request, response) {
-    // TODO: modificar que el rol del usuario automaticamente sea user por defecto tanto en el controller como en la BD
     // const { ci, nombres, paterno, materno, telefono, correo, usuario, pass, rol } = request.body
     const body = request.body
     const file = request.file
@@ -92,15 +91,14 @@ export default class UserController {
     const resultPerson = validatePerson({ person })
     const resultUser = validateUser({ user })
 
-    console.log({ resultPerson })
-    console.log({ resultUser })
+    // console.log({ resultPerson })
+    // console.log({ resultUser })
 
     if (resultUser.error || resultPerson.error) {
       let errorMessage = resultUser?.error?.issues[0]?.message ?? null
       errorMessage = errorMessage ?? resultPerson?.error?.issues[0]?.message ?? 'Error en los campos ingresados'
 
       console.log({ errorMessage })
-      // TODO: CONTROLAR EL ERROR QUE LLEGA DEL BACKEND AL REGISTRAR EL USUARIO
 
       return response.status(422).json({
         statusCode: 422,
@@ -110,6 +108,18 @@ export default class UserController {
 
       })
     }
+    // TODO: Verificar que si existe errores al subir imagenes nose guarden en LOCAL esto con desarrollo o en produccion veriamos la falla en el peor de los casos XD
+    // Probar que el ssitema nose rompa ya que el frontend cambia ya que le estamos enviando el rol del usuario
+
+    const isUserExist = await UserModel.isExistUser({ ci: resultPerson.data.ci, username: resultUser.data.usuario })
+    if (isUserExist.length !== 0) {
+      if (file) await deleteLocalImage({ file })
+      return response.status(409).json({
+        statusCode: 409,
+        message: 'Usted ya cuenta con un usuario registrado o El nombre de usuario ya esta ocupado.'
+      })
+    }
+
     try {
       if (file) {
         const { avatar, avatarId } = await uploadImage({ file })
@@ -132,7 +142,10 @@ export default class UserController {
       response.status(201).json({
         statusCode: 201,
         message: 'Usuario creada',
-        data: newUser,
+        data: {
+          newUser,
+          rol: 'user'
+        },
         token
       })
     } catch (error) {
@@ -168,7 +181,7 @@ export default class UserController {
           message: 'Usuario no encontrado'
         })
       }
-      const { pass: passDB } = validUser[0]
+      const { pass: passDB, rol } = validUser[0]
       const isValidPassword = await bcrypt.compare(pass, passDB)
 
       if (!isValidPassword) {
@@ -192,7 +205,10 @@ export default class UserController {
       response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
-        data: usuario,
+        data: {
+          usuario,
+          rol
+        },
         token
       })
     } catch (error) {

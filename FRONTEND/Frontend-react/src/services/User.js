@@ -16,7 +16,7 @@ class User {
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar iniciar sesión',
         success: false
       }
@@ -25,7 +25,7 @@ class User {
 
   static async registerUser ({ payload }) {
     try {
-      // console.log(payload)
+      console.log(payload)
 
       const res = await RequestService.postRequestFormData({
         url: 'user',
@@ -35,7 +35,7 @@ class User {
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar registrar',
         success: false
       }

@@ -7,8 +7,10 @@ export default class NoteModel {
     const p = parseInt(page)
     const selectedPage = p === 1 || p === 0 ? 0 : (p - 1) * perPage
     try {
-      const query = `SELECT n.*, u.usuario FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario${sql} LIMIT ?,${perPage}`
+      const query = `SELECT n.id_nota, n.titulo, n.descripcion, n.fechaPost, u.usuario, get_url_image(n.id_nota) as image_url FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario and n.id_nota not in (select notas_id_nota from notas_publicadas np)${sql} ORDER BY n.id_nota DESC, n.fechaPost DESC LIMIT ?,${perPage};`
       const [notes] = await connection.query(query, [...values, selectedPage])
+      console.log(notes)
+
       return notes
     } catch (error) {
       console.log('error in model notes')
@@ -22,7 +24,7 @@ export default class NoteModel {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
     const { sql, values } = getFilters({ filters, fechaPost })
     try {
-      const query = `select count(*) as total_notas FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario${sql};`
+      const query = `select count(*) as total_notas FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario and n.id_nota not in (select notas_id_nota from notas_publicadas np)${sql};`
       const [result] = await connection.query(query, [...values])
       return result[0]
     } catch (error) {
@@ -63,6 +65,27 @@ export default class NoteModel {
     } catch (error) {
       console.log(error)
       throw new Error(`Fallo al obtener la nota con id: ${id}`)
+    }
+  }
+
+  // Automatizar para que solo enviando un parametro te de el nombre e imagen del usuario sin tener que crear otro metodo como lo haremos
+  static async getNoteForRead ({ idNote, idUser = 0 }) {
+    try {
+      const query = `SELECT n.jsonData, n.fechaPost ,u.usuario, p.avatar, get_full_name(p.ci) as fullname
+      FROM notas n, usuario u, persona p WHERE n.usuario_id_usuario = u.id_usuario and u.persona_ci  = p.ci  AND id_nota = ?;`
+
+      const queryPopularity = 'CALL get_popularity_byNote(?, ?, @likes, @comments, @isLike, @xisPublished);'
+      await connection.query(queryPopularity, [idNote, idUser])
+
+      const [note] = await connection.query(query, [idNote])
+      const [popularity] = await connection.query('SELECT @likes AS likes, @comments AS comments, @isLike AS islike, @xisPublished AS isPublished;')
+      return {
+        note,
+        popularity
+      }
+    } catch (error) {
+      console.log(error)
+      throw new Error(`Fallo al obtener la nota con id: ${idNote}`)
     }
   }
 
@@ -174,7 +197,7 @@ export default class NoteModel {
     const p = parseInt(page)
     const selectedPage = p === 1 || p === 0 ? 0 : (p - 1) * perPage
     try {
-      const query = `SELECT n.*, get_url_image(n.id_nota) as image_url FROM notas n WHERE n.usuario_id_usuario = ?${sql} ORDER BY n.id_nota ASC, n.fechaPost ASC LIMIT ?,${perPage}`
+      const query = `SELECT n.*, get_url_image(n.id_nota) as image_url FROM notas n WHERE n.usuario_id_usuario = ?${sql} ORDER BY n.id_nota DESC, n.fechaPost DESC LIMIT ?,${perPage}`
       console.log(query)
       const [notes] = await connection.query(query, [idUser, ...values, selectedPage])
       return notes
@@ -182,6 +205,16 @@ export default class NoteModel {
       console.log('error in model notes')
       console.log(error)
       throw new Error('Fallo al solicitar datos al servidor')
+    }
+  }
+
+  static async verifyUserPermissionForNote ({ idNote, idUser }) {
+    try {
+      const query = 'SELECT * from notas n where n.id_nota = ? and n.usuario_id_usuario = ?;'
+      const [note] = await connection.query(query, [idNote, idUser])
+      return note
+    } catch (error) {
+      throw new Error('Error al comunicarse con la base de datos')
     }
   }
 }

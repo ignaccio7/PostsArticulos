@@ -31,6 +31,7 @@ export default class UserModel {
 
     try {
       await connection.beginTransaction()
+      // rol por defecto siempre sera undefined
 
       const queryPerson = 'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar,avatar_id) VALUES (?,?,?,?,?,?,?,?)'
       const queryUser = 'INSERT INTO usuario(persona_ci,usuario,pass) VALUES(?,?,?)'
@@ -115,9 +116,21 @@ export default class UserModel {
 
   // metodo para obtener el password del usuario
   static async getPassUser ({ username }) {
-    const query = 'SELECT pass FROM usuario WHERE usuario = ?'
+    const query = 'SELECT pass, rol FROM usuario WHERE usuario = ?'
     try {
       const [result] = await connection.query(query, [username])
+      return result
+    } catch (error) {
+      console.log(error)
+      throw new Error('Fallo en la base de datos al buscar el usuario')
+    }
+  }
+
+  // metodo para verificar si un usuario existe. buscamos mediante el username y el ci
+  static async isExistUser ({ ci, username }) {
+    const query = 'SELECT * FROM usuario u WHERE u.persona_ci  = ? OR u.usuario = ?;'
+    try {
+      const [result] = await connection.query(query, [ci, username])
       return result
     } catch (error) {
       console.log(error)

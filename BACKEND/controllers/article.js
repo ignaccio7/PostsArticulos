@@ -6,10 +6,10 @@ export default class ArticleController {
   static async getAll (req = request, res = response) {
     try {
       const { idUser } = req
-      const { titulo, tema, init, end, page, perPage = 8 } = req.query
-      const results = await ArticleModel.getAll({ filters: { titulo, tema }, fechaPost: { init, end }, page, idUser, perPage })
+      const { titulo, init, end, page, perPage = 11 } = req.query
+      const results = await ArticleModel.getAll({ filters: { titulo }, fechaPost: { init, end }, page, idUser, perPage })
 
-      const resultTotalPages = await ArticleModel.getTotalPages({ filters: { titulo, tema }, fechaPost: { init, end } })
+      const resultTotalPages = await ArticleModel.getTotalPages({ filters: { titulo }, fechaPost: { init, end } })
       const totalPages = Math.ceil(resultTotalPages.total_notas / perPage)
 
       if (results.length === 0) {
@@ -78,7 +78,7 @@ export default class ArticleController {
       })
     } catch (error) {
       console.log(error)
-      response.json({
+      response.status(500).json({
         statusCode: 500,
         message: 'Fallo al encorazonar la publicacion'
       })
@@ -121,7 +121,7 @@ export default class ArticleController {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al encorazonar la publicacion'
+        message: 'Fallo al comentar la publicacion'
       })
     }
   }
@@ -187,7 +187,10 @@ export default class ArticleController {
   static async approveMultipleNotes (request, response) {
     const { idNotes } = request.body
     const { idUser } = request
+    console.log('AprobandoNotas')
     console.log(idNotes)
+    console.log(request.body)
+
     try {
       const result = await ArticleModel.approveMultipleNotes({ idNotes, idUser })
       response.status(201).json({
@@ -199,6 +202,25 @@ export default class ArticleController {
       console.log('errorArticleController', error)
       response.json({
         statusCode: error.status ? error.status : 500,
+        message: error.message
+      })
+    }
+  }
+
+  static async disapproveMultipleNotes (request, response) {
+    const { idNotes } = request.body
+    try {
+      const result = await ArticleModel.disapproveMultipleNotes({ idNotes })
+      response.status(201).json({
+        statusCode: 201,
+        message: 'Notas Desaprobadas',
+        success: result
+      })
+    } catch (error) {
+      console.log(error)
+      const statusCode = error.status ? error.status : 500
+      response.status(statusCode).json({
+        statusCode,
         message: error.message
       })
     }

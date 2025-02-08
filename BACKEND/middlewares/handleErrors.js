@@ -5,14 +5,15 @@ export const handleErrors = (err, req, res, next) => {
     return res.status(401).json({ statusCode: 401, message: 'Token no encontrado' })
   }
   if (err && err.message === 'jwt expired') {
-    return res.status(401).json({ statusCode: 401, message: 'Token expirado' })
+    return res.status(401).json({ statusCode: 401, message: 'Token expirado. Por favor, vuelva a iniciar sesion' })
   }
   if (err && err.message === 'invalid signature') {
     return res.status(401).json({ statusCode: 401, message: 'Token invalido' })
   }
   // si es un error de permiso de usuario
   if (err && err.message === 'Not permission allowed') {
-    return res.status(401).json({ statusCode: 401, message: 'Acceso denegado: el usuario no es administrador' })
+    // return res.status(401).json({ statusCode: 401, message: 'Acceso denegado: el usuario no es administrador' })
+    return res.status(401).json({ statusCode: 401, message: 'Acceso denegado: No tiene permiso para esta accion' })
   }
   // si es un error de CORS
   if (err && err.message === 'Not allowed by CORSa') {

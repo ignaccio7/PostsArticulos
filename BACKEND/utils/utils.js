@@ -15,6 +15,7 @@ export function getFilters ({ filters, fechaPost }) {
     }
   })
 
+  // TODO cambiar que en caso de ser tabla NOTA usar fechaPost y en caso de ser tabla notas_publicadas usar fechaPub hacer pasar como parametro
   if (fechaPost.init && fechaPost.end) {
     sql += ' AND fechaPost BETWEEN ? AND ?'
     values.push(fechaPost.init)
@@ -157,5 +158,15 @@ export async function deleteImages ({ publicImagesIds = [] }) {
   } catch (error) {
     console.log(error)
     throw new Error('Error al eliminar las imagenes')
+  }
+}
+
+export async function deleteLocalImage ({ file }) {
+  try {
+    const filePath = path.join(process.cwd(), file.path)
+    await fs.unlink(filePath)
+  } catch (error) {
+    console.log(error)
+    throw new Error('Error al eliminar la la imagen')
   }
 }

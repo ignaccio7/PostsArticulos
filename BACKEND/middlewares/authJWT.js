@@ -6,8 +6,8 @@ const secretKey = config.SECRET
 
 export async function generateToken ({ user }) {
   return jwt.sign({ user }, secretKey, {
-    expiresIn: '1h' // 1 min
-    // expiresIn: 60 * 60 * 24 // 1 dia
+    // expiresIn: '1h' // 1 min
+    expiresIn: 60 * 60 * 24 * 7// 1 dia
   })
 }
 
@@ -17,8 +17,14 @@ const SKIP_VERIFICATION = Symbol('skipVerification') // TODO eliminar el symbol 
 export async function checkToken (request, response, next) {
   const authorization = request.get('authorization')
 
-  if (!authorization || !authorization.toLowerCase().startsWith('bearer')) {
+  console.log('1')
+
+  // if (!authorization || !authorization.toLowerCase().startsWith('bearer')) {
+  if (!authorization || !authorization.toLowerCase().startsWith('bearer') || !authorization.split(' ')[1]) {
+    console.log('2')
+
     request[SKIP_VERIFICATION] = true // Establece una bandera con Symbol para saltar verificación
+
     return next()
   }
 
@@ -27,8 +33,12 @@ export async function checkToken (request, response, next) {
 
 // middleware
 export async function verifyToken (request, response, next) {
+  console.log('3')
+
   // verificamos esta parte por la ruta de articles
   if (request[SKIP_VERIFICATION]) {
+    console.log('salto')
+
     return next()
   }
   // verificamos esta parte por la ruta de articles

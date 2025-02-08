@@ -39,6 +39,7 @@ export default function InputImage () {
             onChange={handleImage}
             className='absolute opacity-0 pointer-events-none'
             accept='image/png, image/jpeg, image/jpg, image/webp, image/avif'
+            required
           />
           <IconImage />
           <span htmlFor="avatar" className='!border-none cursor-pointer'>

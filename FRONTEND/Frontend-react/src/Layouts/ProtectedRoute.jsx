@@ -7,7 +7,11 @@ export default function ProtectedRoute () {
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('protected Route')
+    console.log('auth', auth)
+
     if (!auth) {
+      console.log('voy al login')
       navigate('/login')
     }
   }, [])

@@ -22,15 +22,23 @@ export default class ArticleModel {
   //   }
   // }
 
-  static async getAll ({ filters, fechaPost, page = 0, idUser = 0, perPage }) {
+  static async getAll ({ filters, fechaPost, page = 0, idUser = 0, perPage = 11 }) {
     const { sql, values } = getFilters({ filters, fechaPost })
     const p = parseInt(page)
     const selectedPage = p === 1 || p === 0 ? 0 : (p - 1) * perPage
     try {
-      const query = `SELECT np.id_publicacion, n.id_nota, n.titulo, n.descripcion, n.imagenes, n.fechaPost, np.fechaPub, u.usuario,(SELECT COUNT(*) FROM popularidad p WHERE p.id_publicacion = np.id_publicacion) AS likes,(select count(*) from popularidad p where p.id_publicacion = np.id_publicacion and p.id_usuario = ${idUser}) as islike
-      FROM notas_publicadas np, notas n, usuario u
-      WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${sql} LIMIT ?,${perPage};`
-      const [notes] = await connection.query(query, [...values, selectedPage])
+      const query = `SELECT np.id_publicacion, n.id_nota, n.titulo, n.descripcion,get_url_image(np.notas_id_nota) as url_image, np.fechaPub, u.usuario,
+(SELECT COUNT(*) FROM popularidad p WHERE p.id_publicacion = np.id_publicacion) AS likes,
+(SELECT count(*) from popularidad p where p.id_publicacion = np.id_publicacion and p.id_usuario = ?) as islike,
+(SELECT COUNT(*) FROM comentarios c WHERE c.id_publicacion = np.id_publicacion) AS comments
+FROM notas_publicadas np, notas n, usuario u
+WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${sql} ORDER BY likes DESC LIMIT ?,?;`
+      console.log(query)
+      console.log(sql)
+      console.log(perPage)
+      console.log(selectedPage)
+
+      const [notes] = await connection.query(query, [idUser, ...values, selectedPage, +perPage])
       // console.log(notes)
       return notes
     } catch (error) {
@@ -56,9 +64,9 @@ export default class ArticleModel {
 
   static async getById ({ id, idUser = 0 }) {
     try {
-      const query = ` SELECT np.id_publicacion, n.id_nota, n.titulo, n.descripcion, n.imagenes, n.fechaPost, np.fechaPub, u.usuario,
+      const query = ` SELECT np.id_publicacion, n.id_nota, n.titulo, n.descripcion, n.jsonData, n.fechaPost, np.fechaPub, u.usuario,
       (SELECT COUNT(*) FROM popularidad p WHERE p.id_publicacion = np.id_publicacion) AS likes,
-      (select count(*) from popularidad p where p.id_publicacion = np.id_publicacion and p.id_usuario = ${idUser}) as islike
+      (SELECT count(*) FROM popularidad p where p.id_publicacion = np.id_publicacion and p.id_usuario = ${idUser}) as islike
       FROM notas_publicadas np, notas n, usuario u
       WHERE np.notas_id_nota  = n.id_nota AND np.usuario_id_usuario  = u.id_usuario and np.id_publicacion  = ${id};`
       const [note] = await connection.query(query, [id])
@@ -122,7 +130,13 @@ export default class ArticleModel {
   static async getComments ({ idUser = 0, idPub }) {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
     try {
-      const query = 'SELECT c.*, IF(c.id_usuario = ?, 1, 0) as isMyComment FROM comentarios c WHERE c.id_publicacion = ?;'
+      // const query = 'SELECT c.*, IF(c.id_usuario = ?, 1, 0) as isMyComment FROM comentarios c WHERE c.id_publicacion = ? ORDER BY c.id_comentario DESC;'
+      const query = `SELECT c.id_comentario, c.comment, c.fechaPub, IF(c.id_usuario = ?, 1, 0) as isMyComment, u.usuario, p.avatar  
+      FROM comentarios c 
+      right join usuario u on u.id_usuario = c.id_usuario
+      right join persona p on u.persona_ci = p.ci
+      WHERE c.id_publicacion = ? 
+      ORDER BY c.id_comentario DESC;`
       const [comments] = await connection.query(query, [idUser, idPub])
       return comments
     } catch (error) {
@@ -144,6 +158,25 @@ export default class ArticleModel {
     }
   }
 
+  // Para desaprobar notas que se hayan publicado
+  static async disapproveMultipleNotes ({ idNotes }) {
+    try {
+      await connection.beginTransaction()
+      const query = 'delete from notas_publicadas where id_publicacion = ?;'
+      const promises = idNotes.map(idNote => {
+        return connection.query(query, [idNote])
+      })
+      await Promise.all(promises)
+      await connection.commit()
+      return true
+    } catch (error) {
+      await connection.rollback()
+      console.log(error)
+      const objError = { status: 500, message: 'Error al desaprobar las notas' }
+      throw objError
+    }
+  }
+
   // Para aprobar multiples notas a publicacion
   static async approveMultipleNotes ({ idNotes, idUser }) {
     try {
@@ -159,7 +192,7 @@ export default class ArticleModel {
     } catch (error) {
       await connection.rollback()
       console.error(error)
-      const objError = { status: 500, message: 'Error al crear la persona' }
+      const objError = { status: 500, message: 'Error al aprobar las notas' }
       if (error.code === 'ER_DUP_ENTRY') {
         objError.status = 409
         objError.message = 'Las notas ya fueron aprobadas.'

@@ -8,8 +8,11 @@ import { useEffect } from 'react'
 export default function Login () {
   const navigate = useNavigate()
   const { auth } = useAuth()
+  console.log('login')
 
   useEffect(() => {
+    console.log('auth', auth)
+
     if (auth) navigate('/notes')
   }, [auth, navigate])
 

@@ -38,7 +38,7 @@ export default function InputImage ({ id, content = '' }) {
           (<img
             src={typeof image !== 'string' ? URL.createObjectURL(image) : image}
             alt='imagen'
-            className='max-w-80 h-auto object-cover object-center rounded-md'
+            className='max-w-2xl h-auto aspect-video w-full object-cover object-center rounded-md'
           />)
         }
       </div>

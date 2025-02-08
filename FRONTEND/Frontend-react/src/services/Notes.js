@@ -12,17 +12,20 @@ export default class Note {
     const requestOptions = {
       Authorization: `Bearer ${accessToken}`
     }
+
     try {
       const res = await RequestService.getRequest(`note/me?${query}`, requestOptions)
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar obtener notas',
         success: false
       }
     }
   }
+
+  // VER COMO SANITIZAR LOS ERRORES VENIDOS POR ZOD DEL BACKEND Y VALIDAR EN EL FRONT CREATE AND UPDATE NOTE
 
   static async getNoteByUser ({ idNote, accessToken }) {
     const requestOptions = {
@@ -33,7 +36,26 @@ export default class Note {
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
+        message: error.message || 'Ocurrio un error al intentar obtener notas',
+        success: false
+      }
+    }
+  }
+
+  static async getNoteForRead ({ idNote, accessToken }) {
+    const requestOptions = {
+      Authorization: `Bearer ${accessToken}`
+    }
+    try {
+      const res = await RequestService.getRequest(`note/read/${idNote}`, requestOptions)
+      return {
+        note: res.data.note[0],
+        popularity: res.data.popularity[0]
+      }
+    } catch (error) {
+      throw {
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar obtener notas',
         success: false
       }
@@ -48,8 +70,12 @@ export default class Note {
       const res = await RequestService.postRequestFormData({ url: 'note', requestOptions, body: formData })
       return res
     } catch (error) {
+      console.log('Error en createNote')
+      console.log(JSON.stringify(error))
+      console.log(error.message)
+
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar crear nota',
         success: false
       }
@@ -66,7 +92,7 @@ export default class Note {
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar actualizar nota',
         success: false
       }
@@ -80,10 +106,14 @@ export default class Note {
 
     try {
       const res = await RequestService.deleteRequest({ url: `note/${idNote}`, requestOptions })
+      console.log('Res en deleteNote')
+
+      console.log(res)
+
       return res
     } catch (error) {
       throw {
-        status: error.status ?? 500,
+        status: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar eliminar nota',
         success: false
       }

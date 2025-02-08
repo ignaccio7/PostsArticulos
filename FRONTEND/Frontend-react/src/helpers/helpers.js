@@ -13,5 +13,5 @@ export function getPagination (totalPages, page) {
   if (totalPages - page < 3) {
     return [1, '...', totalPages - 2, totalPages - 1, totalPages]
   }
-  return [1, '...', page - 1, page, page + 1, '...', totalPages]
+  return [1, '...', +page - 1, +page, +page + 1, '...', totalPages]
 }

@@ -66,6 +66,8 @@ export default function Profile () {
 
   const deleteImage = async () => {
     try {
+      console.log({ ci: ci.current, accessToken })
+
       const res = await ProfileService.deleteImageProfile({ ci: ci.current, accessToken })
       console.log(res)
       setImage('')
@@ -80,7 +82,6 @@ export default function Profile () {
       .then(res => {
         ci.current = res.data[0].ci
         res.data[0].telefono = res.data[0]?.telefono.toString()
-        // TODO falta listar notas pertenecientes al usuario y el crear que redireccione a la pagina de notas
         const imageUrl = res.data[0]?.avatar
         if (imageUrl) {
           setImage(imageUrl)

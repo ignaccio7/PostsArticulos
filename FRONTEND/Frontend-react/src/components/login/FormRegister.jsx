@@ -6,9 +6,12 @@ import { registerSchema } from '../../schemas/User.schema'
 import { toast } from 'sonner'
 import User from '../../services/User'
 import { useAuth } from '../../hooks/useAuth'
+import { useSessionStore } from '../../store/session'
 
+// TODO: listar articulos publicados en el home de la pagina
 export default function FormRegister () {
   const auth = useAuth()
+  const loginUser = useSessionStore(state => state.loginUser)
   const {
     register,
     handleSubmit,
@@ -34,7 +37,14 @@ export default function FormRegister () {
         formData.append('avatar', data.avatar[0]) // Acceder al primer archivo
       }
 
-      await User.registerUser({ payload: formData })
+      const { data: responseData, token } = await User.registerUser({ payload: formData })
+      const user = responseData.newUser.user.usuario
+      const rol = responseData.rol
+
+      console.log('Response register user')
+      console.log(responseData)
+
+      loginUser({ username: user, token, rol })
       auth.login()
       toast.success('Usuario registrado exitosamente')
       navigate('/notes', { replace: true })
