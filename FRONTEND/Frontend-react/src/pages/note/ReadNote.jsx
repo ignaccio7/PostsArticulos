@@ -33,13 +33,20 @@ export default function ReadNote () {
   })
 
   useEffect(() => {
+    console.log('abc')
+
     Note.getNoteForRead({ idNote: id, accessToken })
       .then(res => {
-        // console.log(res)
+        console.log(res)
 
         const data = res.note
         const pop = res.popularity
 
+        console.log(data)
+        console.log(typeof data)
+        console.log(typeof data.jsonData)
+
+        // const [t, st, ...rest] = JSON.parse(data.jsonData)
         const [t, st, ...rest] = data.jsonData
         setTitle(t.content)
         setSubtitle(st.content)

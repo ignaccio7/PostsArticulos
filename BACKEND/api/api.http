@@ -199,8 +199,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiL
 GET http://localhost:1234/article
 
 ### OBTENER TODOS LOS ARTICULOS
-GET http://localhost:1234/article?page=1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTgxNjAyNjQsImV4cCI6MTcxODE2Mzg2NH0.7exdITJpMQzEIqH5zIKDobq6LTxPxJ5-_ZVYlSTjJKs
+GET http://localhost:1234/article?page=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW83IiwiaWF0IjoxNzQ5ODU5ODgyLCJleHAiOjE3NTA0NjQ2ODJ9.RHeg_fEObbvzpmqfK1R3Z9W0aXktvuFKBZfMlFofSgQ
 
 ### OBTENER TODOS LOS ARTICULOS con filtros
 GET http://localhost:1234/article?titulo=titulo1&tema=tema

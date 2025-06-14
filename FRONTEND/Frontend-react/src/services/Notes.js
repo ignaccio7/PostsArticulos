@@ -14,7 +14,10 @@ export default class Note {
     }
 
     try {
-      const res = await RequestService.getRequest(`note/me?${query}`, requestOptions)
+      const res = await RequestService.getRequest(
+        `note/me?${query}`,
+        requestOptions
+      )
       return res
     } catch (error) {
       throw {
@@ -32,7 +35,12 @@ export default class Note {
       Authorization: `Bearer ${accessToken}`
     }
     try {
-      const res = await RequestService.getRequest(`note/${idNote}`, requestOptions)
+      const res = await RequestService.getRequest(
+        `note/${idNote}`,
+        requestOptions
+      )
+      console.log(res)
+
       return res
     } catch (error) {
       throw {
@@ -48,7 +56,12 @@ export default class Note {
       Authorization: `Bearer ${accessToken}`
     }
     try {
-      const res = await RequestService.getRequest(`note/read/${idNote}`, requestOptions)
+      const res = await RequestService.getRequest(
+        `note/read/${idNote}`,
+        requestOptions
+      )
+      console.log(res)
+
       return {
         note: res.data.note[0],
         popularity: res.data.popularity[0]
@@ -67,7 +80,11 @@ export default class Note {
       Authorization: `Bearer ${accessToken}`
     }
     try {
-      const res = await RequestService.postRequestFormData({ url: 'note', requestOptions, body: formData })
+      const res = await RequestService.postRequestFormData({
+        url: 'note',
+        requestOptions,
+        body: formData
+      })
       return res
     } catch (error) {
       console.log('Error en createNote')
@@ -88,12 +105,17 @@ export default class Note {
     }
 
     try {
-      const res = await RequestService.patchRequestFormData({ url: `note/${idNote}`, requestOptions, body: formData })
+      const res = await RequestService.patchRequestFormData({
+        url: `note/${idNote}`,
+        requestOptions,
+        body: formData
+      })
       return res
     } catch (error) {
       throw {
         status: error.statusCode ?? 500,
-        message: error.message || 'Ocurrio un error al intentar actualizar nota',
+        message:
+          error.message || 'Ocurrio un error al intentar actualizar nota',
         success: false
       }
     }
@@ -105,7 +127,10 @@ export default class Note {
     }
 
     try {
-      const res = await RequestService.deleteRequest({ url: `note/${idNote}`, requestOptions })
+      const res = await RequestService.deleteRequest({
+        url: `note/${idNote}`,
+        requestOptions
+      })
       console.log('Res en deleteNote')
 
       console.log(res)

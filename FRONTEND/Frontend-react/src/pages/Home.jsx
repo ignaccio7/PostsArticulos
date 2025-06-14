@@ -57,6 +57,7 @@ export default function Home () {
       // const search = previousParams?.titulo ?? ''
       // const res = await Article.getAll({ accessToken, query: `page=${page}&titulo=${search}` })
       const res = await Article.getAll({ accessToken, query })
+
       return { data: res.data, page: res.page, totalPages: res.totalPages }
     } catch (error) {
       setArticles([])
@@ -70,6 +71,8 @@ export default function Home () {
   }
 
   useEffect(() => {
+    console.log('Cargando articulos')
+
     const previousParams = Object.fromEntries(searchParams)
     const search = previousParams?.titulo ?? ''
     const query = `titulo=${search}&page=1`
@@ -83,13 +86,20 @@ export default function Home () {
 
   // Para el sentinel
   useEffect(() => {
+    console.log(articles)
+
     if (!sentinelRef.current) return
+
+    console.log('sentinel')
+    console.log(sentinelRef.current)
 
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         // console.log(totalPages)
 
         if (+page === totalPages) return
+
+        console.log('Ejecutando')
 
         const nextPage = +page + 1
         console.log('next page')
@@ -99,7 +109,12 @@ export default function Home () {
         const search = prevParams?.titulo ?? ''
         getArticles({ query: `titulo=${search}&page=${nextPage}` })
           .then((res) => {
-            setArticles([...articles, ...res.data])
+            console.log('//////////////////')
+            console.log(articles)
+            console.log(res.data)
+
+            const newArticles = [...articles, ...res.data]
+            setArticles(newArticles)
             setTotalPages(res.totalPages)
             setPage(res.page)
           })

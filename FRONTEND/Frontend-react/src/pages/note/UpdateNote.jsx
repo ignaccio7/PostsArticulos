@@ -50,7 +50,9 @@ export default function UpdateNote () {
       .then(data => {
         if (data.statusCode !== 200) navigate('/notes')
 
-        // console.log(data)
+        console.log(data)
+        console.log(typeof data)
+        console.log(typeof data.data.jsonData)
         setElements(data.data.jsonData)
       })
       .catch((e) => {

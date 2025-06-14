@@ -32,10 +32,14 @@ export default class ArticleModel {
 (SELECT count(*) from popularidad p where p.id_publicacion = np.id_publicacion and p.id_usuario = ?) as islike,
 (SELECT COUNT(*) FROM comentarios c WHERE c.id_publicacion = np.id_publicacion) AS comments
 FROM notas_publicadas np, notas n, usuario u
-WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${sql} ORDER BY likes DESC LIMIT ?,?;`
+WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${sql} ORDER BY  (SELECT COUNT(*) FROM popularidad p WHERE p.id_publicacion = np.id_publicacion) DESC LIMIT ?,?;`
+      console.log('query')
       console.log(query)
+      console.log('sql')
       console.log(sql)
+      console.log('perPage')
       console.log(perPage)
+      console.log('selectedPage')
       console.log(selectedPage)
 
       const [notes] = await connection.query(query, [idUser, ...values, selectedPage, +perPage])
