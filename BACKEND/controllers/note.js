@@ -442,8 +442,9 @@ export default class NoteController {
 
       result.data.jsonData = JSON.stringify(jsonDB)
 
-      console.log('=====================IMAGE FOR SAFE')
+      console.log('======================IMAGE FOR SAFE')
       console.log(imagesForSafe)
+      let sinUsar = 0
 
       // VEMOS SI DEBERIAMOS ELIMINAR ALGUNA IMAGEN DE CLOUDINARY -> filtramos las imagenes que no estan en el json recibido y las que no las almacenaremos para eliminar
       imagesDB.forEach((image) => {
