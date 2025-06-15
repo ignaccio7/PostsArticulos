@@ -182,8 +182,8 @@ export default class UserController {
         })
       }
       const { pass: passDB, rol } = validUser[0]
-      // const isValidPassword = await bcrypt.compare(pass, passDB)
-      const isValidPassword = passDB === pass
+      const isValidPassword = await bcrypt.compare(pass, passDB)
+      // const isValidPassword = passDB === pass
 
       if (!isValidPassword) {
         return response.status(404).json({

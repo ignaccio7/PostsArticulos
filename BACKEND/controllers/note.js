@@ -7,18 +7,26 @@ import { JSDOM } from 'jsdom'
 
 export default class NoteController {
   // Para obtener todos los resultados
-  static async getAll (request, response) {
+  static async getAll(request, response) {
     try {
       const { titulo, tema, init, end, page, perPage = 5 } = request.query
-      const results = await NoteModel.getAll({ filters: { titulo, tema }, fechaPost: { init, end }, page, perPage })
+      const results = await NoteModel.getAll({
+        filters: { titulo, tema },
+        fechaPost: { init, end },
+        page,
+        perPage,
+      })
 
-      const resultTotalPages = await NoteModel.getTotalPages({ filters: { titulo, tema }, fechaPost: { init, end } })
+      const resultTotalPages = await NoteModel.getTotalPages({
+        filters: { titulo, tema },
+        fechaPost: { init, end },
+      })
       const totalPages = Math.ceil(resultTotalPages.total_notas / perPage)
 
       if (results.length === 0) {
         response.status(404).json({
           statusCode: 404,
-          message: 'No existen registros'
+          message: 'No existen registros',
         })
         return
       }
@@ -29,13 +37,13 @@ export default class NoteController {
         data: results,
         perPage,
         totalPages,
-        page: page || '1'
+        page: page || '1',
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al solicitar datos en el gestor de Base de datos'
+        message: 'Fallo al solicitar datos en el gestor de Base de datos',
       })
     }
   }
@@ -66,7 +74,7 @@ export default class NoteController {
   //     })
   //   }
   // }
-  static async getById (request, response) {
+  static async getById(request, response) {
     try {
       const { id } = request.params
       const result = await NoteModel.getById({ id })
@@ -74,14 +82,14 @@ export default class NoteController {
       if (result.length === 0) {
         response.status(404).json({
           statusCode: 404,
-          message: 'No se encontro la nota'
+          message: 'No se encontro la nota',
         })
         return
       }
 
       console.log(result[0].jsonData)
 
-      result[0].jsonData.forEach(element => {
+      result[0].jsonData.forEach((element) => {
         if (element.tag === 'image') {
           delete element.content.imageId
         }
@@ -90,19 +98,19 @@ export default class NoteController {
       response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
-        data: result[0]
+        data: result[0],
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al obtener la nota'
+        message: 'Fallo al obtener la nota',
       })
     }
   }
 
   // Automatizar para que solo enviando un parametro te de el nombre e imagen del usuario sin tener que crear otro metodo como lo haremos
-  static async getNoteForRead (request, response) {
+  static async getNoteForRead(request, response) {
     try {
       const { id } = request.params
       const { idUser } = request
@@ -114,14 +122,14 @@ export default class NoteController {
       if (result.note.length === 0) {
         response.status(404).json({
           statusCode: 404,
-          message: 'No se encontro la nota'
+          message: 'No se encontro la nota',
         })
         return
       }
 
       console.log(result.note[0].jsonData)
 
-      result.note[0].jsonData.forEach(element => {
+      result.note[0].jsonData.forEach((element) => {
         if (element.tag === 'image') {
           delete element.content.imageId
         }
@@ -130,13 +138,13 @@ export default class NoteController {
       response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
-        data: result
+        data: result,
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al obtener la nota'
+        message: 'Fallo al obtener la nota',
       })
     }
   }
@@ -170,7 +178,7 @@ export default class NoteController {
   } */
 
   // Para crear una nueva nota - CON FORMDATA
-  static async create (request, response) {
+  static async create(request, response) {
     const body = request.body
     const files = request.files
     console.log({ body })
@@ -195,10 +203,10 @@ export default class NoteController {
 
     if (result.error) {
       // sacando el 1er error
-      const zodError = result?.error?.issues?.map(e => e.message)[0] || 'Invalid fields'
+      const zodError = result?.error?.issues?.map((e) => e.message)[0] || 'Invalid fields'
       return response.status(422).json({
         statusCode: 422,
-        message: zodError
+        message: zodError,
       })
     }
 
@@ -222,7 +230,7 @@ export default class NoteController {
     // parseamos los datos para almacenarlos en la db
     let numImage = 0
     const jsonDB = JSON.parse(result.data.order)
-    jsonDB.forEach(element => {
+    jsonDB.forEach((element) => {
       if (element.tag === 'image') {
         element.content = result.data.imagenes[numImage]
         numImage++
@@ -244,19 +252,19 @@ export default class NoteController {
       response.status(201).json({
         statusCode: 201,
         message: 'Nota creada',
-        data: newNote
+        data: newNote,
       })
     } catch (error) {
       console.log(error)
       response.status(500).json({
         statusCode: 500,
-        message: 'Fallo al crear la nota'
+        message: 'Fallo al crear la nota',
       })
     }
   }
 
   // Para eliminar una nota
-  static async delete (request, response) {
+  static async delete(request, response) {
     try {
       const { id } = request.params
 
@@ -267,7 +275,7 @@ export default class NoteController {
       console.log('2')
 
       if (searchImages.length > 0) {
-        const idsImages = searchImages.flatMap(i => i.image_id)
+        const idsImages = searchImages.flatMap((i) => i.image_id)
         await deleteImages({ publicImagesIds: idsImages })
       }
       console.log('3')
@@ -278,19 +286,19 @@ export default class NoteController {
       if (result === false) {
         response.json({
           statusCode: 404,
-          message: 'Nose ha encontrado la nota'
+          message: 'Nose ha encontrado la nota',
         })
         return
       }
       response.json({
         statusCode: 200,
-        message: 'Nota eliminada'
+        message: 'Nota eliminada',
       })
     } catch (error) {
       console.log(error)
       response.status(500).json({
         statusCode: 500,
-        message: error.message
+        message: error.message,
       })
     }
   }
@@ -335,7 +343,7 @@ export default class NoteController {
   } */
 
   // Para modificar una nota - CON FORMDATA
-  static async update (request, response) {
+  static async update(request, response) {
     try {
       const body = request.body
       const files = request.files
@@ -365,10 +373,10 @@ export default class NoteController {
       console.log(partialNote)
       const result = validatePartialNote({ note: partialNote })
       if (result.error) {
-        const zodError = result?.error?.issues?.map(e => e.message)[0] || 'Invalid fields'
+        const zodError = result?.error?.issues?.map((e) => e.message)[0] || 'Invalid fields'
         return response.status(422).json({
           statusCode: 422,
-          message: zodError
+          message: zodError,
         })
       }
       const { id } = request.params
@@ -376,7 +384,7 @@ export default class NoteController {
       console.log({
         id,
         idUser,
-        result
+        result,
       })
 
       // result.data.usuario_id_usuario = Number(idUser) VER PARA BORRAR ESTA LINEA
@@ -401,11 +409,11 @@ export default class NoteController {
       const imagesForSafe = []
       let numImage = 0
       const jsonDB = JSON.parse(result.data.order)
-      jsonDB.forEach(element => {
+      jsonDB.forEach((element) => {
         if (element.tag === 'image') {
           // Si enviamos una nueva imagen no tendra el atributo content ya que llegara en files y lo almacenaremos de result.data.imagenes que mas arriba ya subimos al servidor de cloudinary
           if (element.content) {
-            const searchImage = imagesDB.find(e => e.image_url === element.content.image)
+            const searchImage = imagesDB.find((e) => e.image_url === element.content.image)
             element.content = { image: searchImage.image_url, imageId: searchImage.image_id }
             imagesForSafe.push(element.content)
           } else {
@@ -438,11 +446,11 @@ export default class NoteController {
       console.log(imagesForSafe)
 
       // VEMOS SI DEBERIAMOS ELIMINAR ALGUNA IMAGEN DE CLOUDINARY -> filtramos las imagenes que no estan en el json recibido y las que no las almacenaremos para eliminar
-      imagesDB.forEach(image => {
-        const isSafe = imagesForSafe.find(el => (el.image === image.image_url))
+      imagesDB.forEach((image) => {
+        const isSafe = imagesForSafe.find((el) => el.image === image.image_url)
         if (!isSafe) imagesForDelete.push({ image: image.image_url, imageId: image.image_id })
       })
-      const idsForDelete = imagesForDelete.flatMap(image => image.imageId)
+      const idsForDelete = imagesForDelete.flatMap((image) => image.imageId)
       // eliminamos las imagenes
       console.log('=====================IMAGE FOR DELETE')
       console.log(imagesForDelete)
@@ -453,11 +461,18 @@ export default class NoteController {
       console.log('=====================RESULT DATA')
       console.log(result.data)
 
-      const newNote = await NoteModel.updateNote({ id, partialNote: { titulo: result.data.T1, descripcion: result.data.P1, jsonData: result.data.jsonData } })
+      const newNote = await NoteModel.updateNote({
+        id,
+        partialNote: {
+          titulo: result.data.T1,
+          descripcion: result.data.P1,
+          jsonData: result.data.jsonData,
+        },
+      })
       console.log(newNote)
 
       // Sinitizamos la respuesta al cliente sin el imageID
-      newNote[0].jsonData.forEach(element => {
+      newNote[0].jsonData.forEach((element) => {
         if (element.tag === 'image') {
           delete element.content.imageId
         }
@@ -466,31 +481,41 @@ export default class NoteController {
       if (newNote === false) {
         return response.json({
           statusCode: 404,
-          message: 'Nose ha encontrado la nota'
+          message: 'Nose ha encontrado la nota',
         })
       }
 
       response.json({
         statusCode: 200,
         message: 'Nota modificada',
-        data: newNote[0]
+        data: newNote[0],
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al modificar la nota'
+        message: 'Fallo al modificar la nota',
       })
     }
   }
 
-  static async getNotesByUser (request, response) {
+  static async getNotesByUser(request, response) {
     try {
       const { idUser } = request
       const { titulo, tema, init, end, page, perPage = 5 } = request.query
-      const results = await NoteModel.getNotesByUser({ filters: { titulo, tema }, fechaPost: { init, end }, page, idUser, perPage })
+      const results = await NoteModel.getNotesByUser({
+        filters: { titulo, tema },
+        fechaPost: { init, end },
+        page,
+        idUser,
+        perPage,
+      })
 
-      const resultTotalPages = await NoteModel.getTotalPagesByUser({ filters: { titulo, tema }, fechaPost: { init, end }, idUser })
+      const resultTotalPages = await NoteModel.getTotalPagesByUser({
+        filters: { titulo, tema },
+        fechaPost: { init, end },
+        idUser,
+      })
       const totalPages = Math.ceil(resultTotalPages.total_notas / perPage)
 
       console.log({ resultTotalPages })
@@ -504,13 +529,13 @@ export default class NoteController {
         data: results,
         perPage,
         totalPages,
-        page: page || '1'
+        page: page || '1',
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
-        message: 'Fallo al solicitar datos en el gestor de Base de datos'
+        message: 'Fallo al solicitar datos en el gestor de Base de datos',
       })
     }
   }
