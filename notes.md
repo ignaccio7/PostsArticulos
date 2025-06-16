@@ -133,6 +133,17 @@ Y creamos los siguientes archivos con el siguiente contenido:
 // - Evita conflictos con código de otros developers
 ```
 
+Como estamos haciendo uso de un **monorepo** lo que haremos es cambiar la configuracion de la siguiente manera:
+
+```json
+{
+  "BACKEND/**/*.{js,json}": [    
+    "npx biome check --no-errors-on-unmatched",    
+    "npx biome format --no-errors-on-unmatched"
+  ]
+}
+```
+
 `commitlint.config.js`
 ```js
 module.exports = {
@@ -216,13 +227,58 @@ EJEMPLOS DE COMMITS VÁLIDOS:
 */
 ```
 
-``
-```bash
+Luego agregamos el nuevo hook en husky
 
+```bash
+npx husky add .husky/commit-msg 'npx --no-install commitlint --edit $1'
+```
+Y creamos un archivo `.husky/commit-msg` con el siguiente contenido:
+
+```bash
+echo "🚀 Starting commit-msg pre-commit hook..."
+npx --no-install commitlint --edit $1
+```
+
+Y para verificar los testings el hook de precommit 
+```bash
+npx husky add .husky/pre-commit 'npm run lint-staged'
+```
+Y creamos un archivo `.husky/pre-commit` con el siguiente contenido:
+
+```bash
+echo "🚀 Starting pre-commit checks..."
+npm run lint-staged
+```
+
+Y finalmente nuestro `package.json` se vera asi:
+
+```json
+{
+  "name": "blogpost-monorepo",
+  "private": true,
+  "workspaces": [
+    "BACKEND",
+    "FRONTEND/**"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
+  },
+  "keywords": [],
+  "author": "Ignaccio7",
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2"
+  }
+}
 ```
 
 
-``
-```bash
 
-```
+
+
+
+
+
