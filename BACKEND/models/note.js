@@ -2,9 +2,9 @@ import { getFilters } from '../utils/utils.js'
 import { connection } from './connection.js'
 
 export default class NoteModel {
-  static async getAll ({ filters, fechaPost, page = 0, perPage = 5 }) {
+  static async getAll({ filters, fechaPost, page = 0, perPage = 5 }) {
     const { sql, values } = getFilters({ filters, fechaPost })
-    const p = parseInt(page)
+    const p = Number.parseInt(page)
     const selectedPage = p === 1 || p === 0 ? 0 : (p - 1) * perPage
     try {
       const query = `SELECT n.id_nota, n.titulo, n.descripcion, n.fechaPost, u.usuario, get_url_image(n.id_nota) as image_url FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario and n.id_nota not in (select notas_id_nota from notas_publicadas np)${sql} ORDER BY n.id_nota DESC, n.fechaPost DESC LIMIT ?,${perPage};`
@@ -20,7 +20,7 @@ export default class NoteModel {
   }
 
   // obtener totalPages de notas
-  static async getTotalPages ({ filters, fechaPost }) {
+  static async getTotalPages({ filters, fechaPost }) {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
     const { sql, values } = getFilters({ filters, fechaPost })
     try {
@@ -34,7 +34,7 @@ export default class NoteModel {
   }
 
   // obtener totalPages de notas por usuario
-  static async getTotalPagesByUser ({ filters, fechaPost, idUser }) {
+  static async getTotalPagesByUser({ filters, fechaPost, idUser }) {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
     const { sql, values } = getFilters({ filters, fechaPost })
     try {
@@ -57,9 +57,10 @@ export default class NoteModel {
   //     throw new Error(`Fallo al obtener la nota con id: ${id}`)
   //   }
   // }
-  static async getById ({ id }) {
+  static async getById({ id }) {
     try {
-      const query = 'SELECT n.jsonData, u.usuario FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario AND id_nota = ?'
+      const query =
+        'SELECT n.jsonData, u.usuario FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario AND id_nota = ?'
       const [note] = await connection.query(query, [id])
       return note
     } catch (error) {
@@ -69,19 +70,22 @@ export default class NoteModel {
   }
 
   // Automatizar para que solo enviando un parametro te de el nombre e imagen del usuario sin tener que crear otro metodo como lo haremos
-  static async getNoteForRead ({ idNote, idUser = 0 }) {
+  static async getNoteForRead({ idNote, idUser = 0 }) {
     try {
       const query = `SELECT n.jsonData, n.fechaPost ,u.usuario, p.avatar, get_full_name(p.ci) as fullname
       FROM notas n, usuario u, persona p WHERE n.usuario_id_usuario = u.id_usuario and u.persona_ci  = p.ci  AND id_nota = ?;`
 
-      const queryPopularity = 'CALL get_popularity_byNote(?, ?, @likes, @comments, @isLike, @xisPublished);'
+      const queryPopularity =
+        'CALL get_popularity_byNote(?, ?, @likes, @comments, @isLike, @xisPublished);'
       await connection.query(queryPopularity, [idNote, idUser])
 
       const [note] = await connection.query(query, [idNote])
-      const [popularity] = await connection.query('SELECT @likes AS likes, @comments AS comments, @isLike AS islike, @xisPublished AS isPublished;')
+      const [popularity] = await connection.query(
+        'SELECT @likes AS likes, @comments AS comments, @isLike AS islike, @xisPublished AS isPublished;'
+      )
       return {
         note,
-        popularity
+        popularity,
       }
     } catch (error) {
       console.log(error)
@@ -89,21 +93,17 @@ export default class NoteModel {
     }
   }
 
-  static async createNote ({ note }) {
+  static async createNote({ note }) {
     console.log('La nota es ', note)
-    const {
-      usuario_id_usuario: idUsuario,
-      T1: titulo,
-      P1: descripcion,
-      jsonData
-    } = note
+    const { usuario_id_usuario: idUsuario, T1: titulo, P1: descripcion, jsonData } = note
     try {
-      const query = 'INSERT INTO notas (usuario_id_usuario,titulo,descripcion,fechaPost,jsonData) VALUES (?,?,?,?,?)'
+      const query =
+        'INSERT INTO notas (usuario_id_usuario,titulo,descripcion,fechaPost,jsonData) VALUES (?,?,?,?,?)'
       await connection.query(query, [idUsuario, titulo, descripcion, new Date(), jsonData])
       // return note
       return {
         titulo,
-        descripcion
+        descripcion,
       }
     } catch (error) {
       console.log(error)
@@ -111,7 +111,7 @@ export default class NoteModel {
     }
   }
 
-  static async deleteNote ({ id }) {
+  static async deleteNote({ id }) {
     try {
       const query = 'DELETE FROM notas WHERE id_nota = ?'
       console.log('El id ees:', id)
@@ -131,9 +131,10 @@ export default class NoteModel {
     }
   }
 
-  static async updateNote ({ id, partialNote }) {
+  static async updateNote({ id, partialNote }) {
     try {
-      const columns = []; const values = []
+      const columns = []
+      const values = []
       Object.entries(partialNote).forEach(([column, value]) => {
         columns.push(`${column}=?`)
         values.push(value)
@@ -154,7 +155,7 @@ export default class NoteModel {
   }
 
   // Para buscar el id_image de una nota <- para el avatar servia cuando solo existia una imagen pero ahora las guardamos como un json
-  static async searchIdImage ({ idNota }) {
+  static async searchIdImage({ idNota }) {
     try {
       const query = 'SELECT imagen_id FROM notas WHERE id_nota = ?'
       const [note] = await connection.query(query, [idNota])
@@ -179,7 +180,7 @@ export default class NoteModel {
   //   }
   // }
 
-  static async searchIdsImages ({ idNota }) {
+  static async searchIdsImages({ idNota }) {
     try {
       const query = `SELECT jt.element ->> '$.content.imageId' AS image_id, jt.element ->> '$.content.image' AS image_url  FROM notas n, JSON_TABLE(n.jsonData , '$[*]' 
       COLUMNS (element JSON PATH '$')) AS jt
@@ -192,9 +193,9 @@ export default class NoteModel {
     }
   }
 
-  static async getNotesByUser ({ filters, fechaPost, page = 0, idUser, perPage = 5 }) {
+  static async getNotesByUser({ filters, fechaPost, page = 0, idUser, perPage = 5 }) {
     const { sql, values } = getFilters({ filters, fechaPost })
-    const p = parseInt(page)
+    const p = Number.parseInt(page)
     const selectedPage = p === 1 || p === 0 ? 0 : (p - 1) * perPage
     try {
       const query = `SELECT n.*, get_url_image(n.id_nota) as image_url FROM notas n WHERE n.usuario_id_usuario = ?${sql} ORDER BY n.id_nota DESC, n.fechaPost DESC LIMIT ?,${perPage}`
@@ -208,13 +209,13 @@ export default class NoteModel {
     }
   }
 
-  static async verifyUserPermissionForNote ({ idNote, idUser }) {
+  static async verifyUserPermissionForNote({ idNote, idUser }) {
     try {
       const query = 'SELECT * from notas n where n.id_nota = ? and n.usuario_id_usuario = ?;'
       const [note] = await connection.query(query, [idNote, idUser])
       return note
     } catch (error) {
-      throw new Error('Error al comunicarse con la base de datos')
+      throw new Error('Error al comunicarse con la base de datos:', error.message)
     }
   }
 }
