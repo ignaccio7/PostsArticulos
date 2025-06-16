@@ -1,0 +1,6 @@
+{
+  "*.{js}": [
+    "npx biome check --no-errors-on-unmatched",
+    "npx biome format --no-errors-on-unmatched"
+  ]
+}
