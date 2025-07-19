@@ -8,7 +8,7 @@ const ACCEPTED_ORIGINS = [
   'http://localhost:8080',
   'http://localhost:5173',
   'http://midominio.com',
-  'https://midominio.com'
+  'https://midominio.com',
 ]
 
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => {
@@ -19,11 +19,13 @@ export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => {
         return callback(null, true)
       }
 
-      if (!origin) { // este es en caso de que solicitemos del mismo dominio ya que envia undefined
+      if (!origin) {
+        // este es en caso de que solicitemos del mismo dominio ya que envia undefined
         return callback(null, true)
       }
       return callback(new Error('Not allowed by CORSa'), false)
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
 }

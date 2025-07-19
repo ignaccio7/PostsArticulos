@@ -92,6 +92,17 @@ Content-Type: application/json
 }
 
 
+### POST login user
+POST http://localhost:1234/user/login
+Content-Type: application/json
+
+{
+  "usuario":"nirojas1",
+  "pass":"aA*123456"
+}
+
+
+
 ### AHORA YA ES CON TOKEN ESTE ENDPOINT
 ### GET a la pagina de inicio de PERSONA con uso de TOKEN
 GET http://localhost:1234/person

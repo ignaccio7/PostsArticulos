@@ -1,17 +1,20 @@
-import { readJSON } from './utils/utils.js'
-import logger from 'morgan'
+import cookieParser from 'cookie-parser'
 import express, { json } from 'express'
+import logger from 'morgan'
 import config from './config.js'
-import { routerPerson } from './routes/person.js'
-import { routerUser } from './routes/user.js'
 // import { corsMiddleware, handleErrorCors } from './middlewares/cors.js'
 import { corsMiddleware } from './middlewares/cors.js'
 import { handleErrors } from './middlewares/handleErrors.js'
-import { routerNote } from './routes/note.js'
 import { routerArticle } from './routes/article.js'
+import { routerNote } from './routes/note.js'
+import { routerPerson } from './routes/person.js'
+import { routerUser } from './routes/user.js'
+import { readJSON } from './utils/utils.js'
 const pkg = readJSON('./package.json')
 
 const app = express()
+
+app.use(cookieParser())
 
 app.use(json())
 
@@ -23,12 +26,13 @@ app.set('pkg', pkg)
 app.set('port', config.port)
 app.set('host', config.host)
 
-app.get('/', (request, response) => {
+// app.get('/', (request, response) => {
+app.get('/', (_, response) => {
   response.status(200).json({
     author: app.get('pkg').author,
     description: app.get('pkg').description,
     version: app.get('pkg').version,
-    name: app.get('pkg').name
+    name: app.get('pkg').name,
   })
 })
 
@@ -41,7 +45,8 @@ app.use('/note', routerNote)
 // Para los articulos
 app.use('/article', routerArticle)
 
-app.use('/', (request, response) => {
+// app.use('/', (request, response) => {
+app.use('/', (_, response) => {
   response.send(`
   <h1>Not Found</h1>
   <hr/>
@@ -54,5 +59,6 @@ app.use('/', (request, response) => {
 app.use(handleErrors)
 
 app.listen(app.get('port'), () => {
+  // biome-ignore lint/suspicious/noConsoleLog: <explanation>
   console.log(`Server listening on port: http://${app.get('host')}:${app.get('port')}`)
 })

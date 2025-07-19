@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
-import { generateToken } from '../middlewares/authJWT.js'
+import { generateAccessToken, generateRefreshToken } from '../middlewares/authJWT.js'
+import TokenModel from '../models/token.js'
 import UserModel from '../models/user.js'
 import { validatePerson } from '../schemas/person.js'
 import { validatePartialUser, validateUser } from '../schemas/user.js'
@@ -145,7 +146,16 @@ export default class UserController {
       delete newUser?.person?.avatarId
 
       // aqui generaremos el token
-      const token = await generateToken({ user: user.usuario })
+      // const token = await generateToken({ user: user.usuario })
+      const accessToken = await generateAccessToken({ user: user.usuario })
+      const refreshToken = await generateRefreshToken({ user: user.usuario })
+      response.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'none',
+        maxAge: 24 * 60 * 60 * 1000,
+        path: '/',
+      })
 
       response.status(201).json({
         statusCode: 201,
@@ -154,7 +164,7 @@ export default class UserController {
           newUser,
           rol: 'user',
         },
-        token,
+        token: accessToken,
       })
     } catch (error) {
       console.log('errorController', error)
@@ -180,6 +190,9 @@ export default class UserController {
       })
     }
     const { usuario, pass } = user
+
+    console.log('user')
+    console.log({ usuario, pass })
 
     try {
       const validUser = await UserModel.getPassUser({ username: usuario })
@@ -210,7 +223,22 @@ export default class UserController {
         })
       } */
       // aqui generaremos el token
-      const token = await generateToken({ user: usuario })
+      // estamos guardando en la tabla de refresh token el userid como el username pero quiza se podria hacer una consulta para obtener el id_usuario pero por el momento no
+      const accessToken = await generateAccessToken({ user: user.usuario })
+      const refreshToken = await generateRefreshToken({ user: user.usuario })
+
+      console.log({ accessToken, refreshToken })
+
+      response.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        // maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 5 * 60 * 1000,
+        path: '/',
+        domain: 'localhost',
+        sameSite: 'none',
+      })
+
       response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
@@ -219,13 +247,42 @@ export default class UserController {
           rol,
           avatar,
         },
-        token,
+        token: accessToken,
       })
     } catch (error) {
       console.log(error)
       response.json({
         statusCode: 500,
         message: 'Fallo al intentar logearse',
+      })
+    }
+  }
+
+  static async signout(request, response) {
+    try {
+      const { idUser, jti } = request
+      const result = await TokenModel.deleteRefreshToken({ jti, userId: idUser })
+      if (result === false) {
+        return response.status(404).json({
+          statusCode: 404,
+          message: 'No se encontro el token para el usuario',
+        })
+      }
+
+      response.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      })
+
+      response.status(200).json({
+        statusCode: 200,
+        message: 'Sesion cerrada',
+      })
+    } catch (error) {
+      return response.status(500).json({
+        statusCode: 500,
+        message: error.message,
       })
     }
   }
@@ -293,6 +350,26 @@ export default class UserController {
         statusCode: 500,
         message: 'Fallo al intentar modificar el usuario',
       })
+    }
+  }
+
+  // refresh token
+  static async refresh(request, response) {
+    console.log('VINO AL REFERSH')
+    const { refreshToken } = request.cookies
+    const { idUser } = request
+    try {
+      console.log(refreshToken)
+      const accessToken = await generateAccessToken({ user: idUser })
+      console.log('new AccessToken', accessToken)
+      return response.status(200).json({
+        statusCode: 200,
+        message: 'Token actualizado',
+        data: accessToken,
+      })
+    } catch (error) {
+      console.log('Error en el refresh token controller')
+      console.log(error)
     }
   }
 }

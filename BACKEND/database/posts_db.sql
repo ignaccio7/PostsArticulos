@@ -155,6 +155,21 @@
   ALTER TABLE `comentarios`
   ADD COLUMN `fechaPub` DATETIME DEFAULT CURRENT_TIMESTAMP;
 
+CREATE TABLE `refresh_tokens` (
+  `token_id` varchar(36) NOT NULL,
+  `user_id` varchar(15) NOT NULL,
+  `token_hash` varchar(64) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`token_id`),
+  KEY `idx_user_id` (`user_id`),
+  CONSTRAINT `fk_refresh_tokens_user` 
+    FOREIGN KEY (`user_id`) 
+    REFERENCES `usuario` (`usuario`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
   -- Crea la tabla de imágenes asociadas a notas
   -- CREATE TABLE `imagen_nota` (
   --   `id_imagen` varchar(255) NOT NULL,

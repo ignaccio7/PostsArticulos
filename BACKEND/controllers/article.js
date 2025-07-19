@@ -144,8 +144,8 @@ export default class ArticleController {
       const remove = await ArticleModel.canIDelete({ id, idUser })
       console.log(remove)
       if (remove.length === 0 || remove.can_i_delete === 0) {
-        return response.json({
-          statusCode: 401,
+        return response.status(403).json({
+          statusCode: 403,
           message: 'Usted no puede eliminar este comentario',
         })
       }

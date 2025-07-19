@@ -1,11 +1,17 @@
 // Manejo de errores
-export const handleErrors = (err, req, res, next) => {
+// export const handleErrors = (err, req, res, next) => {
+export const handleErrors = (err, _, res, next) => {
+  console.log('erroren handleErrors', err)
+
   // console.log('El error es', err.message)
   if (err && err.message === 'jwt must be provided') {
-    return res.status(401).json({ statusCode: 401, message: 'Token no encontrado' })
+    return res.status(401).json({ statusCode: 401, message: 'Token no encontradoaaaaaaaa' })
   }
   if (err && err.message === 'jwt expired') {
-    return res.status(401).json({ statusCode: 401, message: 'Token expirado. Por favor, vuelva a iniciar sesion' })
+    console.log('Vino aquiiiiiiiiiiiiiiiiiiiiiiiiiii')
+    return res
+      .status(401)
+      .json({ statusCode: 401, message: 'Token expirado. Por favor, vuelva a iniciar sesion' })
   }
   if (err && err.message === 'invalid signature') {
     return res.status(401).json({ statusCode: 401, message: 'Token invalido' })
@@ -13,7 +19,9 @@ export const handleErrors = (err, req, res, next) => {
   // si es un error de permiso de usuario
   if (err && err.message === 'Not permission allowed') {
     // return res.status(401).json({ statusCode: 401, message: 'Acceso denegado: el usuario no es administrador' })
-    return res.status(401).json({ statusCode: 401, message: 'Acceso denegado: No tiene permiso para esta accion' })
+    return res
+      .status(403)
+      .json({ statusCode: 403, message: 'Acceso denegado: No tiene permiso para esta accion' })
   }
   // si es un error de CORS
   if (err && err.message === 'Not allowed by CORSa') {
@@ -21,7 +29,10 @@ export const handleErrors = (err, req, res, next) => {
   }
   // si es un error al subir un archivo que no sea una imagen
   if (err && err.message === 'InvalidTypeMulter') {
-    return res.status(400).json({ statusCode: 403, message: 'Invalid file type. Only JPEG, PNG, AVIF and WEBP are allowed' })
+    return res.status(400).json({
+      statusCode: 400,
+      message: 'Invalid file type. Only JPEG, PNG, AVIF and WEBP are allowed',
+    })
   }
   if (err) {
     console.log('error en handleErrors')

@@ -1,7 +1,7 @@
 import { connection } from './connection.js'
 
 export default class UserModel {
-  static async getAll () {
+  static async getAll() {
     try {
       const query = 'SELECT u.*, p.avatar FROM usuario u, persona p WHERE u.persona_ci = p.ci'
       const [users] = await connection.query(query)
@@ -12,30 +12,27 @@ export default class UserModel {
     }
   }
 
-  static async createUserPerson ({ person, user }) {
-    const {
-      ci,
-      nombres,
-      paterno,
-      materno,
-      telefono,
-      correo,
-      avatar,
-      avatarId
-    } = person
-    const {
-      usuario,
-      pass,
-      rol
-    } = user
+  static async createUserPerson({ person, user }) {
+    const { ci, nombres, paterno, materno, telefono, correo, avatar, avatarId } = person
+    const { usuario, pass, rol } = user
 
     try {
       await connection.beginTransaction()
       // rol por defecto siempre sera undefined
 
-      const queryPerson = 'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar,avatar_id) VALUES (?,?,?,?,?,?,?,?)'
+      const queryPerson =
+        'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar,avatar_id) VALUES (?,?,?,?,?,?,?,?)'
       const queryUser = 'INSERT INTO usuario(persona_ci,usuario,pass) VALUES(?,?,?)'
-      const promisePerson = connection.query(queryPerson, [ci, nombres, paterno, materno, telefono, correo, avatar, avatarId])
+      const promisePerson = connection.query(queryPerson, [
+        ci,
+        nombres,
+        paterno,
+        materno,
+        telefono,
+        correo,
+        avatar,
+        avatarId,
+      ])
       const promiseUser = connection.query(queryUser, [ci, usuario, pass, rol])
       // const promisePerson = connection.query('SELECT * FROM persona')
       // const promiseUser = connection.query('SELECT * FROM usuario')
@@ -45,7 +42,7 @@ export default class UserModel {
       await connection.commit()
       return {
         person,
-        user
+        user,
       }
     } catch (error) {
       await connection.rollback()
@@ -55,7 +52,8 @@ export default class UserModel {
       // TODO arreglar el error para cuando el username ya esta ocupado
       if (error.code === 'ER_DUP_ENTRY') {
         objError.status = 409
-        objError.message = 'Usted ya cuenta con un usuario registrado o El nombre de usuario ya esta ocupado.'
+        objError.message =
+          'Usted ya cuenta con un usuario registrado o El nombre de usuario ya esta ocupado.'
       }
       throw objError
     }
@@ -73,7 +71,7 @@ export default class UserModel {
     }
   } */
 
-  static async search ({ ci }) {
+  static async search({ ci }) {
     const query = 'SELECT persona_ci,usuario,rol FROM usuario WHERE persona_ci = ?'
     try {
       const [user] = await connection.query(query, [ci])
@@ -84,7 +82,7 @@ export default class UserModel {
     }
   }
 
-  static async update ({ ci, usuario, pass }) {
+  static async update({ ci, usuario, pass }) {
     try {
       const query = 'UPDATE usuario SET usuario=?, pass=? WHERE persona_ci = ?'
       const [result] = await connection.query(query, [usuario, pass, ci])
@@ -94,7 +92,9 @@ export default class UserModel {
         return false
       }
 
-      const [updatedUser] = await connection.query('SELECT * FROM usuario WHERE persona_ci = ?', [ci])
+      const [updatedUser] = await connection.query('SELECT * FROM usuario WHERE persona_ci = ?', [
+        ci,
+      ])
       return updatedUser
     } catch (error) {
       console.log(error)
@@ -103,7 +103,7 @@ export default class UserModel {
   }
 
   // metodo para el middleware de token
-  static async searchByUsername ({ username }) {
+  static async searchByUsername({ username }) {
     const query = 'SELECT rol, id_usuario FROM usuario WHERE usuario = ?'
     try {
       const [result] = await connection.query(query, [username])
@@ -115,8 +115,9 @@ export default class UserModel {
   }
 
   // metodo para obtener el password del usuario
-  static async getPassUser ({ username }) {
-    const query = 'SELECT pass, rol FROM usuario WHERE usuario = ?'
+  static async getPassUser({ username }) {
+    const query =
+      'SELECT u.pass, u.rol, p.avatar FROM usuario u INNER JOIN persona p ON u.persona_ci = p.ci WHERE u.usuario = ?'
     try {
       const [result] = await connection.query(query, [username])
       return result
@@ -127,7 +128,7 @@ export default class UserModel {
   }
 
   // metodo para verificar si un usuario existe. buscamos mediante el username y el ci
-  static async isExistUser ({ ci, username }) {
+  static async isExistUser({ ci, username }) {
     const query = 'SELECT * FROM usuario u WHERE u.persona_ci  = ? OR u.usuario = ?;'
     try {
       const [result] = await connection.query(query, [ci, username])

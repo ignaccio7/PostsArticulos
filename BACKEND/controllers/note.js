@@ -102,7 +102,7 @@ export default class NoteController {
       })
     } catch (error) {
       console.log(error)
-      response.json({
+      response.status(500).json({
         statusCode: 500,
         message: 'Fallo al obtener la nota',
       })
@@ -142,9 +142,9 @@ export default class NoteController {
       })
     } catch (error) {
       console.log(error)
-      response.json({
+      response.status(500).json({
         statusCode: 500,
-        message: 'Fallo al obtener la nota',
+        message: 'Fallo al obtener la nota123',
       })
     }
   }
@@ -444,7 +444,7 @@ export default class NoteController {
 
       console.log('======================IMAGE FOR SAFE')
       console.log(imagesForSafe)
-      let sinUsar = 0
+      const sinUsar = 0
 
       // VEMOS SI DEBERIAMOS ELIMINAR ALGUNA IMAGEN DE CLOUDINARY -> filtramos las imagenes que no estan en el json recibido y las que no las almacenaremos para eliminar
       imagesDB.forEach((image) => {
