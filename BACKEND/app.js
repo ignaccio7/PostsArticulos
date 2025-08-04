@@ -9,9 +9,9 @@ import { routerArticle } from './routes/article.js'
 import { routerNote } from './routes/note.js'
 import { routerPerson } from './routes/person.js'
 import { routerUser } from './routes/user.js'
+import { checkBanned, generalLimiter, verifyLimiterForMethod } from './utils/ratelimit/rateLimit.js'
 import { readJSON } from './utils/utils.js'
 const pkg = readJSON('./package.json')
-
 const app = express()
 
 app.use(cookieParser())
@@ -25,6 +25,13 @@ app.use(corsMiddleware())
 app.set('pkg', pkg)
 app.set('port', config.port)
 app.set('host', config.host)
+
+// Limite de peticiones
+// 1. Verificamos si esta o no baneado
+app.use(checkBanned)
+// 2. Aplicamos el limite general de peticiones
+app.use('/', generalLimiter)
+app.use(verifyLimiterForMethod)
 
 // app.get('/', (request, response) => {
 app.get('/', (_, response) => {

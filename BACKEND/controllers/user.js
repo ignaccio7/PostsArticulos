@@ -239,7 +239,7 @@ export default class UserController {
         sameSite: 'none',
       })
 
-      response.json({
+      return response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
         data: {
@@ -251,7 +251,7 @@ export default class UserController {
       })
     } catch (error) {
       console.log(error)
-      response.json({
+      return response.json({
         statusCode: 500,
         message: 'Fallo al intentar logearse',
       })

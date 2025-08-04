@@ -22,9 +22,9 @@ export default class ArticleModel {
   //   }
   // }
 
-  static async getAll ({ filters, fechaPost, page = 0, idUser = 0, perPage = 11 }) {
+  static async getAll({ filters, fechaPost, page = 0, idUser = 0, perPage = 11 }) {
     const { sql, values } = getFilters({ filters, fechaPost })
-    const p = parseInt(page)
+    const p = Number.parseInt(page)
     const selectedPage = p === 1 || p === 0 ? 0 : (p - 1) * perPage
     try {
       const query = `SELECT np.id_publicacion, n.id_nota, n.titulo, n.descripcion,get_url_image(np.notas_id_nota) as url_image, np.fechaPub, u.usuario,
@@ -33,14 +33,14 @@ export default class ArticleModel {
 (SELECT COUNT(*) FROM comentarios c WHERE c.id_publicacion = np.id_publicacion) AS comments
 FROM notas_publicadas np, notas n, usuario u
 WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${sql} ORDER BY  (SELECT COUNT(*) FROM popularidad p WHERE p.id_publicacion = np.id_publicacion) DESC LIMIT ?,?;`
-      console.log('query')
-      console.log(query)
-      console.log('sql')
-      console.log(sql)
-      console.log('perPage')
-      console.log(perPage)
-      console.log('selectedPage')
-      console.log(selectedPage)
+      // console.log('query')
+      // console.log(query)
+      // console.log('sql')
+      // console.log(sql)
+      // console.log('perPage')
+      // console.log(perPage)
+      // console.log('selectedPage')
+      // console.log(selectedPage)
 
       const [notes] = await connection.query(query, [idUser, ...values, selectedPage, +perPage])
       // console.log(notes)
@@ -53,7 +53,7 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   }
 
   // obtener totalPages de articles
-  static async getTotalPages ({ filters, fechaPost }) {
+  static async getTotalPages({ filters, fechaPost }) {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
     const { sql, values } = getFilters({ filters, fechaPost })
     try {
@@ -66,7 +66,7 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
     }
   }
 
-  static async getById ({ id, idUser = 0 }) {
+  static async getById({ id, idUser = 0 }) {
     try {
       const query = ` SELECT np.id_publicacion, n.id_nota, n.titulo, n.descripcion, n.jsonData, n.fechaPost, np.fechaPub, u.usuario,
       (SELECT COUNT(*) FROM popularidad p WHERE p.id_publicacion = np.id_publicacion) AS likes,
@@ -81,7 +81,7 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
     }
   }
 
-  static async toggleLike ({ idPub, idUser }) {
+  static async toggleLike({ idPub, idUser }) {
     try {
       const query = 'call togglelike(?, ?);'
       await connection.query(query, [idPub, idUser])
@@ -93,7 +93,7 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   }
 
   // Para agregar un comentario
-  static async addComment ({ idPub, idUser, comment }) {
+  static async addComment({ idPub, idUser, comment }) {
     try {
       const query = 'insert into comentarios(id_publicacion, id_usuario, comment) values(?,?,?);'
       const result = connection.query(query, [idPub, idUser, comment])
@@ -105,9 +105,10 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   }
 
   // Para eliminar un comentario
-  static async canIDelete ({ id, idUser = 0 }) {
+  static async canIDelete({ id, idUser = 0 }) {
     try {
-      const query = 'select if(c.id_usuario=?,1,0) as can_i_delete from comentarios c where c.id_comentario = ?;'
+      const query =
+        'select if(c.id_usuario=?,1,0) as can_i_delete from comentarios c where c.id_comentario = ?;'
       const [result] = await connection.query(query, [idUser, id])
       return result
     } catch (error) {
@@ -116,7 +117,7 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
     }
   }
 
-  static async deleteComment ({ idComment }) {
+  static async deleteComment({ idComment }) {
     try {
       const query = 'delete from comentarios where id_comentario = ?'
       const [result] = await connection.query(query, idComment)
@@ -131,7 +132,7 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   }
 
   // Para obtener todos los comentarios
-  static async getComments ({ idUser = 0, idPub }) {
+  static async getComments({ idUser = 0, idPub }) {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
     try {
       // const query = 'SELECT c.*, IF(c.id_usuario = ?, 1, 0) as isMyComment FROM comentarios c WHERE c.id_publicacion = ? ORDER BY c.id_comentario DESC;'
@@ -151,9 +152,10 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   }
 
   // Para aprobar una nota a publicacion
-  static async approveNote ({ idNote, idUser }) {
+  static async approveNote({ idNote, idUser }) {
     try {
-      const query = 'insert into notas_publicadas (notas_id_nota, usuario_id_usuario, fechaPub) values(?,?,CURDATE());'
+      const query =
+        'insert into notas_publicadas (notas_id_nota, usuario_id_usuario, fechaPub) values(?,?,CURDATE());'
       await connection.query(query, [idNote, idUser])
       return true
     } catch (error) {
@@ -163,11 +165,11 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   }
 
   // Para desaprobar notas que se hayan publicado
-  static async disapproveMultipleNotes ({ idNotes }) {
+  static async disapproveMultipleNotes({ idNotes }) {
     try {
       await connection.beginTransaction()
       const query = 'delete from notas_publicadas where id_publicacion = ?;'
-      const promises = idNotes.map(idNote => {
+      const promises = idNotes.map((idNote) => {
         return connection.query(query, [idNote])
       })
       await Promise.all(promises)
@@ -182,12 +184,13 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   }
 
   // Para aprobar multiples notas a publicacion
-  static async approveMultipleNotes ({ idNotes, idUser }) {
+  static async approveMultipleNotes({ idNotes, idUser }) {
     try {
       console.log(idNotes)
       await connection.beginTransaction()
-      const query = 'insert into notas_publicadas (notas_id_nota, usuario_id_usuario, fechaPub) values(?,?,CURDATE());'
-      const promises = idNotes.map(idNote => {
+      const query =
+        'insert into notas_publicadas (notas_id_nota, usuario_id_usuario, fechaPub) values(?,?,CURDATE());'
+      const promises = idNotes.map((idNote) => {
         return connection.query(query, [idNote, idUser])
       })
       await Promise.all(promises)

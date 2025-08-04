@@ -7,12 +7,12 @@ import UserModel from '../models/user.js'
 const secretKey = config.SECRET
 
 export async function generateAccessToken({ user }) {
-  console.log('user-access-token', user)
+  // console.log('user-access-token', user)
 
   const accessToken = jwt.sign({ user }, secretKey, { expiresIn: '2m' })
-  console.log({
-    accessToken,
-  })
+  // console.log({
+  //   accessToken,
+  // })
 
   // const accessToken = jwt.sign({ user }, secretKey, { expiresIn: Date.now() + 60 * 15 })
   return accessToken
@@ -30,13 +30,13 @@ export async function generateRefreshToken({ user }) {
   //   secretKey,
   //   { expiresIn: expiresAt }
   // )
-  console.log('1')
+  // console.log('1')
 
   const refreshToken = jwt.sign({ user, jti }, secretKey, {
     expiresIn: '1h',
     // expiresIn: '7d',
   })
-  console.log('2')
+  // console.log('2')
 
   const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex')
   // const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
@@ -45,7 +45,7 @@ export async function generateRefreshToken({ user }) {
     .slice(0, 19)
     .replace('T', ' ')
 
-  console.log('3')
+  // console.log('3')
   await TokenModel.saveRefreshToken({
     userId: user,
     tokenId: jti,
@@ -87,7 +87,7 @@ export async function verifyToken(request, response, next) {
 
   // verificamos esta parte por la ruta de articles
   if (request[SKIP_VERIFICATION]) {
-    console.log('salto')
+    // console.log('salto')
 
     return next()
   }
