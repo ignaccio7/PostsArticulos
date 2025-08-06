@@ -34,7 +34,7 @@
         "useTemplate": "warn"
       },
       "suspicious": {
-        "noConsoleLog": "warn",
+        "noConsoleLog": "off",
         "noDebugger": "error",
         "noDoubleEquals": "warn"
       },

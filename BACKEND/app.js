@@ -54,7 +54,7 @@ app.use('/article', routerArticle)
 
 // app.use('/', (request, response) => {
 app.use('/', (_, response) => {
-  response.send(`
+  response.status(404).send(`
   <h1>Not Found</h1>
   <hr/>
   <p>HTTP Error 404. The request resource is not found.</p>
@@ -65,7 +65,4 @@ app.use('/', (_, response) => {
 // Manejo de errores
 app.use(handleErrors)
 
-app.listen(app.get('port'), () => {
-  // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-  console.log(`Server listening on port: http://${app.get('host')}:${app.get('port')}`)
-})
+export default app
