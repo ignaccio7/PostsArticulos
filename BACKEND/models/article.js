@@ -166,38 +166,42 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
 
   // Para desaprobar notas que se hayan publicado
   static async disapproveMultipleNotes({ idNotes }) {
+    const conn = await connection.getConnection()
     try {
-      await connection.beginTransaction()
+      await conn.beginTransaction()
       const query = 'delete from notas_publicadas where id_publicacion = ?;'
       const promises = idNotes.map((idNote) => {
-        return connection.query(query, [idNote])
+        return conn.query(query, [idNote])
       })
       await Promise.all(promises)
-      await connection.commit()
+      await conn.commit()
       return true
     } catch (error) {
-      await connection.rollback()
+      await conn.rollback()
       console.log(error)
       const objError = { status: 500, message: 'Error al desaprobar las notas' }
       throw objError
+    } finally {
+      conn.release()
     }
   }
 
   // Para aprobar multiples notas a publicacion
   static async approveMultipleNotes({ idNotes, idUser }) {
+    const conn = await connection.getConnection()
     try {
       console.log(idNotes)
-      await connection.beginTransaction()
+      await conn.beginTransaction()
       const query =
         'insert into notas_publicadas (notas_id_nota, usuario_id_usuario, fechaPub) values(?,?,CURDATE());'
       const promises = idNotes.map((idNote) => {
-        return connection.query(query, [idNote, idUser])
+        return conn.query(query, [idNote, idUser])
       })
       await Promise.all(promises)
-      await connection.commit()
+      await conn.commit()
       return true
     } catch (error) {
-      await connection.rollback()
+      await conn.rollback()
       console.error(error)
       const objError = { status: 500, message: 'Error al aprobar las notas' }
       if (error.code === 'ER_DUP_ENTRY') {
@@ -205,6 +209,8 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
         objError.message = 'Las notas ya fueron aprobadas.'
       }
       throw objError
+    } finally {
+      conn.release()
     }
   }
 }

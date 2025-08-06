@@ -16,14 +16,16 @@ export default class UserModel {
     const { ci, nombres, paterno, materno, telefono, correo, avatar, avatarId } = person
     const { usuario, pass, rol } = user
 
+    const conn = await connection.getConnection()
+
     try {
-      await connection.beginTransaction()
+      await conn.beginTransaction()
       // rol por defecto siempre sera undefined
 
       const queryPerson =
         'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar,avatar_id) VALUES (?,?,?,?,?,?,?,?)'
       const queryUser = 'INSERT INTO usuario(persona_ci,usuario,pass) VALUES(?,?,?)'
-      const promisePerson = connection.query(queryPerson, [
+      const promisePerson = conn.query(queryPerson, [
         ci,
         nombres,
         paterno,
@@ -33,19 +35,19 @@ export default class UserModel {
         avatar,
         avatarId,
       ])
-      const promiseUser = connection.query(queryUser, [ci, usuario, pass, rol])
+      const promiseUser = conn.query(queryUser, [ci, usuario, pass, rol])
       // const promisePerson = connection.query('SELECT * FROM persona')
       // const promiseUser = connection.query('SELECT * FROM usuario')
       const [resultPerson, resultUser] = await Promise.all([promisePerson, promiseUser])
       console.log(resultPerson)
       console.log(resultUser)
-      await connection.commit()
+      await conn.commit()
       return {
         person,
         user,
       }
     } catch (error) {
-      await connection.rollback()
+      await conn.rollback()
       // throw new Error('Error al crear la persona')
       console.error('errorModel', error)
       const objError = { status: 500, message: 'Error al crear la persona' }
@@ -56,6 +58,8 @@ export default class UserModel {
           'Usted ya cuenta con un usuario registrado o El nombre de usuario ya esta ocupado.'
       }
       throw objError
+    } finally {
+      conn.release()
     }
   }
 
