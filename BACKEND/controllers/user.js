@@ -84,6 +84,8 @@ export default class UserController {
     // const { ci, nombres, paterno, materno, telefono, correo, usuario, pass, rol } = request.body
     const body = request.body
     const file = request.file
+    console.log(body)
+
     const user = { usuario: body.usuario, pass: body.password }
     const person = { ...body, ci: Number(body?.ci), avatar: { ...file } }
 

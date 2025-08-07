@@ -63,7 +63,7 @@ Content-Type: application/json
   },
   "user":{
     "usuario":"ignaccio7",
-    "pass":"260298nesigABC+-*",
+    "pass":"aA*123456",
     "rol":"admin"
   }
 }
@@ -88,7 +88,7 @@ Content-Type: application/json
 
 {
   "usuario":"ignaccio7",
-  "pass":"260298nesigABC+-*"
+  "pass":"aA*123456"
 }
 
 
@@ -214,12 +214,12 @@ GET http://localhost:1234/article?page=2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaWduYWNjaW83IiwiaWF0IjoxNzQ5ODU5ODgyLCJleHAiOjE3NTA0NjQ2ODJ9.RHeg_fEObbvzpmqfK1R3Z9W0aXktvuFKBZfMlFofSgQ
 
 ### OBTENER TODOS LOS ARTICULOS con filtros
-GET http://localhost:1234/article?titulo=titulo1&tema=tema
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+GET http://localhost:1234/article?titulo=titulo1&tema=tema&init=2023-02-01&end=2023-05-02
+
 
 ### OBTENER TODOS LOS ARTICULOS con filtros
 GET http://localhost:1234/article?page=2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
+
 
 ### OBTENER UN ARTICULO POR ID
 GET http://localhost:1234/article/

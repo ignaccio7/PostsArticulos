@@ -4,8 +4,8 @@ export default class UserModel {
   static async getAll() {
     try {
       const query = 'SELECT u.*, p.avatar FROM usuario u, persona p WHERE u.persona_ci = p.ci'
-      const [users] = await connection.query(query)
-      return users
+      const result = await connection.query(query)
+      return result.rows
     } catch (error) {
       console.log(error)
       throw new Error('fallo al solicitar datos')
@@ -14,17 +14,18 @@ export default class UserModel {
 
   static async createUserPerson({ person, user }) {
     const { ci, nombres, paterno, materno, telefono, correo, avatar, avatarId } = person
-    const { usuario, pass, rol } = user
+    const { usuario, pass, _rol } = user
+    const defaultRol = 'user'
 
-    const conn = await connection.getConnection()
+    const conn = await connection.connect()
 
     try {
-      await conn.beginTransaction()
+      await conn.query('BEGIN')
       // rol por defecto siempre sera undefined
 
       const queryPerson =
-        'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar,avatar_id) VALUES (?,?,?,?,?,?,?,?)'
-      const queryUser = 'INSERT INTO usuario(persona_ci,usuario,pass) VALUES(?,?,?)'
+        'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar,avatar_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)'
+      const queryUser = 'INSERT INTO usuario(persona_ci,usuario,pass) VALUES($1,$2,$3, $4)'
       const promisePerson = conn.query(queryPerson, [
         ci,
         nombres,
@@ -35,24 +36,24 @@ export default class UserModel {
         avatar,
         avatarId,
       ])
-      const promiseUser = conn.query(queryUser, [ci, usuario, pass, rol])
+      const promiseUser = conn.query(queryUser, [ci, usuario, pass, defaultRol])
       // const promisePerson = connection.query('SELECT * FROM persona')
       // const promiseUser = connection.query('SELECT * FROM usuario')
       const [resultPerson, resultUser] = await Promise.all([promisePerson, promiseUser])
       console.log(resultPerson)
       console.log(resultUser)
-      await conn.commit()
+      await conn.query('COMMIT')
       return {
         person,
         user,
       }
     } catch (error) {
-      await conn.rollback()
+      await conn.query('ROLLBACK')
       // throw new Error('Error al crear la persona')
       console.error('errorModel', error)
       const objError = { status: 500, message: 'Error al crear la persona' }
       // TODO arreglar el error para cuando el username ya esta ocupado
-      if (error.code === 'ER_DUP_ENTRY') {
+      if (error.code === 23505) {
         objError.status = 409
         objError.message =
           'Usted ya cuenta con un usuario registrado o El nombre de usuario ya esta ocupado.'
@@ -76,10 +77,10 @@ export default class UserModel {
   } */
 
   static async search({ ci }) {
-    const query = 'SELECT persona_ci,usuario,rol FROM usuario WHERE persona_ci = ?'
+    const query = 'SELECT persona_ci,usuario,rol FROM usuario WHERE persona_ci = $1'
     try {
-      const [user] = await connection.query(query, [ci])
-      return user
+      const result = await connection.query(query, [ci])
+      return result.rows
     } catch (error) {
       console.error(error)
       throw new Error(`Fallo el buscar el usuario con ci ${ci}`)
@@ -88,18 +89,18 @@ export default class UserModel {
 
   static async update({ ci, usuario, pass }) {
     try {
-      const query = 'UPDATE usuario SET usuario=?, pass=? WHERE persona_ci = ?'
-      const [result] = await connection.query(query, [usuario, pass, ci])
+      const query = 'UPDATE usuario SET usuario=$1, pass=$2 WHERE persona_ci = $3'
+      const result = await connection.query(query, [usuario, pass, ci])
       console.log(result)
 
-      if (result.affectedRows === 0) {
+      if (result.rowCount === 0) {
         return false
       }
 
-      const [updatedUser] = await connection.query('SELECT * FROM usuario WHERE persona_ci = ?', [
+      const updatedUser = await connection.query('SELECT * FROM usuario WHERE persona_ci = $1', [
         ci,
       ])
-      return updatedUser
+      return updatedUser.rows
     } catch (error) {
       console.log(error)
       throw new Error('Error al actualizar el usuario')
@@ -108,10 +109,10 @@ export default class UserModel {
 
   // metodo para el middleware de token
   static async searchByUsername({ username }) {
-    const query = 'SELECT rol, id_usuario FROM usuario WHERE usuario = ?'
+    const query = 'SELECT rol, id_usuario FROM usuario WHERE usuario = $1'
     try {
-      const [result] = await connection.query(query, [username])
-      return result
+      const result = await connection.query(query, [username])
+      return result.rows
     } catch (error) {
       console.log(error)
       throw new Error('Fallo en la base de datos al buscar el usuario')
@@ -121,10 +122,10 @@ export default class UserModel {
   // metodo para obtener el password del usuario
   static async getPassUser({ username }) {
     const query =
-      'SELECT u.pass, u.rol, p.avatar FROM usuario u INNER JOIN persona p ON u.persona_ci = p.ci WHERE u.usuario = ?'
+      'SELECT u.pass, u.rol, p.avatar FROM usuario u INNER JOIN persona p ON u.persona_ci = p.ci WHERE u.usuario = $1'
     try {
-      const [result] = await connection.query(query, [username])
-      return result
+      const result = await connection.query(query, [username])
+      return result.rows
     } catch (error) {
       console.log(error)
       throw new Error('Fallo en la base de datos al buscar el usuario')
@@ -133,10 +134,10 @@ export default class UserModel {
 
   // metodo para verificar si un usuario existe. buscamos mediante el username y el ci
   static async isExistUser({ ci, username }) {
-    const query = 'SELECT * FROM usuario u WHERE u.persona_ci  = ? OR u.usuario = ?;'
+    const query = 'SELECT * FROM usuario u WHERE u.persona_ci  = $1 OR u.usuario = $2;'
     try {
-      const [result] = await connection.query(query, [ci, username])
-      return result
+      const result = await connection.query(query, [ci, username])
+      return result.rows
     } catch (error) {
       console.log(error)
       throw new Error('Fallo en la base de datos al buscar el usuario')

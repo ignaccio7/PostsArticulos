@@ -1,33 +1,37 @@
-import path from 'node:path'
 import fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
+import path from 'node:path'
 import cloudinary from '../libs/cloudinary.js'
 const require = createRequire(import.meta.url)
 export const readJSON = (p) => require(path.join(process.cwd(), p))
 
-export function getFilters ({ filters, fechaPost }) {
-  let sql = ''; const values = []
+export function getFilters({ filters, fechaPost, startIndex = 1 }) {
+  let sql = ''
+  const values = []
+  let paramIndex = startIndex
 
   Object.entries(filters).forEach(([a, b]) => {
     if (b) {
-      sql += ` AND n.${a} LIKE ?`
+      sql += ` AND n.${a} ILIKE $${paramIndex}`
       values.push(`%${b}%`)
+      paramIndex++
     }
   })
 
   // TODO cambiar que en caso de ser tabla NOTA usar fechaPost y en caso de ser tabla notas_publicadas usar fechaPub hacer pasar como parametro
   if (fechaPost.init && fechaPost.end) {
-    sql += ' AND fechaPost BETWEEN ? AND ?'
+    sql += ` AND fechaPost BETWEEN $${paramIndex} AND $${paramIndex + 1}`
     values.push(fechaPost.init)
     values.push(fechaPost.end)
+    paramIndex += 2
   }
 
-  return { sql, values }
+  return { sql, values, nextParamIndex: paramIndex }
 }
 /** ********************************** CLOUDINARY SERVICE  */
 
 // upload avatar
-export async function uploadImage ({ file }) {
+export async function uploadImage({ file }) {
   /**
  * Information for file
   file: {
@@ -77,7 +81,7 @@ export async function uploadImage ({ file }) {
   }
 }
 
-export async function deleteImage ({ publicId }) {
+export async function deleteImage({ publicId }) {
   try {
     await cloudinary.uploader.destroy(publicId)
     return true
@@ -88,7 +92,7 @@ export async function deleteImage ({ publicId }) {
 }
 
 // upload notes
-export async function uploadImages ({ files }) {
+export async function uploadImages({ files }) {
   /**
  * Information for file
   file: {
@@ -146,7 +150,7 @@ export async function uploadImages ({ files }) {
   }
 }
 
-export async function deleteImages ({ publicImagesIds = [] }) {
+export async function deleteImages({ publicImagesIds = [] }) {
   try {
     console.log(publicImagesIds)
 
@@ -161,7 +165,7 @@ export async function deleteImages ({ publicImagesIds = [] }) {
   }
 }
 
-export async function deleteLocalImage ({ file }) {
+export async function deleteLocalImage({ file }) {
   try {
     const filePath = path.join(process.cwd(), file.path)
     await fs.unlink(filePath)

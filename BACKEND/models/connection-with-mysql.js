@@ -1,7 +1,5 @@
-import pg from 'pg'
+import mysql from 'mysql2/promise'
 import config from '../config.js'
-
-const { Pool } = pg
 
 const conf = {
   host: config.db_host,
@@ -10,16 +8,17 @@ const conf = {
   password: config.db_password,
   database: config.db_name,
 
-  max: 2,
-  min: 0,
-  idleTimeoutMillis: 30000,
-  connectTimeoutMillis: 2000,
-  maxLifetimeSeconds: 60,
+  waitForConnections: true,
+  connectionLimit: 2,
+  maxIdle: 2,
+  idleTimeout: 60000,
 
-  ssl: config.environment === 'production' ? { rejectUnauthorized: false } : false,
+  connectTimeout: 60000,
+  charset: 'utf8mb4',
 }
 
-const pool = new Pool(conf)
+// const connection = await mysql.createConnection(conf)
+const pool = mysql.createPool(conf)
 
 // pool.on('connection', (connection) => {
 //   console.log(`🔗 Nueva conexión establecida: ID ${connection.threadId}`)
@@ -37,8 +36,8 @@ const closeDatabase = async () => {
 
 const testConnection = async () => {
   try {
-    const connection = await pool.connect()
-    await connection.query('SELECT NOW()')
+    const connection = await pool.getConnection()
+    await connection.ping()
     connection.release()
     console.log('✅ Conexión a DB establecida')
     return true

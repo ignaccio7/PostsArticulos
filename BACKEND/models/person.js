@@ -6,8 +6,8 @@ export default class PersonModel {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
     try {
       const query = 'SELECT * FROM persona'
-      const [people] = await connection.query(query)
-      return people
+      const people = await connection.query(query)
+      return people.rows
     } catch (error) {
       console.log('error in model')
       console.log(error)
@@ -18,9 +18,9 @@ export default class PersonModel {
   // Para obtener un resultado determinado por el ci
   static async getById({ ci }) {
     try {
-      const query = 'SELECT * FROM persona WHERE ci = ?'
-      const [person] = await connection.query(query, [ci])
-      return person
+      const query = 'SELECT * FROM persona WHERE ci = $1'
+      const person = await connection.query(query, [ci])
+      return person.rows
     } catch (error) {
       console.error(error)
       throw new Error(`Fallo el buscar la persona con ci ${ci}`)
@@ -31,9 +31,9 @@ export default class PersonModel {
   static async getByUsername({ username }) {
     try {
       const query =
-        'select p.ci, p.nombres, p.paterno, p.materno, p.telefono, p.correo, p.avatar from persona p , usuario u where u.persona_ci = p.ci and u.usuario = ?;'
-      const [person] = await connection.query(query, [username])
-      return person
+        'select p.ci, p.nombres, p.paterno, p.materno, p.telefono, p.correo, p.avatar from persona p , usuario u where u.persona_ci = p.ci and u.usuario = $1;'
+      const person = await connection.query(query, [username])
+      return person.rows
     } catch (error) {
       console.error(error)
       throw new Error(`Fallo el buscar la persona con ci ${username}`)
@@ -46,7 +46,7 @@ export default class PersonModel {
 
     try {
       const query =
-        'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar) VALUES (?,?,?,?,?,?,?) '
+        'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar) VALUES ($1, $2, $3, $4, $5, $6, $7)'
       await connection.query(query, [ci, nombres, paterno, materno, telefono, correo, avatar])
       return person
     } catch (error) {
@@ -58,9 +58,9 @@ export default class PersonModel {
   // Para eliminar a una persona
   static async deletePerson({ ci }) {
     try {
-      const query = 'DELETE FROM persona WHERE ci = ?'
-      const [deletePerson] = await connection.query(query, ci)
-      if (deletePerson.affectedRows === 0) {
+      const query = 'DELETE FROM persona WHERE ci = $1'
+      const deletePerson = await connection.query(query, [ci])
+      if (deletePerson.rowCount === 0) {
         return false
       }
       return true
@@ -75,19 +75,21 @@ export default class PersonModel {
     try {
       const columns = []
       const values = []
+      let paramIndex = 1
       Object.entries(partialPerson).forEach(([column, value]) => {
-        columns.push(`${column}=?`)
+        columns.push(`${column}=$${paramIndex}`)
         values.push(value)
+        paramIndex++
       })
-      const query = `UPDATE persona SET ${columns.join(',')} WHERE ci = ?`
-      const [result] = await connection.query(query, [...values, ci])
+      const query = `UPDATE persona SET ${columns.join(',')} WHERE ci = $${paramIndex}`
+      const result = await connection.query(query, [...values, ci])
       console.log(result)
 
-      if (result.affectedRows === 0) {
+      if (result.rowCount === 0) {
         return false
       }
-      const [updatePerson] = await connection.query('SELECT * FROM persona WHERE ci = ?', [ci])
-      return updatePerson
+      const updatePerson = await connection.query('SELECT * FROM persona WHERE ci = $1', [ci])
+      return updatePerson.rows
     } catch (error) {
       console.log(error)
       throw new Error('Error al actualizar la persona')
@@ -97,9 +99,9 @@ export default class PersonModel {
   // Para buscar el id_avatar de una persona
   static async searchIdAvatar({ ci }) {
     try {
-      const query = 'SELECT avatar_id FROM persona WHERE ci = ?'
-      const [person] = await connection.query(query, [ci])
-      return person
+      const query = 'SELECT avatar_id FROM persona WHERE ci = $1'
+      const person = await connection.query(query, [ci])
+      return person.rows
     } catch (error) {
       console.error(error)
       throw new Error(`Fallo el buscar la persona con ci ${ci}`)
