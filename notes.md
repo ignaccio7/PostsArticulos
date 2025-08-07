@@ -242,6 +242,8 @@ npx --no-install commitlint --edit $1
 Y para verificar los testings el hook de precommit 
 ```bash
 npx husky add .husky/pre-commit 'npm run lint-staged'
+o
+echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
 ```
 Y creamos un archivo `.husky/pre-commit` con el siguiente contenido:
 
