@@ -15,8 +15,10 @@ export default class Article {
       const requestOptions = {
         Authorization: `Bearer ${accessToken}`
       }
-
+      console.log('1')
+      
       res = await RequestService.getRequest(`article?${query}`, requestOptions)
+      console.log('2')
       // console.log('res', res)
 
       articles = res.data

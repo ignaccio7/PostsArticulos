@@ -8,12 +8,18 @@ const useSessionStore = create(
         username: '',
         accessToken: '',
         rol: '',
+        avatar: '',
 
-        loginUser: async ({ username, token, rol }) => {
-          set({ username, accessToken: token, rol })
+        loginUser: async ({ username, token, rol, avatar }) => {
+          console.log({ username, token, rol, avatar })
+
+          set({ username, accessToken: token, rol, avatar })
         },
         logoutUser: () => {
-          set({ username: '', accessToken: '', rol: '' })
+          set({ username: '', accessToken: '', rol: '', avatar: '' })
+        },
+        setAccessToken: (token = '') => {
+          set({ accessToken: token })
         }
       }
     },
@@ -23,6 +29,22 @@ const useSessionStore = create(
   )
 )
 
+// Métodos estáticos para acceder al store sin hooks
+class SessionManager {
+  static getAccessToken() {
+    return useSessionStore.getState().accessToken
+  }
+
+  static setAccessToken(token) {    
+    useSessionStore.getState().setAccessToken(token)
+  }
+
+  static logoutUser() {
+    useSessionStore.getState().logoutUser()
+  }
+} 
+
 export {
-  useSessionStore
+  useSessionStore,
+  SessionManager
 }

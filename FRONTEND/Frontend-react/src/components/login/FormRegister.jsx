@@ -21,6 +21,11 @@ export default function FormRegister () {
   const navigate = useNavigate()
 
   const onSubmit = async (data) => {
+    console.log(data)
+    console.log(data.ci)
+    console.log(data.nombres)
+    console.log(data.password)
+    
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       const formData = new FormData()

@@ -31,6 +31,11 @@ export default function Notes () {
         setNotes(data.data)
         setTotalPages(data.totalPages)
       })
+      .catch((error) => {
+        console.log('Error aqui')
+        console.log(error)
+        
+      })
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])

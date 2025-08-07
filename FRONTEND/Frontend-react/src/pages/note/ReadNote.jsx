@@ -79,7 +79,7 @@ export default function ReadNote () {
       <h1 className='text-step5 font-bold'>{title}</h1>
       <p className='text-step1 whitespace-pre-line'>{subtitle}</p>
       {/* InfoUser */}
-      <div className="info flex flex-row gap-4 flex-wrap items-center my-4 leading-none">
+      <div className="info flex flex-row gap-4 flex-wrap items-center my-4 leading-none max-w-[1000px]">
         <picture className='block w-20 h-20 rounded-full overflow-hidden'>
           <img
             className='w-full h-full aspect-square object-cover'

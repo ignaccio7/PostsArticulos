@@ -53,7 +53,7 @@ export default function InputSearch () {
         value={search}
         type="search"
         placeholder="Algo que buscar..."
-        className="w-full h-full px-2 border-none outline-none"
+        className="w-full h-full px-2 border-none outline-none bg-transparent"
       />
     </label>
   )

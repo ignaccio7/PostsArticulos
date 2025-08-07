@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom'
 import { useSessionStore } from '../../store/session'
 
 const INITIAL_USER = {
-  user: '',
-  pass: ''
+  user: 'nirojas1',
+  pass: 'aA*123456'
 }
 
 const INITIAL_USER_ERRORS = {
@@ -70,7 +70,10 @@ export default function FormLogin () {
     // console.log('SIGNIN')
     try {
       const { data, token } = await User.signin(user)
-      loginUser({ username: data.usuario, token, rol: data.rol })
+      console.log({ data })
+      console.log({ avatar: data?.avatar })
+
+      loginUser({ username: data?.usuario, token, rol: data?.rol, avatar: data?.avatar })
 
       auth.login()
       toast.success('Sesión iniciada exitosamente')

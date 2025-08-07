@@ -20,8 +20,10 @@ export default class Note {
       )
       return res
     } catch (error) {
+      console.log('Error en notess')
+      
       throw {
-        status: error.statusCode ?? 500,
+        statusCode: error.statusCode ?? 500,
         message: error.message || 'Ocurrio un error al intentar obtener notas',
         success: false
       }

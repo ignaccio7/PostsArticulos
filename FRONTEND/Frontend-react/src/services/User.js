@@ -23,6 +23,20 @@ class User {
     }
   }
 
+  static async signout () {
+    try {
+      console.log('saliendoooooooooooooooooo')
+      
+      const res = await RequestService.getRequest('user/logout')
+      return res
+    }catch (error) {
+      throw {
+        status: error.statusCode ?? 500,
+        message: error.message || 'Ocurrio un error al intentar cerrar sesión',
+      }
+    }
+  }
+
   static async registerUser ({ payload }) {
     try {
       console.log(payload)
