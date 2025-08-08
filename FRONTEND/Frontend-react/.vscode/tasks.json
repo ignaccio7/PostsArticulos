@@ -5,6 +5,11 @@
       "label": "pnpm dev",
       "type": "shell",
       "command": "pnpm dev",
+      "options": {
+        "shell": {
+          "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        }
+      },
       "problemMatcher": [],
       "runOptions": {
         "runOn": "folderOpen"

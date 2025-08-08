@@ -95,7 +95,10 @@ export default function Home () {
 
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        // console.log(totalPages)
+        console.log('////////////////////////////////////////////////////')
+        
+        console.log(page)
+        console.log(totalPages)
 
         if (+page === totalPages) return
 

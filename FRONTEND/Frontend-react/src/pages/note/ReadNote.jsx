@@ -44,10 +44,10 @@ export default function ReadNote () {
 
         console.log(data)
         console.log(typeof data)
-        console.log(typeof data.jsonData)
+        console.log(typeof data.jsondata)
 
         // const [t, st, ...rest] = JSON.parse(data.jsonData)
-        const [t, st, ...rest] = data.jsonData
+        const [t, st, ...rest] = data.jsondata
         setTitle(t.content)
         setSubtitle(st.content)
         setNote([...rest])
@@ -55,7 +55,7 @@ export default function ReadNote () {
           username: data.usuario ?? '',
           fullname: data.fullname ?? '',
           image: data.avatar ?? '',
-          fechaPost: data.fechaPost ?? ''
+          fechaPost: data.fechapost ?? ''
         })
         setPopularity({
           likes: pop.likes ?? 0,

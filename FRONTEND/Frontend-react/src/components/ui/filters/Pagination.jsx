@@ -15,6 +15,7 @@ export default function Pagination ({ actualPage = 1, total = 1 }) {
   const pagination = getPagination(totalPages, page)
 
   const handlePagination = (page = 1) => {
+    if (page >= total) return
     setPage(page)
     setSearchParams(prevParams => {
       const newSearchParams = Object.fromEntries(prevParams)

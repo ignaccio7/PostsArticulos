@@ -52,8 +52,8 @@ export default function UpdateNote () {
 
         console.log(data)
         console.log(typeof data)
-        console.log(typeof data.data.jsonData)
-        setElements(data.data.jsonData)
+        console.log(typeof data.data.jsondata)
+        setElements(data.data.jsondata)
       })
       .catch((e) => {
         console.log(e)
