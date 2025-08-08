@@ -78,6 +78,7 @@ export default class NoteController {
     try {
       const { id } = request.params
       const result = await NoteModel.getById({ id })
+      console.log(result)
 
       if (result.length === 0) {
         response.status(404).json({
@@ -87,9 +88,7 @@ export default class NoteController {
         return
       }
 
-      console.log(result[0].jsonData)
-
-      result[0].jsonData.forEach((element) => {
+      result[0].jsondata.forEach((element) => {
         if (element.tag === 'image') {
           delete element.content.imageId
         }
@@ -127,9 +126,9 @@ export default class NoteController {
         return
       }
 
-      console.log(result.note[0].jsonData)
+      console.log(result.note[0].jsondata)
 
-      result.note[0].jsonData.forEach((element) => {
+      result.note[0].jsondata.forEach((element) => {
         if (element.tag === 'image') {
           delete element.content.imageId
         }
@@ -444,7 +443,7 @@ export default class NoteController {
 
       console.log('======================IMAGE FOR SAFE')
       console.log(imagesForSafe)
-      const sinUsar = 0
+      // const sinUsar = 0
 
       // VEMOS SI DEBERIAMOS ELIMINAR ALGUNA IMAGEN DE CLOUDINARY -> filtramos las imagenes que no estan en el json recibido y las que no las almacenaremos para eliminar
       imagesDB.forEach((image) => {
@@ -511,6 +510,9 @@ export default class NoteController {
         idUser,
         perPage,
       })
+
+      console.log('The results')
+      console.log(results)
 
       const resultTotalPages = await NoteModel.getTotalPagesByUser({
         filters: { titulo, tema },

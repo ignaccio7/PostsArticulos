@@ -4,12 +4,15 @@ import config from '../config.js'
 import TokenModel from '../models/token.js'
 import UserModel from '../models/user.js'
 
-const secretKey = config.SECRET
+const { access_token_expiration, refresh_token_expiration, secretKey } = config
+console.log('---------------------------------')
+console.log({ access_token_expiration, refresh_token_expiration, secretKey })
 
 export async function generateAccessToken({ user }) {
   // console.log('user-access-token', user)
 
-  const accessToken = jwt.sign({ user }, secretKey, { expiresIn: '2m' })
+  // const accessToken = jwt.sign({ user }, secretKey, { expiresIn: '2m' })
+  const accessToken = jwt.sign({ user }, secretKey, { expiresIn: access_token_expiration })
   // console.log({
   //   accessToken,
   // })
@@ -33,7 +36,8 @@ export async function generateRefreshToken({ user }) {
   // console.log('1')
 
   const refreshToken = jwt.sign({ user, jti }, secretKey, {
-    expiresIn: '1h',
+    // expiresIn: '1h',
+    expiresIn: refresh_token_expiration,
     // expiresIn: '7d',
   })
   // console.log('2')

@@ -25,7 +25,7 @@ export default class UserModel {
 
       const queryPerson =
         'INSERT INTO persona (ci,nombres,paterno,materno,telefono,correo,avatar,avatar_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)'
-      const queryUser = 'INSERT INTO usuario(persona_ci,usuario,pass) VALUES($1,$2,$3, $4)'
+      const queryUser = 'INSERT INTO usuario(persona_ci,usuario,pass, rol) VALUES($1,$2,$3, $4)'
       const promisePerson = conn.query(queryPerson, [
         ci,
         nombres,

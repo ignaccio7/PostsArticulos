@@ -13,9 +13,11 @@ export default {
   cd_name: process.env.CLOUDINARY_CLOUD_NAME || '',
   cd_api_key: process.env.CLOUDINARY_API_KEY || '',
   cd_api_secret: process.env.CLOUDINARY_API_SECRET || '',
-  SECRET: 'postsRGIgna',
   rate_limit_general: Number.parseInt(process.env.LIMIT_GENERAL_PER_MINUTE) || 30,
   rate_limit_read: Number.parseInt(process.env.LIMIT_READ_PER_MINUTE) || 20,
   rate_limit_write: Number.parseInt(process.env.LIMIT_WRITE_PER_MINUTE) || 3,
+  access_token_expiration: process.env.ACCESS_TOKEN_EXPIRES_IN || '900000',
+  refresh_token_expiration: process.env.REFRESH_TOKEN_EXPIRES_IN || '3600000',
   environment: process.env.NODE_ENV || 'development',
+  secretKey: 'postsRGIgna',
 }

@@ -19,7 +19,10 @@ export default class ArticleController {
         filters: { titulo },
         fechaPost: { init, end },
       })
-      const totalPages = Math.ceil(resultTotalPages.total_notas / perPage)
+      console.log('||||||||||||||||||||||||||')
+      console.log(resultTotalPages)
+
+      const totalPages = Math.ceil(resultTotalPages[0].total_notas / perPage)
 
       if (results.length === 0) {
         res.status(404).json({

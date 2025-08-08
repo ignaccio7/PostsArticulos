@@ -1,10 +1,13 @@
 import bcrypt from 'bcrypt'
+import config from '../config.js'
 import { generateAccessToken, generateRefreshToken } from '../middlewares/authJWT.js'
 import TokenModel from '../models/token.js'
 import UserModel from '../models/user.js'
 import { validatePerson } from '../schemas/person.js'
 import { validatePartialUser, validateUser } from '../schemas/user.js'
 import { deleteLocalImage, uploadImage } from '../utils/utils.js'
+
+const { refresh_token_expiration } = config
 
 // TODO en esta tabla falta añadir el rol al momento de registrar y/o modificar
 
@@ -155,8 +158,9 @@ export default class UserController {
         httpOnly: true,
         secure: false,
         sameSite: 'none',
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: refresh_token_expiration,
         path: '/',
+        // maxAge: 24 * 60 * 60 * 1000,
       })
 
       response.status(201).json({
@@ -234,11 +238,11 @@ export default class UserController {
       response.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: true,
-        // maxAge: 24 * 60 * 60 * 1000,
-        maxAge: 5 * 60 * 1000,
+        maxAge: refresh_token_expiration,
         path: '/',
         domain: 'localhost',
         sameSite: 'none',
+        // maxAge: 24 * 60 * 60 * 1000,
       })
 
       return response.json({

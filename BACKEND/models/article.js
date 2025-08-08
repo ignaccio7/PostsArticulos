@@ -60,6 +60,9 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
     try {
       const query = `select count(*) as total_notas FROM notas_publicadas np, usuario u, notas n WHERE np.notas_id_nota = n.id_nota and np.usuario_id_usuario = u.id_usuario${sql};`
       const result = await connection.query(query, [...values])
+      console.log('//////////////////////////')
+      console.log(result)
+
       return result.rows
     } catch (error) {
       console.log(error)

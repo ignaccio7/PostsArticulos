@@ -36,10 +36,11 @@ export default class NoteModel {
   // obtener totalPages de notas por usuario
   static async getTotalPagesByUser({ filters, fechaPost, idUser }) {
     // const [results, fields] = await connection.query(query) -> results es el vector de resultados - fields los campos de la base de datos
-    const { sql, values } = getFilters({ filters, fechaPost })
+    const { sql, values } = getFilters({ filters, fechaPost, startIndex: 2 })
     try {
-      const query = `select count(*) as total_notas FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario AND n.usuario_id_usuario = ?${sql};`
+      const query = `SELECT count(*) as total_notas FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario AND n.usuario_id_usuario = $1${sql}`
       const result = await connection.query(query, [idUser, ...values])
+
       return result.rows
     } catch (error) {
       console.log(error)
@@ -75,14 +76,18 @@ export default class NoteModel {
       const query = `SELECT n.jsonData, n.fechaPost ,u.usuario, p.avatar, get_full_name(p.ci) as fullname
       FROM notas n, usuario u, persona p WHERE n.usuario_id_usuario = u.id_usuario and u.persona_ci  = p.ci  AND id_nota = $1;`
 
-      const queryPopularity =
-        'CALL get_popularity_byNote($1, $2, @likes, @comments, @isLike, @xisPublished);'
-      await connection.query(queryPopularity, [idNote, idUser])
+      console.log('Llego aqui 0')
+      const queryPopularity = 'CALL get_popularity_byNote($1, $2,NULL,NULL,NULL,NULL);'
+      const popularity = await connection.query(queryPopularity, [idNote, idUser])
+
+      console.log('Llego aqui 1')
 
       const note = await connection.query(query, [idNote])
-      const popularity = await connection.query(
-        'SELECT @likes AS likes, @comments AS comments, @isLike AS islike, @xisPublished AS isPublished;'
-      )
+      console.log('Llego aqui 2')
+      // const popularity = await connection.query(
+      //   'SELECT @likes AS likes, @comments AS comments, @isLike AS islike, @xisPublished AS isPublished;'
+      // )
+      console.log('Llego aqui 3')
       return {
         note: note.rows,
         popularity: popularity.rows,
@@ -212,9 +217,12 @@ export default class NoteModel {
       console.log(values)
       console.log(perPage)
       console.log(selectedPage)
+      console.log(JSON.stringify(sql))
       console.log([idUser, ...values, +perPage, +selectedPage])
 
       const notes = await connection.query(query, [idUser, ...values, +perPage, +selectedPage])
+      console.log(notes)
+
       return notes.rows
     } catch (error) {
       console.log('error in model notes')
