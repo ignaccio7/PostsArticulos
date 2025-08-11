@@ -14,12 +14,13 @@ export default class ArticleController {
         idUser,
         perPage,
       })
+      console.log('||||||||||||||||||||||||||')
+      console.log(results)
 
       const resultTotalPages = await ArticleModel.getTotalPages({
         filters: { titulo },
         fechaPost: { init, end },
       })
-      console.log('||||||||||||||||||||||||||')
       console.log(resultTotalPages)
 
       const totalPages = Math.ceil(resultTotalPages[0].total_notas / perPage)
@@ -31,6 +32,11 @@ export default class ArticleController {
         })
         return
       }
+      results.forEach((element) => {
+        if (element.url_image) {
+          element.url_image = JSON.parse(element.url_image).image
+        }
+      })
 
       return res.json({
         statusCode: 200,
@@ -63,6 +69,15 @@ export default class ArticleController {
         })
         return
       }
+      result.forEach((element) => {
+        if (element.url_image) {
+          element.url_image = JSON.parse(element.url_image).image
+        }
+      })
+      console.log('|||||||||||||||||---------------')
+
+      console.log(result)
+
       response.json({
         statusCode: 200,
         message: 'Solicitud exitosa',
@@ -122,6 +137,9 @@ export default class ArticleController {
   static async addComment(request, response) {
     try {
       const { idPub, comment } = request.body
+      console.log('comment')
+      console.log({ idPub, comment })
+
       const { idUser } = request
       await ArticleModel.addComment({ idPub, idUser, comment })
 

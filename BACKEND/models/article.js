@@ -60,8 +60,8 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
     try {
       const query = `select count(*) as total_notas FROM notas_publicadas np, usuario u, notas n WHERE np.notas_id_nota = n.id_nota and np.usuario_id_usuario = u.id_usuario${sql};`
       const result = await connection.query(query, [...values])
-      console.log('//////////////////////////')
-      console.log(result)
+      // console.log('//////////////////////////')
+      // console.log(result)
 
       return result.rows
     } catch (error) {
@@ -99,8 +99,10 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
   // Para agregar un comentario
   static async addComment({ idPub, idUser, comment }) {
     try {
-      const query = 'insert into comentarios(id_publicacion, id_usuario, comment) values($1,$2,$3);'
-      const result = connection.query(query, [idPub, idUser, comment])
+      console.log({ idPub, idUser, comment })
+
+      const query = 'INSERT INTO comentarios(id_publicacion, id_usuario, comment) values($1,$2,$3);'
+      const result = await connection.query(query, [idPub, idUser, comment])
       console.log(result)
     } catch (error) {
       console.log(error)
@@ -146,8 +148,8 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
       right join persona p on u.persona_ci = p.ci
       WHERE c.id_publicacion = $2 
       ORDER BY c.id_comentario DESC;`
-      const [comments] = await connection.query(query, [idUser, idPub])
-      return comments
+      const comments = await connection.query(query, [idUser, idPub])
+      return comments.rows
     } catch (error) {
       console.log('error in model')
       console.log(error)
@@ -170,18 +172,18 @@ WHERE np.notas_id_nota  = n.id_nota AND  np.usuario_id_usuario  = u.id_usuario${
 
   // Para desaprobar notas que se hayan publicado
   static async disapproveMultipleNotes({ idNotes }) {
-    const conn = await connection.getConnection()
+    const conn = await connection.connect()
     try {
-      await conn.beginTransaction()
+      await conn.query('BEGIN')
       const query = 'delete from notas_publicadas where id_publicacion = $1;'
       const promises = idNotes.map((idNote) => {
         return conn.query(query, [idNote])
       })
       await Promise.all(promises)
-      await conn.commit()
+      await conn.query('COMMIT')
       return true
     } catch (error) {
-      await conn.rollback()
+      await conn.query('ROLLBACK')
       console.log(error)
       const objError = { status: 500, message: 'Error al desaprobar las notas' }
       throw objError

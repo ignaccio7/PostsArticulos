@@ -35,7 +35,7 @@ export default class TokenModel {
 
   static async findRefreshToken({ jti }) {
     const query = `SELECT * FROM refresh_tokens 
-    WHERE token_id = $1 AND expires_at > NOW()`
+    WHERE token_id = $1 AND expires_at > (NOW() AT TIME ZONE 'UTC')`
     try {
       const result = await connection.query(query, [jti])
       return result.rows

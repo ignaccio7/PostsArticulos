@@ -184,6 +184,7 @@ export default class UserController {
 
   static async signin(request, response) {
     const user = request.body
+    console.log(user)
 
     const resultUser = validateUser({ user })
 

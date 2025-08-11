@@ -44,7 +44,8 @@ export async function generateRefreshToken({ user }) {
 
   const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex')
   // const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 5)
+  // const expiresAt = new Date(Date.now() + 1000 * 60 * 5)
+  const expiresAt = new Date(Date.now() + Number.parseInt(refresh_token_expiration))
     .toISOString()
     .slice(0, 19)
     .replace('T', ' ')
@@ -131,7 +132,8 @@ export async function verifyRefreshToken(request, response, next) {
   if (!refreshToken)
     return response.status(412).json({
       statusCode: 412,
-      message: 'Refresh token no encontrado',
+      message: 'Sesion no iniciada.',
+      // message: 'Refresh token no encontrado',
     })
 
   try {

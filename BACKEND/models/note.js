@@ -26,7 +26,7 @@ export default class NoteModel {
     try {
       const query = `select count(*) as total_notas FROM notas n, usuario u WHERE n.usuario_id_usuario = u.id_usuario and n.id_nota not in (select notas_id_nota from notas_publicadas np)${sql};`
       const result = await connection.query(query, [...values])
-      return result.rowCount
+      return result.rows
     } catch (error) {
       console.log(error)
       throw new Error('fallo al solicitar datos')

@@ -19,5 +19,8 @@ export default {
   access_token_expiration: process.env.ACCESS_TOKEN_EXPIRES_IN || '900000',
   refresh_token_expiration: process.env.REFRESH_TOKEN_EXPIRES_IN || '3600000',
   environment: process.env.NODE_ENV || 'development',
+  admin_user: process.env.ADMIN_USER || 'admin',
+  admin_password: process.env.ADMIN_PASSWORD || 'aA*123456',
+  admin_email: process.env.ADMIN_EMAIL || 'admin@google.com',
   secretKey: 'postsRGIgna',
 }

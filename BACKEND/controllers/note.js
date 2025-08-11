@@ -21,7 +21,11 @@ export default class NoteController {
         filters: { titulo, tema },
         fechaPost: { init, end },
       })
-      const totalPages = Math.ceil(resultTotalPages.total_notas / perPage)
+      const totalPages = Math.ceil(resultTotalPages[0].total_notas / perPage)
+      console.log('-------------------------------')
+      console.log({ resultTotalPages })
+      console.log({ totalPages })
+      console.log({ perPage })
 
       if (results.length === 0) {
         response.status(404).json({
@@ -30,6 +34,17 @@ export default class NoteController {
         })
         return
       }
+
+      console.log('||||||||||||||||||||||||||||||||||||||')
+      console.log(results)
+
+      results.forEach((element) => {
+        if (element.image_url) {
+          element.image_url = JSON.parse(element.image_url).image
+        }
+      })
+
+      console.log(results)
 
       return response.json({
         statusCode: 200,
@@ -519,11 +534,17 @@ export default class NoteController {
         fechaPost: { init, end },
         idUser,
       })
-      const totalPages = Math.ceil(resultTotalPages.total_notas / perPage)
+      const totalPages = Math.ceil(resultTotalPages[0].total_notas / perPage)
 
       console.log({ resultTotalPages })
       console.log({ totalPages })
+      console.log({ perPage })
 
+      results.forEach((element) => {
+        if (element.image_url) {
+          element.image_url = JSON.parse(element.image_url).image
+        }
+      })
       console.log(results)
 
       return response.json({

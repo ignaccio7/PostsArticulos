@@ -7,7 +7,7 @@ POST http://localhost:1234/
 GET http://localhost:1234/person
 
 ### GET a la pagina inicio de PERSONA para obtener por ci
-GET http://localhost:1234/person/10918761
+GET http://localhost:1234/person/10121351
 
 ### GET a la pagina inicio de PERSONA para obtener por ci
 GET http://localhost:1234/person/search/11111112
@@ -21,20 +21,20 @@ POST  http://localhost:1234/person
 Content-Type: application/json
 
 {
-  "ci" : 10918761,
-  "nombres" : "Nestor",
-  "paterno" : "Rojas",
-  "materno" : "Guarachi",
-  "telefono" : "75209039",
-  "correo" : "nr@gmail.com",
+  "ci" : 10121344,
+  "nombres" : "ignaccio7",
+  "paterno" : "ignaccio7",
+  "materno" : "ignaccio7",
+  "telefono" : "76765673",
+  "correo" : "ignaccio7@gmail.com",
   "avatar" : "avatarnr"
 }
 
 ### DELETE para eliminar una persona de la base de datos
-DELETE http://localhost:1234/person/10918769
+DELETE http://localhost:1234/person/10121314
 
 ### PATCH a la pagina de inicio de PERSONA para modificar
-PATCH http://localhost:1234/person/10918761
+PATCH http://localhost:1234/person/10121314
 Content-Type: application/json
 
 {
@@ -53,12 +53,12 @@ Content-Type: application/json
 
 {
   "person":{
-    "ci" : 10918764,
-    "nombres" : "Nestor",
-    "paterno" : "Rojas",
-    "materno" : "Guarachi",
+    "ci" : 1011121314,
+    "nombres" : "ignaccio7",
+    "paterno" : "ignaccio",
+    "materno" : "ignaccio",
     "telefono" : "75209039",
-    "correo" : "nr@gmail.com",
+    "correo" : "ignaccio7@gmail.com",
     "avatar" : "avatarnr"
   },
   "user":{
@@ -113,7 +113,7 @@ GET http://localhost:1234/person/13123133
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 
 ### PATCH a la pagina de inicio de PERSONA para modificar
-PATCH http://localhost:1234/person/10918761
+PATCH http://localhost:1234/person/1011121314
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcmEiLCJpYXQiOjE3MTY0MjIwODcsImV4cCI6MTcxNjQyNTY4N30.SvBihv4gJp54cYUrSLNDH9OpAXHgnfOeomHTCYubopk
 Content-Type: application/json
 
