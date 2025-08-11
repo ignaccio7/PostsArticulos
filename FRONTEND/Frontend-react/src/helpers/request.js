@@ -14,11 +14,20 @@ class RequestService {
     SessionManager.setAccessToken(data.data)
   }
 
-  static async handleRequest({ url, options, retry = true }) {
-    try {
-      const response = await fetch(`${BASE_URL}/${url}`, {
+  static async handleRequest({ url, options, retry = true, body }) {
+    const method = options.method ?? 'GET'
+    const methodsWithBody = ['POST', 'PATCH', 'PUT']
+
+    const optionsFetch = {
         ...options,
         credentials: 'include',
+    }
+
+    if (methodsWithBody.includes(method) && body) optionsFetch.body = body
+
+    try {
+      const response = await fetch(`${BASE_URL}/${url}`, {
+        ...optionsFetch
       })
       const data = await response.json()
 
@@ -33,10 +42,11 @@ class RequestService {
           Authorization: `Bearer ${newAccessToken}`,
         }
       
-        return this.handleRequest({
+        return await this.handleRequest({
             url,
             options: { ...options, headers: newHeaders },
             retry: false,
+            body
           })
       }
 
@@ -98,57 +108,80 @@ class RequestService {
   }
 
   static async postRequestJSON({ url = '', requestOptions = {}, body }) {
-    try {
-      console.log(body)
-      
-      const response = await fetch(`${BASE_URL}/${url}`, {
+    const data = await this.handleRequest({
+      url,
+      options: {
         method: 'POST',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
           ...requestOptions,
-        },
-        body: JSON.stringify(body),
-      })
+          'Content-Type': 'application/json'
+        }
+      },
+      body: JSON.stringify(body)
+    })
+    return data
+    // try {
+    //   console.log(body)
+      
+    //   const response = await fetch(`${BASE_URL}/${url}`, {
+    //     method: 'POST',
+    //     credentials: 'include',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       ...requestOptions,
+    //     },
+    //     body: JSON.stringify(body),
+    //   })
 
-      if (!response.ok) {
-        const errorMessage = await response.json()
-        throw errorMessage
-      }
+    //   if (!response.ok) {
+    //     const errorMessage = await response.json()
+    //     throw errorMessage
+    //   }
 
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.log(error)
-      throw error
-      // throw new Error('Error al comunicarse con el servidor')
-    }
+    //   const data = await response.json()
+    //   return data
+    // } catch (error) {
+    //   console.log(error)
+    //   throw error
+    //   // throw new Error('Error al comunicarse con el servidor')
+    // }
   }
 
   static async postRequestFormData({ url = '', requestOptions = {}, body }) {
     for (const [key, value] of body.entries()) {
   console.log(key, value)
 }
-    try {
-      const response = await fetch(`${BASE_URL}/${url}`, {
+    const data = await this.handleRequest({
+      url,
+      options: {
         method: 'POST',
         headers: {
           ...requestOptions,
-        },
-        body,
-      })
+        }
+      },
+      body
+    })
+    return data
+    // try {
+    //   const response = await fetch(`${BASE_URL}/${url}`, {
+    //     method: 'POST',
+    //     headers: {
+    //       ...requestOptions,
+    //     },
+    //     body,
+    //   })
 
-      if (!response.ok) {
-        const errorMessage = await response.json()
-        throw errorMessage
-      }
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.log(error)
-      throw error
-      // throw new Error('Error al comunicarse con el servidor')
-    }
+    //   if (!response.ok) {
+    //     const errorMessage = await response.json()
+    //     throw errorMessage
+    //   }
+    //   const data = await response.json()
+    //   return data
+    // } catch (error) {
+    //   console.log(error)
+    //   throw error
+    //   // throw new Error('Error al comunicarse con el servidor')
+    // }
   }
 
   static async patchRequestFormData({ url = '', requestOptions = {}, body }) {

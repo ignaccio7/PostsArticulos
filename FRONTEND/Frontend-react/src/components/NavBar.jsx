@@ -156,7 +156,7 @@ export default function NavBar() {
             {auth ? (
               <div className="flex flex-col text-step1">
                 <div className='flex gap-2 items-center px-2 my-2'>
-                  <img src={avatar} alt="Perfil" className='w-14 h-auto aspect-square rounded-full object-cover object-center'/>
+                  <img src={`${avatar !== '' ? avatar : '/logo.png'}`} alt="Perfil" className='w-14 h-auto aspect-square rounded-full object-cover object-center'/>
                   <span className="truncate px-2 py-1 text-right text-step0 text-zinc-400">
                     {username}
                   </span>

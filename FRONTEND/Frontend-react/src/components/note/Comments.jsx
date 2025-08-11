@@ -4,13 +4,17 @@ import Article from '../../services/Article'
 import { toast } from 'sonner'
 import { IconTrash } from '../ui/Icons'
 import { useAuth } from '../../hooks/useAuth'
-export default function Comments ({ idNote, accessToken }) {
+export default function Comments ({ idNote, accessToken, addedComment, deletedComment }) {
   const [comments, setComments] = useState([])
   const { auth } = useAuth()
 
   const getComments = useCallback(async ({ setComments }) => {
     try {
       const res = await Article.getComments({ accessToken, idNote })
+      console.log('comments')
+      console.log(res)
+      
+      
       setComments(res.data)
     } catch (error) {
       console.log(error)
@@ -28,6 +32,7 @@ export default function Comments ({ idNote, accessToken }) {
     try {
       await Article.addComment({ accessToken, idNote, comment: newComment })
       await getComments({ setComments })
+      addedComment()
     } catch (error) {
       console.log(error)
       toast.error('Error al añadir el comentario')
@@ -40,6 +45,7 @@ export default function Comments ({ idNote, accessToken }) {
     try {
       await Article.deleteComment({ accessToken, idComment })
       await getComments({ setComments })
+      deletedComment()
     } catch (error) {
       toast.error('Error al eliminar el comentario')
     }
@@ -47,7 +53,7 @@ export default function Comments ({ idNote, accessToken }) {
 
   return (
     <div className="comments my-4 flex flex-col gap-4">
-      <h2>Comentarios ({comments.length})</h2>
+      <h2>Comentarios ({comments?.length})</h2>
 
       {
         auth && (
@@ -77,28 +83,28 @@ export default function Comments ({ idNote, accessToken }) {
 
       <div className='w-full bg-white mt-2 rounded-md p-6 text-black text-step1 flex flex-col gap-4 max-w-[1000px]'>
         {
-          comments.length === 0
+          comments?.length === 0
             ? <p className='text-step1 whitespace-pre-line text-[#9ca3af]'>No hay comentarios para mostrar</p>
-            : comments.map(comment => {
+            : comments?.map(comment => {
               return (
                 <div
                   className={'comment flex flex-col gap-3'}
                   key={comment.id_comentario}>
                   <article className="user flex flex-row gap-2 items-center">
                     <header className='flex flex-row gap-2 justify-between w-full'>
-                      <div className="user">
+                      <div className="user flex flex-row gap-2 items-center">
                         <img
-                          src={comment.avatar}
+                          src={comment.avatar || '/logo.png'}
                           alt="user1"
                           className='w-14 h-14 rounded-full aspect-square'
                         />
-                        <p className={`leading-none text-step1 ${comment.isMyComment === 0 ? 'text-zinc-700' : 'text-third'}`}>
+                        <p className={`leading-none text-step1 ${comment.ismycomment === 0 ? 'text-zinc-700' : 'text-third'}`}>
                           {comment.usuario} <br />
-                          <span className='text-step0'>{new Date(comment.fechaPub).toLocaleDateString()}</span>
+                          <span className='text-step0'>{new Date(comment.fechapub).toLocaleDateString()}</span>
                         </p>
                       </div>
                       {
-                        comment.isMyComment !== 0 && (
+                        comment.ismycomment !== 0 && (
                           <button
                             className='text-zinc-700 hover:scale-[1.05] transition-transform duration-300'
                             onClick={() => deleteComment(comment.id_comentario)}

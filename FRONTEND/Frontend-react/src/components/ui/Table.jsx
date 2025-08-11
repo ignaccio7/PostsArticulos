@@ -15,7 +15,7 @@ export default function Table ({ results = [] }) {
                 <tr key={note.id_nota} className='border-b-4 border-b-slate-800 group hover:bg-slate-700 transition-colors duration-500 ease'>
                   <td className='p-2 w-32'>
                     <img alt={`Imagen de ${note.title}`} src={urlImage}
-                      className='block w-32 rounded-md min-w-[70px] min-h-[70px] object-cover sm:min-w-40 sm:min-h-40'
+                      className='block w-32 rounded-md min-w-[70px] min-h-[70px] object-cover sm:min-w-40 sm:min-h-40 max-h-[100px]'
                     />
                   </td>
                   <td className="flex flex-col py-2 px-4 text-slate-200 overflow-hidden">

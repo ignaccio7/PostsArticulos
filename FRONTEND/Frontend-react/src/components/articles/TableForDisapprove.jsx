@@ -19,9 +19,15 @@ export default function TableForDisapprove ({ results = [] }) {
       <div className="tableForApprove w-full mb-8 flex flex-col gap-4">
         {
           results.map(note => {
+            console.log(JSON.stringify(note))
             const isCheked = notesForDisapprove.includes(note.id)
             const urlImage = note?.image ? note.image : '/logo.png'
-            const dateOfPub = new Date(note.fechaPub)
+            const dateOfPub = new Date(note.fechapub)
+            console.log('--------------------------------')
+            console.log(JSON.stringify(note.fechaPub))
+            console.log(JSON.stringify(dateOfPub))
+            
+            
             const descriptionSanitized = note?.description?.replace('&lt;', '<').replace('&gt;', '>')
             const titleUrl = note.title.replace(/[/\\]/g, '').replace(/\s+/g, '-')
             return (

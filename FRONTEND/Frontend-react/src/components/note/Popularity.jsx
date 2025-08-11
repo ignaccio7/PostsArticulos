@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react'
 import { sleep } from '../../utils/utils'
 
 export default function Popularity ({ likes = 0, comments = 0, islike = 0, isPublished = 0, accessToken = '' }) {
+  console.log('LLEGAMOS AQUI EN POPULARITY')
+  
   const [popularity, setPopularity] = useState({
     likes: 0,
     comments: 0,

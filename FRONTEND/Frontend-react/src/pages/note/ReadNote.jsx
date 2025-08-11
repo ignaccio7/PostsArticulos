@@ -40,8 +40,10 @@ export default function ReadNote () {
         console.log(res)
 
         const data = res.note
-        const pop = res.popularity
-
+        const pop = res?.popularity
+        console.log(pop)
+        console.log(pop.ispublished)
+        
         console.log(data)
         console.log(typeof data)
         console.log(typeof data.jsondata)
@@ -58,10 +60,10 @@ export default function ReadNote () {
           fechaPost: data.fechapost ?? ''
         })
         setPopularity({
-          likes: pop.likes ?? 0,
+          likes: pop.likes  ?? 0,
           comments: pop.comments ?? 0,
           islike: pop.islike ?? 0,
-          isPublished: pop.isPublished ?? 0
+          isPublished: pop.ispublished ?? 0
         })
       })
       .catch(e => {
@@ -71,8 +73,19 @@ export default function ReadNote () {
       })
   }, [])
 
-  // TODO: habilitar funcion para que de like a la nota
-  // TODO: crear opcion de aprobar notas
+  const addCommentWithoutDatabase = () => {
+    setPopularity({
+      ...popularity,
+      comments: popularity.comments + 1
+    })
+  }
+
+  const subCommentWithoutDatabase = () => {
+    setPopularity({
+      ...popularity,
+      comments: popularity.comments -1
+    })
+  }
 
   return (
     <article className="container flex flex-col gap-2 mt-2 mb-8 w-full">
@@ -83,7 +96,7 @@ export default function ReadNote () {
         <picture className='block w-20 h-20 rounded-full overflow-hidden'>
           <img
             className='w-full h-full aspect-square object-cover'
-            src={user.image ?? '/logo.png'}
+            src={user.image || '/logo.png'}
             alt={`Imagen de ${user.username}`} />
         </picture>
         <div className="personal_info flex-1">
@@ -122,7 +135,8 @@ export default function ReadNote () {
       </div>
       {/* Comments */}
       {
-        popularity.isPublished !== 0 && <Comments idNote={popularity.isPublished} accessToken={accessToken} />
+        popularity.isPublished !== 0 && <Comments idNote={popularity.isPublished} accessToken={accessToken} addedComment={addCommentWithoutDatabase}
+        deletedComment={subCommentWithoutDatabase} />
       }
     </article>
   )

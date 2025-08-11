@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState , useRef } from 'react'
 
 import { useSearchParams } from 'react-router-dom'
 import { useRefreshStore } from '../../../store/refresh'
 
 export default function SizeResults () {
   const refresh = useRefreshStore(state => state.refresh)
+  const firstRender = useRef(true)
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const [size, setSize] = useState(() => {
+  const [size, setSize] = useState(() => {    
     const params = Object.fromEntries(searchParams)
     return params?.perPage ?? 5
   })
@@ -27,11 +28,15 @@ export default function SizeResults () {
       return { ...newSearchParams, perPage: newSize }
     })
   }
-
+  
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
     setSize(5)
   }, [refresh])
-
+  
   return (
     <div className="sizeResults">
       <select name="sizeResults" id="sizeResults"

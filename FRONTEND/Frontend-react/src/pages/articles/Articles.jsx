@@ -14,6 +14,10 @@ export default function AprobeNote () {
   const { notesForDisapprove, clearNotesForDisapprove } = useNotesforApprove()
 
   const { notes, page, totalPages, getArticles } = useArticles({ accessToken, perPage: 5, method: 'getAll' })
+  console.log('||||||||||||||||||||||||||||||||')
+  console.log(notes)
+  
+  
 
   const disapproveNotes = async () => {
     if (notesForDisapprove.length === 0) return toast.error('No hay notas para desaprobar')

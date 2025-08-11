@@ -37,6 +37,7 @@ export default function InputSearch () {
   useEffect(() => {
     const previousParams = Object.fromEntries(searchParams)
     if (previousParams?.titulo) setSearch(previousParams.titulo)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

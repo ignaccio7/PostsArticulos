@@ -45,7 +45,7 @@ export default class Article {
       likes: article.likes,
       comments: article.comments,
       islike: article.islike,
-      fechaPub: article.fechaPub
+      fechapub: article.fechapub
     }))
 
     return {

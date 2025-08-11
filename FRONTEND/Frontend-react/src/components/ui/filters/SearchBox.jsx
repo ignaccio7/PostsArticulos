@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect , useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useRefreshStore } from '../../../store/refresh'
 
 export default function SearchBox () {
   const refresh = useRefreshStore(state => state.refresh)
+  const firstRender = useRef(true)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [search, setSearch] = useState(() => {
@@ -30,6 +31,10 @@ export default function SearchBox () {
   }
 
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
     setSearch('')
   }, [refresh])
 

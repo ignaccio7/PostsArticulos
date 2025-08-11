@@ -6,6 +6,8 @@ class User {
       usuario: user,
       pass
     }
+    console.log(payload)
+    
 
     try {
       const res = await RequestService.postRequestJSON({

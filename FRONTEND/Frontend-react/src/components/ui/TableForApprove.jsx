@@ -21,7 +21,7 @@ export default function TableForApprove ({ results = [] }) {
           results.map(note => {
             const isCheked = notesForApprove.includes(note.id_nota)
             const urlImage = note?.image_url ? note.image_url : '/logo.png'
-            const dateOfPost = new Date(note.fechaPost)
+            const dateOfPost = new Date(note.fechapost)
             const descriptionSanitized = note.descripcion.replace('&lt;', '<').replace('&gt;', '>')
 
             const titleUrl = note.titulo.replace(/[/\\]/g, '').replace(/\s+/g, '-')

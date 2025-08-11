@@ -49,7 +49,7 @@ export default function FormRegister () {
       console.log('Response register user')
       console.log(responseData)
 
-      loginUser({ username: user, token, rol })
+      loginUser({ username: user, token, rol, avatar: responseData?.newUser?.person?.avatar })
       auth.login()
       toast.success('Usuario registrado exitosamente')
       navigate('/notes', { replace: true })
