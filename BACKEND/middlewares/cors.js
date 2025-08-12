@@ -9,7 +9,7 @@ const ACCEPTED_ORIGINS = [
   'http://localhost:5173',
   'http://midominio.com',
   'https://midominio.com',
-  'https://techtricks-blogpost.netlify.app/',
+  'https://techtricks-blogpost.netlify.app',
 ]
 
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => {
