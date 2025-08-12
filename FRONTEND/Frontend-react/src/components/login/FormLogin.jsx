@@ -49,8 +49,8 @@ export default function FormLogin () {
       newErrors.passError = 'La contraseña es requerida'
     } else if (password.length < 8) {
       newErrors.passError = 'La contraseña debe tener por lo menos 8 caracteres'
-    } else if (password.length > 20) {
-      newErrors.passError = 'La contraseña solo puede tener 20 caracteres'
+    } else if (password.length > 25) {
+      newErrors.passError = 'La contraseña solo puede tener 25 caracteres'
     }
     return newErrors
   }
