@@ -1,0 +1,2 @@
+export const TITLE_PROJECT = 'Techtricks'
+export const DESCRIPTION_PROJECT = 'Un blog multi-usuario que nos permitira compartir novedades interesantes, consejos o cualquier artículo que ayudara a la comunidad a aprender y mejorar las habilidades en nuestro campo.'

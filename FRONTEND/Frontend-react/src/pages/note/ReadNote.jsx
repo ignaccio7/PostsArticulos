@@ -7,8 +7,10 @@ import { toast } from 'sonner'
 import DOMPurify from 'dompurify'
 import Popularity from '../../components/note/Popularity'
 import Comments from '../../components/note/Comments'
+import { useSEO } from '../../hooks/useSEO'
 
 export default function ReadNote () {
+  const { changeMetadata } = useSEO()
   const navigate = useNavigate()
 
   const accessToken = useSessionStore(state => state.accessToken)
@@ -32,7 +34,7 @@ export default function ReadNote () {
     fechaPost: ''
   })
 
-  useEffect(() => {
+  useEffect(() => {    
     console.log('abc')
 
     Note.getNoteForRead({ idNote: id, accessToken })
@@ -86,6 +88,13 @@ export default function ReadNote () {
       comments: popularity.comments -1
     })
   }
+
+  useEffect(() => {
+    changeMetadata({
+     title,
+     description: subtitle
+    })
+  }, [title, subtitle])
 
   return (
     <article className="container flex flex-col gap-2 mt-2 mb-8 w-full">
