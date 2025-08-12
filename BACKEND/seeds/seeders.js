@@ -19,9 +19,9 @@ async function seed() {
     const person = {
       ci: 123321456,
       nombres: 'ignaccio7',
-      paterno: 'ignaccio7',
-      materno: 'ignaccio7',
-      telefono: 76757643,
+      paterno: '',
+      materno: '',
+      telefono: 77777777,
       correo: admin_email,
       avatar: '',
       avatar_id: '',
