@@ -7,7 +7,7 @@
     "FRONTEND/**"
   ],
   "scripts": {
-    "prepare": "node -e \"process.env.NODE_ENV !== 'production' && require('child_process').exec('husky')\"",
+    "prepare": "test \"$NODE_ENV\" = \"production\" || husky",
     "lint-staged": "lint-staged"
   },
   "keywords": [],
