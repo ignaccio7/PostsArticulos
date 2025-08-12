@@ -87,7 +87,7 @@ export default function FormLogin () {
 
   return (
     <form className="form-login" onSubmit={signin} >
-      <h2 className="form__title">Inicio de sesion</h2>
+      <h2 className="form__title">Inicio de sesión</h2>
       <div className="form__credentials">
         <label>
           <IconUser />
