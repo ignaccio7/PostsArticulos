@@ -7,7 +7,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useSessionStore } from '../store/session'
 import { useNotesforApprove } from '../hooks/useNotes'
 import { IconLoginUser, IconUser } from './ui/Icons'
-import { useRef, useState } from 'react'
+import { useRef, useState , useEffect } from 'react'
 import User from '../services/User'
 
 export default function NavBar() {
@@ -28,10 +28,9 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownMenu = useRef(null)
   const dropdownUser = () => {
-    setIsOpen(!isOpen)
-    dropdownMenu.current.style = isOpen
-      ? 'opacity: 0;pointer-events:none;'
-      : 'opacity: 1 ; pointer-events:auto;'
+    console.log('EJECUTO EL DROPDOWNMENU')
+    
+    setIsOpen(!isOpen)    
   }
 
   const closeSession = async () => {
@@ -43,6 +42,18 @@ export default function NavBar() {
     await User.signout().then(res => console.log(res)).catch(err => console.log(err))    
     if (location.pathname !== '/') navigate('/')
   }
+
+  useEffect(() => {
+    console.log('AQUI')
+    
+    if (dropdownMenu.current) {
+      console.log('AQUI TAMBIEN')
+      
+      dropdownMenu.current.style = !isOpen
+      ? 'opacity: 0; pointer-events:none;'
+      : 'opacity: 1 ; pointer-events:auto;'
+    }
+  },[isOpen])
 
   return (
     <div

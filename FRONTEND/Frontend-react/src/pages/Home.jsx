@@ -7,13 +7,11 @@ import { useSessionStore } from '../store/session'
 import { toast } from 'sonner'
 import { useSearchParams } from 'react-router-dom'
 import { useRefreshStore } from '../store/refresh'
-import { useSEO } from '../hooks/useSEO'
 
 const TOTAL_POPULAR_NOTES = 7
 
 export default function Home () {
   const sentinelRef = useRef(null)
-  const { changeMetadata } = useSEO()
 
   const [searchParams] = useSearchParams()
   const searchNewArticles = useRefreshStore(state => state.searchNewArticles)
@@ -136,13 +134,6 @@ export default function Home () {
       }
     }
   }, [articles])
-
-  useEffect(() => {
-    changeMetadata({
-      title: '',
-      description: ''
-    })
-  }, [])
 
   // se le debe pasar la cantidad exacta de multiplos de 3 + 1
   const popularArticles = articles.length > TOTAL_POPULAR_NOTES ? articles.slice(0, TOTAL_POPULAR_NOTES) : []
