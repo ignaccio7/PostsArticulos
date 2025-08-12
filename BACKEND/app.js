@@ -9,7 +9,7 @@ import { routerArticle } from './routes/article.js'
 import { routerNote } from './routes/note.js'
 import { routerPerson } from './routes/person.js'
 import { routerUser } from './routes/user.js'
-import { checkBanned, generalLimiter, verifyLimiterForMethod } from './utils/ratelimit/rateLimit.js'
+import { checkBanned, generalLimiter, verifyLimiterForMethod } from './utils/ratelimit/ratelimit.js'
 import { readJSON } from './utils/utils.js'
 const pkg = readJSON('./package.json')
 const app = express()
