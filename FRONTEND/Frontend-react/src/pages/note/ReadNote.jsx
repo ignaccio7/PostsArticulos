@@ -112,7 +112,7 @@ export default function ReadNote () {
           <h4>{user.fullname}</h4>
           <p className='flex flex-row gap-2 justify-between text-third'>
             <span>{user.username}</span>
-            <span>{new Date(user.fechaPost).toLocaleDateString()}</span>
+            <span>{user.fechaPost && (new Date(user.fechaPost).toLocaleDateString())}</span>
           </p>
         </div>
       </div>

@@ -13,7 +13,7 @@ export default function Card ({
   islike, className = ''
 }) {
   // const urlImage = !image ? '/logo.png' : image
-  const urlImage = image ?? '/logo_sin_fondo.png'
+  const urlImage = image ?? '/logo_sin_fondo.webp'
   const titleUrl = title.replace(/[/\\]/g, '').replace(/\s+/g, '-')
 
   return (

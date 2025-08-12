@@ -9,7 +9,7 @@ export default function GridArticles ({ articles }) {
   return (
     <div className="grid-articles grid grid-cols-1 md:grid-cols-4 gap-4">
       {
-        articles.map(({ id, title, description, image, link, author, likes, comments, islike }) => {
+        articles?.map(({ id, title, description, image, link, author, likes, comments, islike }) => {
           return (
             <Card key={`${id}-${title}-${description}`}
               title={title}

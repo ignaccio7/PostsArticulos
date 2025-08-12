@@ -8,7 +8,7 @@ export default function Header () {
       <div className="container h-full flex flex-row justify-between items-center">
         <Link className="logo w-28 h-auto flex-shrink-0" to="/">
           {/* <img src="./logo.png" alt="" className="mix-blend-lighten" /> */}
-          <img src="/logo_sin_fondo.png" alt="" className="w-full h-auto aspect-square" />
+          <img src="/logo_sin_fondo.webp" alt="" className="w-full h-auto aspect-square" />
         </Link>
 
         <label htmlFor="menu" className="sm:hidden cursor-pointer">

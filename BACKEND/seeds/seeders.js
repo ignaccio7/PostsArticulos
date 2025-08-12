@@ -61,7 +61,22 @@ async function seed() {
         adminId,
         'Bienvenido',
         'Esta es la nota de ejemplo del admin',
-        JSON.stringify({ ejemplo: true }),
+        JSON.stringify([
+          { id: 'T1', tag: 'title', content: 'Bienvenido', prevElement: null },
+          {
+            id: 'P1',
+            tag: 'paragraph',
+            content: 'Esta es una nota de ejemplo',
+            prevElement: 'T1',
+          },
+          {
+            id: 'P2',
+            tag: 'paragraph',
+            content: 'Podremos agregar cualquier tipo de contenido aqui',
+            prevElement: 'P1',
+          },
+          { id: 'ST1', tag: 'subtitle', content: ':)', prevElement: 'P2' },
+        ]),
       ]
     )
 
