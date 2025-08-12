@@ -33,8 +33,8 @@ const userSchema = z.object({
     .string({
       required_error: 'Password is required',
     })
-    .max(20, {
-      message: 'Pass must be 20 of fewer characters long',
+    .max(25, {
+      message: 'Pass must be 25 of fewer characters long',
     })
     .min(8, {
       message: 'Pass must be 8 or more chararcters to long',
